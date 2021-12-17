@@ -1,0 +1,1138 @@
+openapi: 3.0.0
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/sultanfariz/gym-management/1.0.0
+  - description: Local development
+    url: http://localhost:8080/api/v1
+
+info:
+  description: Gym Management RESTful API Documentation
+  version: "1.0.0"
+  title: Gym Management App
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+tags:
+  - name: Super Admins
+    description: Secured Super-Admin-only calls
+  - name: Admins
+    description: Operations available to operational Admins
+  - name: Users
+    description: Operations available to regular Users
+
+paths:
+  /admins:
+    get:
+      tags:
+        - Super Admins
+      summary: get all admin data
+      operationId: getallAdmins
+      description: |
+        Get all admin data by Super Admins
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all admin data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Admin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+    post:
+      tags:
+        - Super Admins
+      summary: create new operational admin
+      operationId: createnewadmin
+      description: Create new operational admin
+      responses:
+        "200":
+          description: admin created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get admin data by id
+                  data:
+                    $ref: "#/components/schemas/Admin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                  example: john_doe
+                password:
+                  type: string
+                  example: johnDoe12312
+        description: New admin information
+
+  /admins/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Super Admins
+        - Admins
+      summary: get admin data by id
+      description: Get all admin data by Super Admins
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get admin data by id
+                  data:
+                    $ref: "#/components/schemas/Admin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Super Admins
+      summary: delete admin data by id
+      description: Delete admin data by id
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully delete admin data
+                  data:
+                    $ref: "#/components/schemas/Admin"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /admins/login:
+    post:
+      tags:
+        - Admins
+        - Super Admins
+      summary: login admin to the app
+      operationId: loginadmin
+      description: Login admin to the system
+      responses:
+        "200":
+          description: login success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: login success
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: integer
+                        example: john_doe
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: john_doe
+                password:
+                  type: string
+                  example: johnDoe12312
+        description: Admin credentials
+
+  /admins/logout:
+    post:
+      tags:
+        - Admins
+        - Super Admins
+      summary: logout admin to the app
+      operationId: logoutadmin
+      description: Logout admin to the system
+      responses:
+        "201":
+          description: logout success
+        "500":
+          description: "internal server error"
+
+  /bookings:
+    get:
+      tags:
+        - Admins
+      summary: get all bookings data
+      operationId: getallbookings
+      description: Get all bookings data
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all booking data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Booking"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /bookings/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Admins
+      summary: get booking data by id
+      operationId: getbookingbyid
+      description: Get all admin data by Super Admins
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get booking data by id
+                  data:
+                    $ref: "#/components/schemas/Booking"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Admins
+      summary: change booking status
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: status has been changed
+                  data:
+                    $ref: "#/components/schemas/Booking"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  example: payment verified
+        description: Status Payment
+
+  /classes:
+    get:
+      tags:
+        - Admins
+        - Super Admins
+        - Users
+      summary: get all classes data
+      operationId: getAllClasses
+      description: Get all classes data
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all classes data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Class"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /gyms:
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get all gym data
+      description: Get all gym data
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all gym data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Gym"
+    post:
+      tags:
+        - Super Admins
+      summary: Create new gym
+      description: Create new gym
+      responses:
+        "201":
+          description: gym created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully add new gym
+                  data:
+                    $ref: "#/components/schemas/Gym"
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - adminId
+                - addressId
+                - name
+              properties:
+                adminId:
+                  type: integer
+                  example: 1
+                addressId:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: Gelud Gym
+                telephone:
+                  type: string
+                  example: 081234567890
+        description: Gym input data
+
+  /gyms/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: get gym data by id
+      operationId: getgymbyid
+      description: |
+        Get gym data by id
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get admin data by id
+                  data:
+                    $ref: "#/components/schemas/Gym"
+        "400":
+          description: bad input parameter
+
+  /gyms/{gymId}/classes/{classId}:
+    parameters:
+      - name: gymId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: classId
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get class details on spesific gym
+      description: Get class details on spesific gym
+      responses:
+        "200":
+          description: succesfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get class details
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Class"
+
+  /gyms/{gymId}/classes/{classId}/bookings:
+    parameters:
+      - name: gymId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: classId
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Super Admins
+        - Admins
+      summary: Get all bookings on spesific class
+      description: Get all bookings on spesific class
+      responses:
+        "200":
+          description: succesfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get class details
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Booking"
+
+  /memberships:
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get all memberships data
+      description: Get all memberships data
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all memberships data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Membership"
+
+    delete:
+      tags:
+        - Super Admins
+      summary: Delete memberships by id
+      description: Delete memberships by id
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully delete membership data
+                  data:
+                    $ref: "#/components/schemas/Membership"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /memberships/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get membership by id
+      description: Get membership by id
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get membership data by id
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Membership"
+
+  /newsletters:
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get all newsletters
+      description: Get all newsletters
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all newsletters data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Newsletters"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: login user to the app
+      operationId: login
+      description: Login to the system
+      responses:
+        "200":
+          description: login success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: login success
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: integer
+                        example: john_doe
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5
+
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: john_doe
+                password:
+                  type: string
+                  example: johnDoe12312
+        description: User credentials
+
+  /users:
+    get:
+      tags:
+        - Super Admins
+      summary: get all user data
+      operationId: getallUsers
+      description: |
+        Get all user data by Admins
+      responses:
+        "200":
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all booking data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /video_contents:
+    get:
+      tags:
+        - Super Admins
+        - Admins
+        - Users
+      summary: Get all video contents
+      description: Get all video contents
+      responses:
+        "200":
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: successfully get all video contents data
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/VideoContents"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+
+components:
+  responses:
+    "400":
+      description: Your browser sent a request that this server could not understand
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Your browser sent a request that this server could not understand
+    "404":
+      description: Data not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 404
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Data not found
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal server error
+
+  schemas:
+    Address:
+      type: object
+      required:
+        - address
+        - district
+        - city
+        - postalCode
+        - createdAt
+        - updatedAt
+      properties:
+        address:
+          type: string
+          example: Jalan Kusuma No.9
+        district:
+          type: string
+          example: Grogol Petamburan
+        city:
+          type: string
+          example: Jakarta Barat
+        postalCode:
+          type: string
+          example: 11450
+        createdAt:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    Admin:
+      type: object
+      required:
+        - username
+        - created_at
+        - updated_at
+      properties:
+        username:
+          type: string
+          example: john_doe
+        gym:
+          $ref:  '#/components/schemas/Gym'
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    AdminRelation:
+      type: object
+      properties:
+        username:
+          type: string
+          example: john_doe
+    Booking:
+      type: object
+      required:
+        - user
+        - class
+        - amount
+        - status
+        - created_at
+        - updated_at
+      properties:
+        admin:
+          $ref: "#/components/schemas/AdminRelation"
+        user:
+          $ref: "#/components/schemas/UserRelation"
+        class:
+          $ref:  '#/components/schemas/Class'
+        amount:
+          type: integer
+        status:
+          type: string
+          example: waiting
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    Class:
+      type: object
+      properties:
+        gym:
+          type: array
+          items:
+            $ref: "#/components/schemas/GymRelation"
+        name:
+          type: string
+          example: zumba
+        description:
+          type: string
+          example: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting
+        picture_url:
+          type: string
+          example: bit.ly/1234
+        category:
+          type: string
+          example: cardio
+        status:
+          type: string
+          example: available
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    Gym:
+      type: object
+      required:
+        - name
+        - address
+        - telephone
+        - created_at
+        - updated_at
+      properties:
+        admin:
+          $ref: "#/components/schemas/Admin"
+        name:
+          type: string
+          example: Gelud Gym
+        address:
+          $ref:  '#/components/schemas/Address'
+        telephone:
+          type: string
+          example: 081234567890
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    GymRelation:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Y x G Gym
+        telephone:
+          type: integer
+          example: 9999999
+    Membership:
+      type: object
+      properties:
+        name:
+          type: string
+          example: freemium
+        description:
+          type: string
+          example: for ordinary member
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    Newsletters:
+      type: object
+      properties:
+        admin:
+          $ref: "#/components/schemas/AdminRelation"
+        title:
+          type: string
+          example: how to lose fat
+        content:
+          type: string
+          example: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    User:
+      type: object
+      required:
+        - username
+        - email
+        - photo
+        - created_at
+        - updated_at
+      properties:
+        username:
+          type: string
+          example: john_doe
+        email:
+          type: string
+          example: john_doe@gmail.com
+        photo:
+          type: string
+          example: https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80
+        address:
+          $ref: '#/components/schemas/Address'
+        membership:
+          $ref: '#/components/schemas/Membership'
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    UserRelation:
+      type: object
+      properties:
+        username:
+          type: string
+          example: john_doe
+    VideoContents:
+      type: object
+      properties:
+        admin:
+          $ref: "#/components/schemas/AdminRelation"
+        title:
+          type: string
+          example: how to lose fat
+        url:
+          type: string
+          example: bit.ly/1234
+        description:
+          type: string
+          example: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting
+        created_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
