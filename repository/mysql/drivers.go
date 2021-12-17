@@ -1,6 +1,19 @@
 package mysql
 
 import (
+	"CalFit/repository/mysql/addresses"
+	"CalFit/repository/mysql/booking_details"
+	"CalFit/repository/mysql/classes"
+	"CalFit/repository/mysql/gyms"
+	"CalFit/repository/mysql/membership_types"
+	"CalFit/repository/mysql/newsletters"
+	"CalFit/repository/mysql/operational_admins"
+	"CalFit/repository/mysql/payments"
+	"CalFit/repository/mysql/schedules"
+	"CalFit/repository/mysql/sessions"
+	"CalFit/repository/mysql/super_admins"
+	"CalFit/repository/mysql/users"
+	"CalFit/repository/mysql/video_contents"
 	"fmt"
 
 	"github.com/spf13/viper"
@@ -23,6 +36,21 @@ func InitDB() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(DB)
+
+	DB.AutoMigrate(
+		&super_admins.Super_admin{},
+		&operational_admins.Operational_admin{},
+		&addresses.Address{},
+		&membership_types.Membership_type{},
+		&users.User{},
+		&newsletters.Newsletter{},
+		&gyms.Gym{},
+		&payments.Payment{},
+		&sessions.Session{},
+		&schedules.Schedule{},
+		&classes.Class{},
+		&video_contents.Video_content{},
+		&booking_details.Booking_detail{},
+	)
 	return DB
 }

@@ -4,6 +4,7 @@ import (
 	"CalFit/repository/mysql"
 	"log"
 
+	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
@@ -18,6 +19,7 @@ func init() {
 }
 
 func main() {
+	e := echo.New()
 	mysql.InitDB()
-
+	e.Start(viper.GetString("server.address"))
 }
