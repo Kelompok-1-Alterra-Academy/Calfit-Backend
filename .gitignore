@@ -1,2 +1,4 @@
 .env
+.cli
 config.json
+config_*.json

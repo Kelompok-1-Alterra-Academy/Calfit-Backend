@@ -4,10 +4,14 @@
     "address": ":8080"
   },
   "database": {
-    "username": "root",
-    "password": "",
-    "host": "localhost",
+    "username": "calfitdb",
+    "password": "semogasukses",
+    "host": "calfitdb.clh5lz8c3ezx.us-east-2.rds.amazonaws.com",
     "port": "3306",
-    "name": "CalFit"
+    "name": "calfit_dev"
+  },
+  "jwt": {
+    "secret": "calfit",
+    "expired": 72
   }
 }
