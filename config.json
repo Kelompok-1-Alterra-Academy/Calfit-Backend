@@ -6,9 +6,9 @@
   "database": {
     "username": "root",
     "password": "",
-    "host": "localhost",
+    "host": "host.docker.internal",
     "port": "3306",
-    "name": "CalFit"
+    "name": "Calfit"
   },
   "jwt": {
     "secret": "calfit",
