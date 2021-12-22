@@ -1,6 +1,8 @@
 package main
 
 import (
+	"CalFit/app/middlewares"
+	"CalFit/app/routes"
 	"CalFit/repository/mysql"
 	"log"
 
@@ -21,5 +23,13 @@ func init() {
 func main() {
 	e := echo.New()
 	mysql.InitDB()
-	e.Start(viper.GetString("server.address"))
+	configJWT := middlewares.ConfigJWT{
+		SecretJWT:       viper.GetString("jwt.secret"),
+		ExpiresDuration: viper.GetInt("jwt.expired"),
+	}
+	routesInit := routes.HandlerList{
+		JWTMiddleware: configJWT.Init(),
+	}
+	routesInit.RouteRegister(e)
+	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
 }
