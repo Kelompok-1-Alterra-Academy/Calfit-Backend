@@ -1,6 +1,9 @@
 package request
 
-import "CalFit/bussiness/schedules"
+import (
+	"CalFit/business/schedules"
+	"time"
+)
 
 type Schedules struct {
 	Time_schedule string `json:"time_schedule" form:"time_schedule"`
@@ -13,5 +16,6 @@ func ToDomain(s Schedules) schedules.Domain {
 		Time_schedule: s.Time_schedule,
 		Duration:      s.Duration,
 		SessionID:     s.SessionID,
+		Created_at:    time.Now(),
 	}
 }

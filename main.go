@@ -2,9 +2,9 @@ package main
 
 import (
 	"CalFit/app/middlewares"
-	schedulesHandler "CalFit/app/presenter/schedules"
 	"CalFit/app/routes"
-	schedulesUsecase "CalFit/bussiness/schedules"
+	schedulesUsecase "CalFit/business/schedules"
+	schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
 	schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"

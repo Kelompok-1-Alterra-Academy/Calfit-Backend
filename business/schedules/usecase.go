@@ -1,21 +1,33 @@
 package schedules
 
 type SchedulesUsecase struct {
-	SchedulesRepo Repository
+	schedulesRepo Repository
 }
 
 func NewSchedulesUsecase(repo Repository) Usecase {
 	return &SchedulesUsecase{
-		SchedulesRepo: repo,
+		schedulesRepo: repo,
 	}
 }
 
 func (schedulesUseCase *SchedulesUsecase) Insert(schedules Domain) (Domain, error) {
-	return Domain{}, nil
+	res, err := schedulesUseCase.schedulesRepo.Insert(schedules)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
 }
 
 func (schedulesUseCase *SchedulesUsecase) Get(schedules Domain) ([]Domain, error) {
-	return []Domain{}, nil
+	res, err := schedulesUseCase.schedulesRepo.Get(schedules)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return res, nil
+}
+
+func (schedulesUseCase *SchedulesUsecase) Update(schedules Domain) (Domain, error) {
+	return Domain{}, nil
 }
 
 func (schedulesUseCase *SchedulesUsecase) Delete(schedules Domain) (Domain, error) {

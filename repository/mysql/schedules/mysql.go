@@ -1,7 +1,7 @@
 package schedules
 
 import (
-	"CalFit/bussiness/schedules"
+	"CalFit/business/schedules"
 
 	"gorm.io/gorm"
 )
@@ -16,14 +16,30 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 	}
 }
 
-func (schedulesRepo *SchedulesRepo) Insert(schedulesDomain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, error) {
+	data := fromDomain(domain)
+	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
+		return schedules.Domain{}, err
+	}
+	return data.toDomain(), nil
+}
+
+func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, error) {
+	data := []Schedule{}
+	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
+		return []schedules.Domain{}, err
+	}
+	var domainSchedules []schedules.Domain
+	for _, val := range data {
+		domainSchedules = append(domainSchedules, val.toDomain())
+	}
+	return domainSchedules, nil
+}
+
+func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
 	return schedules.Domain{}, nil
 }
 
-func (schedulesRepo *SchedulesRepo) Get(schedulesDomain schedules.Domain) ([]schedules.Domain, error) {
-	return []schedules.Domain{}, nil
-}
-
-func (schedulesRepo *SchedulesRepo) Delete(schedulesDomain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {
 	return schedules.Domain{}, nil
 }

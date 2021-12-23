@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"CalFit/app/presenter/schedules"
+	"CalFit/controllers/schedules"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -21,4 +21,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 
 	s := e.Group("/v1/schedules")
 	s.POST("", handler.SchedulesHandler.Insert)
+	s.GET("", handler.SchedulesHandler.Get)
+	s.PUT("", handler.SchedulesHandler.Update)
+	s.DELETE("", handler.SchedulesHandler.Delete)
 }
