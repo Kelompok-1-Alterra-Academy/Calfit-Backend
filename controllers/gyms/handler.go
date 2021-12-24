@@ -65,48 +65,8 @@ func (b *GymController) Create(c echo.Context) error {
 	
 	createdGym := requests.CreateGym{}
 	c.Bind(&createdGym)
-			
-			// // check if book already exist
-			// dbBook, err := b.Usecase.GetByISBN(ctx, createdGym.ISBN)
-			// if err != nil && err.Error() != "record not found" {
-				// 	return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-				// }
-				// if dbBook.ISBN != "" {
-					// 	return presenter.ErrorResponse(c, http.StatusForbidden, fmt.Errorf("ISBN already exist"))
-					// }
-					
-					// // get book from google api by isbn
-					// url := fmt.Sprintf("https://www.googleapis.com/gyms/v1/volumes?q=+isbn:%s", createdGym.ISBN)
-					// response, err := http.Get(url)
-					// if err != nil {
-						// 	return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-						// }
-						// responseData, _ := ioutil.ReadAll(response.Body)
-						// var bookReq requests.GetGoogleBookByISBN
-						// json.Unmarshal(responseData, &bookReq)
-						
-						// if len(bookReq.Items) == 0 {
-							// 	return presenter.ErrorResponse(c, http.StatusNotFound, exceptions.ErrBookNotFound)
-							// }
-							
-							// authors := strings.Join(bookReq.Items[0].VolumeInfo.Authors, ", ")
-							
-	// 						gymDomain := gyms.Domain{
-	// 							BookId:        bookReq.Items[0].Id,
-	// 							ISBN:          createdGym.ISBN,
-	// 							Publisher:     bookReq.Items[0].VolumeInfo.Publisher,
-	// 							PublishDate:   bookReq.Items[0].VolumeInfo.PublishedDate,
-	// 	Title:         bookReq.Items[0].VolumeInfo.Title,
-	// 	Authors:       authors,
-	// 	Description:   bookReq.Items[0].VolumeInfo.Description,
-	// 	Language:      bookReq.Items[0].VolumeInfo.Language,
-	// 	Picture:       bookReq.Items[0].VolumeInfo.ImageLinks.Thumbnail,
-	// 	NumberOfPages: bookReq.Items[0].VolumeInfo.NumberOfPages,
-	// 	MinDeposit:    createdGym.MinDeposit,
-	// 	Status:        createdGym.Status,
-	// }
-	// log.Println(gymDomain)
 
+	
 	gymDomain := gyms.Domain{
 		Name: createdGym.Name,
 		Telephone: createdGym.Telephone,
@@ -114,7 +74,8 @@ func (b *GymController) Create(c echo.Context) error {
 		Address: createdGym.Address,
 		Operational_admin_ID: createdGym.Operational_admin_ID,
 	}
-
+	
+	// log.Println(gymDomain)
 	
 	gym, err := b.Usecase.Create(ctx, gymDomain)
 	if err != nil {
@@ -123,8 +84,8 @@ func (b *GymController) Create(c echo.Context) error {
 	
 	gymResponse := responses.FromDomain(gym)
 	
-	// return presenter.SuccessResponse(c, gymResponse)
-	return presenter.SuccessResponse(c, http.StatusOK)
+	return presenter.SuccessResponse(c, gymResponse)
+	// return presenter.SuccessResponse(c, http.StatusOK)
 }
 
 // // func (b *GymController) Create(c echo.Context) error {

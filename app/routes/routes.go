@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"CalFit/controllers/schedules"
 	"CalFit/controllers/gyms"
+	"CalFit/controllers/schedules"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -26,16 +26,14 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",
 	}))
 
-<<<<<<< HEAD
 	s := e.Group("/v1/schedules")
 	s.POST("", handler.SchedulesHandler.Insert)
 	s.GET("", handler.SchedulesHandler.Get)
 	s.PUT("", handler.SchedulesHandler.Update)
 	s.DELETE("", handler.SchedulesHandler.Delete)
-=======
+	
 	// unprotected routes
 	{
 		v1.GET("/gyms", handler.GymController.GetAll)
 	}
->>>>>>> e0b96f2... feat: add request & response for gyms endpoints
 }
