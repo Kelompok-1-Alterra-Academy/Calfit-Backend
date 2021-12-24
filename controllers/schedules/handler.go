@@ -5,6 +5,7 @@ import (
 	presenter "CalFit/controllers"
 	"CalFit/controllers/schedules/request"
 	"CalFit/controllers/schedules/response"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -50,7 +51,7 @@ func (p *Presenter) Update(c echo.Context) error {
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
 	domain := request.ToDomain(reqSchedule)
-	res, err := p.SchedulesUC.Insert(domain)
+	res, err := p.SchedulesUC.Update(domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)
@@ -62,7 +63,8 @@ func (p *Presenter) Delete(c echo.Context) error {
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
 	domain := request.ToDomain(reqSchedule)
-	res, err := p.SchedulesUC.Insert(domain)
+	fmt.Println("ini nilai domain: ", domain)
+	res, err := p.SchedulesUC.Delete(domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)

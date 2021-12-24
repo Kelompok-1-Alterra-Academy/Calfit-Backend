@@ -31,5 +31,9 @@ func (schedulesUseCase *SchedulesUsecase) Update(schedules Domain) (Domain, erro
 }
 
 func (schedulesUseCase *SchedulesUsecase) Delete(schedules Domain) (Domain, error) {
-	return Domain{}, nil
+	res, err := schedulesUseCase.schedulesRepo.Delete(schedules)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
 }

@@ -2,6 +2,7 @@ package schedules
 
 import (
 	"CalFit/business/schedules"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -41,5 +42,12 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 }
 
 func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {
-	return schedules.Domain{}, nil
+	data := fromDomain(domain)
+	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return schedules.Domain{}, errors.New("record not found")
+		}
+	}
+	repo.DBConn.Where("id=?", data.Id).Delete(&data)
+	return data.toDomain(), nil
 }
