@@ -1,7 +1,8 @@
 {
   "debug": true,
   "server": {
-    "address": ":8080"
+    "address": ":8080",
+    "timeout": "60s"
   },
   "database": {
     "username": "root",

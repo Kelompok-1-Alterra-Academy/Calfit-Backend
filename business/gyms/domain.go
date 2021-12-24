@@ -6,15 +6,15 @@ import (
 )
 
 type Domain struct {
-	Id            uint
-	Name     string `validate:"required"`
-	Telephone     string `validate:"required"`
-	Picture     string `validate:"required"`
-	Operational_admin_ID        string `validate:"required"`
-	Address_ID        string `validate:"required"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     time.Time
+	Id            		 uint
+	Name     			 string `validate:"required"`
+	Telephone     		 string `validate:"required"`
+	Picture     		 string `validate:"required"`
+	Operational_admin_ID uint `validate:"required"`
+	Address_ID        	 uint `validate:"required"`
+	Address        		 uint `validate:"required"`
+	Created_at     		 time.Time
+	Updated_at     		 time.Time
 }
 
 type DomainRepository interface {
