@@ -36,29 +36,18 @@ func (u *Usecase) GetAll(ctx context.Context) ([]Domain, error) {
 // 	return u.Repo.GetById(ctx, id)
 // }
 
-// func (u *Usecase) GetByISBN(ctx context.Context, isbn string) (Domain, error) {
-// 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
-// 	defer cancel()
+func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
 
-// 	if isbn == "" {
-// 		return Domain{}, exceptions.ErrEmptyInput
-// 	}
+	// validate := validator.New()
+	// err := validate.Struct(domain)
+	// if err != nil {
+	// 	return Domain{}, exceptions.ErrValidationFailed
+	// }
 
-// 	return u.Repo.GetByISBN(ctx, isbn)
-// }
-
-// func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
-// 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
-// 	defer cancel()
-
-// 	validate := validator.New()
-// 	err := validate.Struct(domain)
-// 	if err != nil {
-// 		return Domain{}, exceptions.ErrValidationFailed
-// 	}
-
-// 	return u.Repo.Create(ctx, domain)
-// }
+	return u.Repo.Create(ctx, domain)
+}
 
 // func (u *Usecase) UpdateStatus(ctx context.Context, bookId string, status bool) (Domain, error) {
 // 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)

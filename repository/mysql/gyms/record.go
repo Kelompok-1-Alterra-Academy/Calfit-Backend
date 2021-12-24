@@ -22,11 +22,11 @@ type Gym struct {
 	Updated_at          time.Time
 }
 
-// func (g *Gym) BeforeCreate() error {
-// 	g.Created_at = time.Now()
-// 	g.Updated_at = time.Now()
-// 	return nil
-// }
+func (g *Gym) BeforeCreate() error {
+	g.Created_at = time.Now()
+	g.Updated_at = time.Now()
+	return nil
+}
 
 func (g *Gym) ToDomain() gyms.Domain {
 	return gyms.Domain{

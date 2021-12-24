@@ -28,4 +28,12 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	{
 		v1.GET("/gyms", handler.GymController.GetAll)
 	}
+
+	// superadmin routes
+	superadmin := v1.Group("")
+	// superadmin.Use(handler.JWTMiddleware.MiddlewareFunc())
+	{
+		superadmin.POST("/gyms", handler.GymController.Create)
+	}
+
 }
