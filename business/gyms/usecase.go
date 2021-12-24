@@ -1,6 +1,7 @@
 package gyms
 
 import (
+	"CalFit/exceptions"
 	context "context"
 	"time"
 	// "github.com/go-playground/validator/v10"
@@ -25,16 +26,16 @@ func (u *Usecase) GetAll(ctx context.Context) ([]Domain, error) {
 	return u.Repo.GetAll(ctx)
 }
 
-// func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
-// 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
-// 	defer cancel()
+func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
 
-// 	if id == "" {
-// 		return Domain{}, exceptions.ErrEmptyInput
-// 	}
+	if id == "" {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 
-// 	return u.Repo.GetById(ctx, id)
-// }
+	return u.Repo.GetById(ctx, id)
+}
 
 func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)

@@ -46,19 +46,19 @@ func (b *GymController) GetAll(c echo.Context) error {
 	return presenter.SuccessResponse(c, response)
 }
 
-// func (u *GymController) GetById(c echo.Context) error {
-	// 	ctx := c.Request().Context()
+func (u *GymController) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	gymId := c.Param("gymId")
+	gym, err := u.Usecase.GetById(ctx, gymId)
+	if err != nil {
+		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
 	
-	// 	bookId := c.Param("bookId")
-	// 	book, err := u.Usecase.GetById(ctx, bookId)
-	// 	if err != nil {
-		// 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-		// 	}
-		
-		// 	response := responses.FromDomain(book)
-		
-		// 	return presenter.SuccessResponse(c, response)
-		// }
+	response := responses.FromDomain(gym)
+
+	return presenter.SuccessResponse(c, response)
+}
 		
 func (b *GymController) Create(c echo.Context) error {
 	ctx := c.Request().Context()

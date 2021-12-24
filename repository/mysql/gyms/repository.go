@@ -25,22 +25,13 @@ func (b *GymRepository) GetAll(ctx context.Context) ([]gyms.Domain, error) {
 	return result, nil
 }
 
-// func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, error) {
-// 	var book gyms
-// 	if err := b.Conn.Where("book_id = ?", id).First(&book).Error; err != nil {
-// 		return gyms.Domain{}, err
-// 	}
-// 	return book.ToDomain(), nil
-// }
-
-// func (b *GymRepository) GetByISBN(ctx context.Context, isbn string) (gyms.Domain, error) {
-// 	var book gyms
-// 	if err := b.Conn.Where("isbn = ?", isbn).First(&book).Error; err != nil {
-// 		return gyms.Domain{}, err
-// 	}
-// 	return book.ToDomain(), nil
-// }
-
+func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, error) {
+	var gym Gym
+	if err := b.Conn.Where("id = ?", id).First(&gym).Error; err != nil {
+		return gyms.Domain{}, err
+	}
+	return gym.ToDomain(), nil
+}
 func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domain, error) {
 	createdGym := Gym{
 		Name:      			 gym.Name,

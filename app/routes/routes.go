@@ -27,6 +27,7 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	// unprotected routes
 	{
 		v1.GET("/gyms", handler.GymController.GetAll)
+		v1.GET("/gyms/:gymId", handler.GymController.GetById)
 	}
 
 	// superadmin routes

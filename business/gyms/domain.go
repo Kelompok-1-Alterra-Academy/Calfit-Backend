@@ -12,6 +12,7 @@ type Domain struct {
 	Picture     		 string `validate:"required"`
 	Operational_admin_ID uint `validate:"required"`
 	Address_ID        	 uint `validate:"required"`
+	Operational_admin    uint `validate:"required"`
 	Address        		 uint `validate:"required"`
 	Created_at     		 time.Time
 	Updated_at     		 time.Time
@@ -19,7 +20,7 @@ type Domain struct {
 
 type DomainRepository interface {
 	GetAll(ctx context.Context) ([]Domain, error)
-	// GetById(ctx context.Context, id string) (Domain, error)
+	GetById(ctx context.Context, id string) (Domain, error)
 	// GetByISBN(ctx context.Context, isbn string) (Domain, error)
 	Create(ctx context.Context, domain Domain) (Domain, error)
 	// UpdateStatus(ctx context.Context, bookId string, status bool) (Domain, error)
@@ -29,7 +30,7 @@ type DomainRepository interface {
 
 type DomainService interface {
 	GetAll(ctx context.Context) ([]Domain, error)
-	// GetById(ctx context.Context, id string) (Domain, error)
+	GetById(ctx context.Context, id string) (Domain, error)
 	// GetByISBN(ctx context.Context, isbn string) (Domain, error)
 	Create(ctx context.Context, domain Domain) (Domain, error)
 	// UpdateStatus(ctx context.Context, bookId string, status bool) (Domain, error)
