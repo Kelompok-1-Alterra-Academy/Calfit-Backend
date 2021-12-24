@@ -38,7 +38,17 @@ func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, err
 }
 
 func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
-	return schedules.Domain{}, nil
+	data := fromDomain(domain)
+	sessionId := Schedule{}
+	repo.DBConn.Debug().Where("id=?", domain.Id).First(&sessionId)
+	data.SessionID = sessionId.SessionID
+	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return schedules.Domain{}, errors.New("record not found")
+		}
+		return schedules.Domain{}, err
+	}
+	return data.toDomain(), nil
 }
 
 func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {

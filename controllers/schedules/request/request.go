@@ -20,6 +20,14 @@ func ToDomain(s Schedules) schedules.Domain {
 			SessionID:     s.SessionID,
 			Created_at:    time.Now(),
 		}
+	} else if s.Id != 0 {
+		return schedules.Domain{
+			Id:            s.Id,
+			Time_schedule: s.Time_schedule,
+			Duration:      s.Duration,
+			SessionID:     s.SessionID,
+			Updated_at:    time.Now(),
+		}
 	}
 	return schedules.Domain{
 		Id: s.Id,
