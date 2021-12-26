@@ -1,6 +1,7 @@
 package gyms
 
 import (
+	"CalFit/business/addresses"
 	"CalFit/business/gyms"
 	presenter "CalFit/controllers"
 	requests "CalFit/controllers/gyms/request"
@@ -19,15 +20,17 @@ import (
 
 type GymController struct {
 	Usecase gyms.Usecase
+	AddressUsecase addresses.Usecase
 }
 
 type Header struct {
 	Cookie string `json:"cookie"`
 }
 
-func NewGymHandler(u gyms.Usecase) *GymController {
+func NewGymHandler(u gyms.Usecase, a addresses.Usecase) *GymController {
 	return &GymController{
 		Usecase: u,
+		AddressUsecase: a,
 	}
 }
 
@@ -65,7 +68,6 @@ func (b *GymController) Create(c echo.Context) error {
 	
 	createdGym := requests.CreateGym{}
 	c.Bind(&createdGym)
-
 	
 	gymDomain := gyms.Domain{
 		Name: createdGym.Name,
@@ -74,8 +76,6 @@ func (b *GymController) Create(c echo.Context) error {
 		Address: createdGym.Address,
 		Operational_admin_ID: createdGym.Operational_admin_ID,
 	}
-	
-	// log.Println(gymDomain)
 	
 	gym, err := b.Usecase.Create(ctx, gymDomain)
 	if err != nil {

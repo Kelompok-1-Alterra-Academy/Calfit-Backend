@@ -3,11 +3,13 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_addressUsecase "CalFit/business/addresses"
 	_gymUsecase "CalFit/business/gyms"
 	_schedulesUsecase "CalFit/business/schedules"
 	_gymHandler "CalFit/controllers/gyms"
 	_schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
+	_addressDb "CalFit/repository/mysql/addresses"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"
@@ -41,9 +43,9 @@ func main() {
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
 	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
-
-	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(Conn), timeoutContext)
-	gymHandler := _gymHandler.NewGymController(*gymUsecase)
+	addressUsecase := _addressUsecase.NewUsecase(_addressDb.NewAddressRepository(db), timeoutContext)
+	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
+	gymHandler := _gymHandler.NewGymController(*gymUsecase,*addressUsecase)
 	
 	routesInit := routes.HandlerList{
 		JWTMiddleware: configJWT.Init(),
