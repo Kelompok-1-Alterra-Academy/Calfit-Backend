@@ -113,3 +113,16 @@ func (b *GymController) Update(c echo.Context) error {
 
 	return presenter.SuccessResponse(c, gymResponse)
 }
+
+func (b *GymController) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id := c.Param("gymId")
+
+	err := b.Usecase.Delete(ctx, id)
+	if err != nil {
+		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return presenter.SuccessResponse(c, nil)
+}

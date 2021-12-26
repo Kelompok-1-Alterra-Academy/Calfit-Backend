@@ -67,3 +67,14 @@ func (u *Usecase) Update(ctx context.Context, id string, domain Domain) (Domain,
 
 	return u.Repo.Update(ctx, id, domain)
 }
+
+func (u *Usecase) Delete(ctx context.Context, id string) error {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return exceptions.ErrEmptyInput
+	}
+
+	return u.Repo.Delete(ctx, id)
+}
