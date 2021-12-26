@@ -35,6 +35,6 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	// superadmin.Use(handler.JWTMiddleware.MiddlewareFunc())
 	{
 		superadmin.POST("/gyms", handler.GymController.Create)
+		superadmin.PUT("/gyms/:gymId", handler.GymController.Update)
 	}
-
 }

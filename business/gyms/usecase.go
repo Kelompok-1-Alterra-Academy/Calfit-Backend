@@ -4,7 +4,8 @@ import (
 	"CalFit/exceptions"
 	context "context"
 	"time"
-	// "github.com/go-playground/validator/v10"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Usecase struct {
@@ -41,22 +42,28 @@ func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
 
-	// validate := validator.New()
-	// err := validate.Struct(domain)
-	// if err != nil {
-	// 	return Domain{}, exceptions.ErrValidationFailed
-	// }
+	validate := validator.New()
+	err := validate.Struct(domain)
+	if err != nil {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
 
 	return u.Repo.Create(ctx, domain)
 }
 
-// func (u *Usecase) UpdateStatus(ctx context.Context, bookId string, status bool) (Domain, error) {
-// 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
-// 	defer cancel()
+func (u *Usecase) Update(ctx context.Context, id string, domain Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
 
-// 	if bookId == "" {
-// 		return Domain{}, exceptions.ErrEmptyInput
-// 	}
+	if id == "" {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 
-// 	return u.Repo.UpdateStatus(ctx, bookId, status)
-// }
+	validate := validator.New()
+	err := validate.Struct(domain)
+	if err != nil {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
+
+	return u.Repo.Update(ctx, id, domain)
+}
