@@ -14,7 +14,7 @@ import (
 var gymRepository mocks.DomainRepository
 
 var gymService gyms.DomainService
-var gymDomain gyms.Domain
+var gymDomain, updatedGymDomain, emptyGymDomain gyms.Domain
 
 func setup() {
 	gymService = gyms.NewUsecase(&gymRepository, time.Minute*15)
@@ -22,9 +22,25 @@ func setup() {
 		Id:          		  1,
 		Name: 				  "Gelud Gym",
 		Telephone:   		  "08123456789",
-		Picture:	     	  "",
+		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address_ID: 		  1,
+	}
+	updatedGymDomain = gyms.Domain{
+		Id:          		  1,
+		Name: 				  "Geludd Gym",
+		Telephone:   		  "08123456789",
+		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
+		Operational_admin_ID: 1,
+		Address_ID: 		  1,
+	}
+	emptyGymDomain = gyms.Domain{
+		Id:          		  0,
+		Name: 				  "",
+		Telephone:   		  "",
+		Picture:	     	  "",
+		Operational_admin_ID: 0,
+		Address_ID: 		  0,
 	}
 }
 
@@ -42,14 +58,13 @@ func TestGetAllGyms(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, gymDomain, gyms[0])
 	})
-
 }
 
 func TestGetGymByGymId(t *testing.T) {
 	setup()
 	gymRepository.On("GetById", mock.Anything, mock.AnythingOfType("string")).Return(gymDomain, nil)
 	t.Run("Test Case 1 | Valid Get Gym By GymId", func(t *testing.T) {
-		gym, err := gymService.GetById(context.Background(), "5wBQEp6ruIAC")
+		gym, err := gymService.GetById(context.Background(), "1")
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}
@@ -78,32 +93,27 @@ func TestCreateNewGym(t *testing.T) {
 		assert.Equal(t, gymDomain, gym)
 	})
 	t.Run("Test Case 2 | Invalid Create New gym with Empty Fields", func(t *testing.T) {
-		gym, err := gymService.Create(context.Background(), gyms.Domain{
-			Name: 				  "",
-			Telephone:   		  "",
-			Picture:	     	  "",
-			Operational_admin_ID: 0,
-			Address_ID: 		  0,
-		})
+		gym, err := gymService.Create(context.Background(), emptyGymDomain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, gym, gymDomain)
 	})
 }
 
-// func TestUpdategymstatusByGymId(t *testing.T) {
-// 	setup()
-// 	gymRepository.On("UpdateStatus", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("bool")).Return(gymDomain, nil)
-// 	t.Run("Test Case 1 | Valid Update gym Status", func(t *testing.T) {
-// 		gym, err := gymService.UpdateStatus(context.Background(), "5wBQEp6ruIAC", true)
-// 		if err != nil {
-// 			t.Errorf("Error: %s", err)
-// 		}
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, gymDomain, gym)
-// 	})
-// 	t.Run("Test Case 2 | Invalid Update gym Status with Empty GymId", func(t *testing.T) {
-// 		gym, err := gymService.UpdateStatus(context.Background(), "", true)
-// 		assert.NotNil(t, err)
-// 		assert.NotEqual(t, gym, gymDomain)
-// 	})
-// }
+func TestUpdateGymByGymId(t *testing.T) {
+	setup()
+	gymRepository.On("Update", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("Domain")).Return(updatedGymDomain, nil)
+	
+	t.Run("Test Case 1 | Valid Update Gym", func(t *testing.T) {
+		gym, err := gymService.Update(context.Background(), "1", updatedGymDomain)
+		if err != nil {
+			t.Errorf("Error: %s", err)
+		}
+		assert.Nil(t, err)
+		assert.Equal(t, updatedGymDomain, gym)
+	})
+	t.Run("Test Case 2 | Invalid Update Gym with Empty GymId", func(t *testing.T) {
+		gym, err := gymService.Update(context.Background(), "", emptyGymDomain)
+		assert.NotNil(t, err)
+		assert.NotEqual(t, gym, gymDomain)
+	})
+}
