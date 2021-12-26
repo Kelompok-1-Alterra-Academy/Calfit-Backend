@@ -44,5 +44,6 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	{
 		superadmin.POST("/gyms", handler.GymController.Create)
 		superadmin.PUT("/gyms/:gymId", handler.GymController.Update)
+		superadmin.DELETE("/gyms/:gymId", handler.GymController.Delete)
 	}
 }

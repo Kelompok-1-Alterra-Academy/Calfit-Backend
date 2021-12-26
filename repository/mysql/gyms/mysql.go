@@ -73,6 +73,14 @@ func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) 
 	return gymModel.ToDomain(), nil
 }
 
-// func (b *GymRepository) Delete(user *User) error {
-// 	return b.Conn.Delete(user).Error
-// }
+func (b *GymRepository) Delete(ctx context.Context, id string) error {
+	var gymModel Gym
+	if err := b.Conn.Where("id = ?", id).First(&gymModel).Error; err != nil {
+		return err
+	}
+	deleteErr := b.Conn.Delete(&gymModel).Error
+	if deleteErr != nil {
+		return deleteErr
+	}
+	return nil
+}
