@@ -3,9 +3,11 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_addressUsecase "CalFit/business/addresses"
 	_gymUsecase "CalFit/business/gyms"
 	_gymController "CalFit/controllers/gyms"
 	"CalFit/repository/mysql"
+	_addressDb "CalFit/repository/mysql/addresses"
 	_gymDb "CalFit/repository/mysql/gyms"
 	"log"
 	"time"
@@ -35,7 +37,8 @@ func main() {
 	timeoutContext := time.Duration(viper.GetInt("server.timeout")) * time.Second
 
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(Conn), timeoutContext)
-	gymController := _gymController.NewGymController(*gymUsecase)
+	addressUsecase := _addressUsecase.NewUsecase(_addressDb.NewAddressRepository(Conn), timeoutContext)
+	gymController := _gymController.NewGymController(*gymUsecase, *addressUsecase)
 
 	routesInit := routes.HandlerList{
 		JWTMiddleware: configJWT.Init(),

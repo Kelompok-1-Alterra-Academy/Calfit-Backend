@@ -6,17 +6,20 @@ import (
 	"CalFit/repository/mysql/classes"
 	"CalFit/repository/mysql/operational_admins"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Gym struct {
+	gorm.Model
 	Id                  uint `gorm:"primaryKey"`
 	Name                string `gorm:"type:varchar(100);not null"`
 	Telephone           string `gorm:"type:varchar(20);not null"`
 	Picture             string `gorm:"type:varchar(500);not null"`
 	Operational_adminID uint `gorm:"not null"`
 	AddressID           uint `gorm:"not null"`
-	Operational_admin   operational_admins.Operational_admin
-	Address             addresses.Address 
+	Operational_admin   operational_admins.Operational_admin `gorm:"foreignkey:Operational_adminID"`
+	Address             addresses.Address `gorm:"foreignkey:AddressID"`
 	Classes             []classes.Class
 	Created_at          time.Time
 	Updated_at          time.Time

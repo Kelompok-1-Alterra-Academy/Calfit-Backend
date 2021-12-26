@@ -30,8 +30,10 @@ func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, er
 	if err := b.Conn.Where("id = ?", id).First(&gym).Error; err != nil {
 		return gyms.Domain{}, err
 	}
+	log.Println(gym.Address)
 	return gym.ToDomain(), nil
 }
+
 func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domain, error) {
 	createdGym := Gym{
 		Name:      			 gym.Name,
@@ -41,7 +43,7 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 		AddressID:         	 1,
 	}
 	createdGym.BeforeCreate()
-	log.Println(createdGym)
+	
 	insertErr := b.Conn.Create(&createdGym).Error
 	if insertErr != nil {
 		return gyms.Domain{}, insertErr
