@@ -5,6 +5,7 @@ import (
 	"CalFit/app/routes"
 	_addressUsecase "CalFit/business/addresses"
 	_gymUsecase "CalFit/business/gyms"
+<<<<<<< HEAD
 	_schedulesUsecase "CalFit/business/schedules"
 	_gymHandler "CalFit/controllers/gyms"
 	_schedulesHandler "CalFit/controllers/schedules"
@@ -12,6 +13,12 @@ import (
 	_addressDb "CalFit/repository/mysql/addresses"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
+=======
+	_gymController "CalFit/controllers/gyms"
+	"CalFit/repository/mysql"
+	_addressDb "CalFit/repository/mysql/addresses"
+	_gymDb "CalFit/repository/mysql/gyms"
+>>>>>>> 0f50a1a0b250a637be7063c66168be052e4bc40d
 	"log"
 	"time"
 
