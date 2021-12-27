@@ -1,6 +1,8 @@
 package presenter
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+)
 
 type BaseResponse struct {
 	Status  int         `json:"status"`
@@ -9,9 +11,9 @@ type BaseResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-func SuccessResponse(c echo.Context, status int, data interface{}) error {
+func SuccessResponse(c echo.Context, data interface{}) error {
 	res := BaseResponse{
-		Status:  status,
+		Status:  200,
 		Success: true,
 		Message: "Success",
 		Data:    data,
