@@ -4,6 +4,7 @@ import (
 	"CalFit/business/gyms"
 	"context"
 	"log"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -42,6 +43,7 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 		Operational_adminID: gym.Operational_admin_ID,
 		AddressID:         	 1,
 	}
+	
 	createdGym.BeforeCreate()
 	
 	insertErr := b.Conn.Create(&createdGym).Error
@@ -51,23 +53,26 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 	return createdGym.ToDomain(), nil
 }
 
-// func (b *GymRepository) UpdateStatus(ctx context.Context, id string, status bool) (gyms.Domain, error) {
-// 	var book gyms
-// 	if err := b.Conn.Where("book_id = ?", id).First(&book).Error; err != nil {
-// 		return gyms.Domain{}, err
-// 	}
-// 	book.Status = status
-// 	book.UpdatedAt = time.Now()
-// 	if err := b.Conn.Save(&book).Error; err != nil {
-// 		return gyms.Domain{}, err
-// 	}
-// 	return book.ToDomain(), nil
+func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) (gyms.Domain, error) {
+	var gymModel Gym
+	if err := b.Conn.Where("id = ?", id).First(&gymModel).Error; err != nil {
+		return gyms.Domain{}, err
+	}
+
+	gymModel.Name = gym.Name
+	gymModel.Telephone = gym.Telephone
+	gymModel.Picture = gym.Picture
+	gymModel.Operational_adminID = gym.Operational_admin_ID
+	gymModel.AddressID = 1
+	gymModel.Updated_at = time.Now()
+
+	updateErr := b.Conn.Save(&gymModel).Error
+	if updateErr != nil {
+		return gyms.Domain{}, updateErr
+	}
+	return gymModel.ToDomain(), nil
+}
+
+// func (b *GymRepository) Delete(user *User) error {
+// 	return b.Conn.Delete(user).Error
 // }
-
-// // func (b *GymRepository) Update(user *User) error {
-// // 	return b.Conn.Save(user).Error
-// // }
-
-// // func (b *GymRepository) Delete(user *User) error {
-// // 	return b.Conn.Delete(user).Error
-// // }

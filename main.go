@@ -45,7 +45,7 @@ func main() {
 	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
 	addressUsecase := _addressUsecase.NewUsecase(_addressDb.NewAddressRepository(db), timeoutContext)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
-	gymHandler := _gymHandler.NewGymController(*gymUsecase,*addressUsecase)
+	gymHandler := _gymHandler.NewHandler(*gymUsecase,*addressUsecase)
 	
 	routesInit := routes.HandlerList{
 		JWTMiddleware: configJWT.Init(),

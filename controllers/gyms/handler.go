@@ -27,7 +27,7 @@ type Header struct {
 	Cookie string `json:"cookie"`
 }
 
-func NewGymHandler(u gyms.Usecase, a addresses.Usecase) *GymController {
+func NewHandler(u gyms.Usecase, a addresses.Usecase) *GymController {
 	return &GymController{
 		Usecase: u,
 		AddressUsecase: a,
@@ -46,21 +46,21 @@ func (b *GymController) GetAll(c echo.Context) error {
 	for i, gym := range gyms {
 		response[i] = responses.FromDomain(gym)
 	}
-	return presenter.SuccessResponse(c, response)
+	return presenter.SuccessResponse(c, http.StatusOK, response)
 }
 
 func (u *GymController) GetById(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	gymId := c.Param("gymId")
-	gym, err := u.Usecase.GetById(ctx, gymId)
+	id := c.Param("gymId")
+	gym, err := u.Usecase.GetById(ctx, id)
 	if err != nil {
 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	
 	response := responses.FromDomain(gym)
 
-	return presenter.SuccessResponse(c, response)
+	return presenter.SuccessResponse(c, http.StatusOK, response)
 }
 		
 func (b *GymController) Create(c echo.Context) error {
@@ -79,102 +79,36 @@ func (b *GymController) Create(c echo.Context) error {
 	
 	gym, err := b.Usecase.Create(ctx, gymDomain)
 	if err != nil {
-		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	
 	gymResponse := responses.FromDomain(gym)
 	
-	return presenter.SuccessResponse(c, gymResponse)
-	// return presenter.SuccessResponse(c, http.StatusOK)
+	return presenter.SuccessResponse(c, http.StatusCreated, gymResponse)
 }
 
-// // func (b *GymController) Create(c echo.Context) error {
-	// // 	// ctx := c.Request().Context()
-	
-	// // 	minDepositBody := c.FormValue("minDeposit")
-	// // 	statusBody := c.FormValue("status")
-	// // 	minDeposit, err := strconv.Atoi(minDepositBody)
-	// // 	if err != nil {
-		// // 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-		// // 	}
-		// // 	status, err := strconv.ParseBool(statusBody)
-		// // 	if err != nil {
-			// // 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-			// // 	}
-			
-			// // 	idParam := c.Param("isbn")
-			// // 	// sbn := c.Param("userId")
-			// // 	isbn := "9780140328721"
-			// // 	log.Println(idParam)
-// // 	url := fmt.Sprintf("https://openlibrary.org/isbn/%s.json", isbn)
-// // 	log.Println(url)
-// // 	response, err := http.Get(url)
-// // 	// response, err := http.Get("https://openlibrary.org/gyms/OL7353617M.json")
-// // 	// response, err := http.Get("https://api.ipify.org?format=json")
-// // 	log.Println("---------------------")
-// // 	log.Println(err)
-// // 	log.Println(response)
-// // 	if err != nil {
-// // 		log.Println("---------------------")
-// // 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-// // 	}
-// // 	responseData, _ := ioutil.ReadAll(response.Body)
-// // 	var bookReq requests.GetBookByISBN
-// // 	json.Unmarshal(responseData, &bookReq)
+func (b *GymController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
 
-// // 	// parse authors and works id to array
-// // 	authorArr := []string{}
-// // 	for _, author := range bookReq.AuthorId {
-// // 		// author.Key = author.Key[:len(author.Key)-1]
-// // 		authorKeySplit := strings.Split(author.Key, "/")
-// // 		authorArr = append(authorArr, authorKeySplit[len(authorKeySplit)-1])
-// // 	}
-// // 	workArr := []string{}
-// // 	for _, work := range bookReq.WorkId {
-// // 		workKeySplit := strings.Split(work.Key, "/")
-// // 		workArr = append(workArr, workKeySplit[len(workKeySplit)-1])
-// // 	}
-// // 	bookKeySplit := strings.Split(bookReq.BookId, "/")
-// // 	bookReq.BookId = bookKeySplit[len(bookKeySplit)-1]
+	id := c.Param("gymId")
+	updatedGym := requests.CreateGym{}
+	c.Bind(&updatedGym)
 
-// // 	// get book data by workId
-// // 	// getBookByWorkUrl := fmt.Sprintf("https://openlibrary.org/api/gyms?bibkeys=ISBN:%s&jscmd=data&format=json", bookReq.ISBN)
-// // 	getBookByWorkUrl := fmt.Sprintf("https://openlibrary.org/works/%s.json", workArr[0])
-// // 	log.Println("---------------------")
-// // 	response, err = http.Get(getBookByWorkUrl)
-// // 	if err != nil {
-// // 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-// // 	}
-// // 	responseData, _ = ioutil.ReadAll(response.Body)
-// // 	var bookByWorkReq requests.GetBookByWorkId
-// // 	json.Unmarshal(responseData, &bookByWorkReq)
-// // 	log.Println(bookByWorkReq)
 
-// // 	gymDomain := gyms.Domain{
-// // 		BookId:        bookReq.BookId,
-// // 		WorkId:        workArr[0],
-// // 		ISBN:          isbn,
-// // 		Publisher:     bookReq.Publisher,
-// // 		PublishDate:   bookReq.PublishDate,
-// // 		Title:         bookReq.Title,
-// // 		Description:   bookByWorkReq.Description,
-// // 		NumberOfPages: bookReq.NumberOfPages,
-// // 		MinDeposit:    uint(minDeposit),
-// // 		Status:        status,
-// // 	}
+	gymDomain := gyms.Domain{
+		Name: updatedGym.Name,
+		Telephone: updatedGym.Telephone,
+		Picture: updatedGym.Picture,
+		Address: updatedGym.Address,
+		Operational_admin_ID: updatedGym.Operational_admin_ID,
+	}
 
-// // 	// book := new(gyms.Book)
-// // 	// if err := c.Bind(book); err != nil {
-// // 	// 	return presenter.ErrorResponse(c, http.StatusBadRequest, err)
-// // 	// }
+	gym, err := b.Usecase.Update(ctx, id, gymDomain)
+	if err != nil {
+		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
 
-// // 	// if err := b.Usecase.Create(ctx, book); err != nil {
-// // 	// 	return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
-// // 	// }
+	gymResponse := responses.FromDomain(gym)
 
-// // 	// return presenter.SuccessResponse(c, string(responseData))
-// // 	// return presenter.SuccessResponse(c, responseData)
-// // 	// return presenter.SuccessResponse(c, bookReq)
-// // 	// return presenter.SuccessResponse(c, bookByWorkReq)
-// // 	return presenter.SuccessResponse(c, gymDomain)
-// // }
+	return presenter.SuccessResponse(c, http.StatusAccepted, gymResponse)
+}

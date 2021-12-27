@@ -22,7 +22,7 @@ func setup() {
 		Id:          		  1,
 		Name: 				  "Gelud Gym",
 		Telephone:   		  "08123456789",
-		Picture:	     	  "",
+		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address_ID: 		  1,
 	}
