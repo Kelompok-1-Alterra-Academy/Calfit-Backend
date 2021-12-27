@@ -3,7 +3,10 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	schedulesUsecase "CalFit/business/schedules"
+	schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
+	schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -22,13 +25,20 @@ func init() {
 
 func main() {
 	e := echo.New()
-	mysql.InitDB()
+	db := mysql.InitDB()
 	configJWT := middlewares.ConfigJWT{
 		SecretJWT:       viper.GetString("jwt.secret"),
 		ExpiresDuration: viper.GetInt("jwt.expired"),
 	}
+
+	// Schedules initialize
+	schedulesRepo := schedulesRepo.NewSchedulesRepo(db)
+	schedulesUsecase := schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
+	schedulesHandler := schedulesHandler.NewHandler(schedulesUsecase)
+
 	routesInit := routes.HandlerList{
-		JWTMiddleware: configJWT.Init(),
+		JWTMiddleware:    configJWT.Init(),
+		SchedulesHandler: *schedulesHandler,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
