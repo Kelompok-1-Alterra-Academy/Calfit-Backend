@@ -112,8 +112,27 @@ func TestUpdateGymByGymId(t *testing.T) {
 		assert.Equal(t, updatedGymDomain, gym)
 	})
 	t.Run("Test Case 2 | Invalid Update Gym with Empty GymId", func(t *testing.T) {
-		gym, err := gymService.Update(context.Background(), "", emptyGymDomain)
+		gym, err := gymService.Update(context.Background(), "0", emptyGymDomain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, gym, gymDomain)
+	})
+}
+
+func TestDeleteGymByGymId(t *testing.T) {
+	setup()
+	gymRepository.On("Delete", mock.Anything, mock.AnythingOfType("string")).Return(nil)
+	t.Run("Test Case 1 | Valid Delete Order", func(t *testing.T) {
+		err := gymService.Delete(context.Background(), "1")
+		if err != nil {
+			t.Errorf("Error: %s", err)
+		}
+		assert.Nil(t, err)
+	})
+	t.Run("Test Case 2 | Invalid Delete Gym with Empty GymId", func(t *testing.T) {
+		err := gymService.Delete(context.Background(), "")
+		if err.Error() != "empty input" {
+			t.Errorf("Error: %s", err)
+		}
+		assert.NotNil(t, err)
 	})
 }
