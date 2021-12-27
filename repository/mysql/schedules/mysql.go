@@ -18,7 +18,7 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 }
 
 func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, error) {
-	data := fromDomain(domain)
+	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
@@ -38,7 +38,7 @@ func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, err
 }
 
 func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
-	data := fromDomain(domain)
+	data := FromDomain(domain)
 	sessionId := Schedule{}
 	repo.DBConn.Debug().Where("id=?", domain.Id).First(&sessionId)
 	data.SessionID = sessionId.SessionID
@@ -52,7 +52,7 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 }
 
 func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {
-	data := fromDomain(domain)
+	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, errors.New("record not found")

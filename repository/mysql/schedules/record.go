@@ -14,7 +14,7 @@ type Schedule struct {
 	Updated_at    time.Time
 }
 
-func fromDomain(domain schedules.Domain) Schedule {
+func FromDomain(domain schedules.Domain) Schedule {
 	return Schedule{
 		Id:            domain.Id,
 		Time_schedule: domain.Time_schedule,
