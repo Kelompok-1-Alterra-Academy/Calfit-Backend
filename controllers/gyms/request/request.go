@@ -8,7 +8,10 @@ type CreateGym struct {
 	Name                 string `json:"name" form:"name"`
 	Telephone            string `json:"telephone" form:"telephone"`
 	Picture              string `json:"picture" form:"picture"`
-	Operational_admin_ID uint   `json:"operational_admin_id" form:"operationalAdminId"`
+	Operational_admin_ID uint   `json:"operationalAdminId" form:"operationalAdminId"`
 	// Address_ID           uint `json:"address_id" form:"address_id"`
-	Address uint `json:"address_id" form:"address"`
+	Address     string `json:"address" form:"address"`
+	District    string `json:"district" form:"district"`
+	City        string `json:"city" form:"city"`
+	Postal_code string `json:"postalCode" form:"postalCode"`
 }

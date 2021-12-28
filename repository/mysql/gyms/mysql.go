@@ -2,6 +2,8 @@ package gyms
 
 import (
 	"CalFit/business/gyms"
+	"CalFit/exceptions"
+	"CalFit/repository/mysql/addresses"
 	"context"
 	"time"
 
@@ -28,33 +30,58 @@ func (b *GymRepository) GetAll(ctx context.Context) ([]gyms.Domain, error) {
 func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, error) {
 	var gym Gym
 	if err := b.Conn.Preload("Address").Where("id = ?", id).First(&gym).Error; err != nil {
-	// if err := b.Conn.Where("id = ?", id).First(&gym).Preload("Address").Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gyms.Domain{}, exceptions.ErrNotFound
+		}
 		return gyms.Domain{}, err
 	}
 	return gym.ToDomain(), nil
 }
 
 func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domain, error) {
+	var gymModel Gym
+
+	// insert address
+	createdAddress := addresses.Address{
+		Address:   gym.Address.Address,
+		District: gym.Address.District,
+		City:      gym.Address.City,
+		Postal_code: gym.Address.Postal_code,
+	}
+	createdAddress.BeforeCreate()
+	insertAddressErr := b.Conn.Create(&createdAddress).Error
+	if insertAddressErr != nil {	
+		return gyms.Domain{}, insertAddressErr
+	}
+
+	// insert gym
 	createdGym := Gym{
 		Name:      			 gym.Name,
 		Telephone: 			 gym.Telephone,
 		Picture:   			 gym.Picture,
 		Operational_adminID: gym.Operational_admin_ID,
-		AddressID:         	 1,
+		AddressID:         	 createdAddress.Id,
 	}
-	
 	createdGym.BeforeCreate()
-	
-	insertErr := b.Conn.Create(&createdGym).Error
-	if insertErr != nil {
-		return gyms.Domain{}, insertErr
+	insertGymErr := b.Conn.Create(&createdGym).Error
+	if insertGymErr != nil {
+		return gyms.Domain{}, insertGymErr
 	}
-	return createdGym.ToDomain(), nil
+
+	// get gym data
+	if  getErr := b.Conn.Preload("Address").Where("id = ?", createdGym.Id).First(&gymModel).Error; getErr != nil {
+		return gyms.Domain{}, getErr
+	}
+
+	return gymModel.ToDomain(), nil
 }
 
 func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) (gyms.Domain, error) {
 	var gymModel Gym
 	if err := b.Conn.Where("id = ?", id).Preload("Address").First(&gymModel).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gyms.Domain{}, exceptions.ErrGymNotFound
+		}
 		return gyms.Domain{}, err
 	}
 	

@@ -55,11 +55,13 @@ func (u *GymController) GetById(c echo.Context) error {
 	id := c.Param("gymId")
 	gym, err := u.Usecase.GetById(ctx, id)
 	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return presenter.ErrorResponse(c, http.StatusNotFound, exceptions.ErrGymNotFound)
+		}
 		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	
 	response := responses.FromDomain(gym)
-
 	return presenter.SuccessResponse(c, http.StatusOK, response)
 }
 		
@@ -68,12 +70,19 @@ func (b *GymController) Create(c echo.Context) error {
 	
 	createdGym := requests.CreateGym{}
 	c.Bind(&createdGym)
+
+	addressDomain := addresses.Domain{
+		Address: createdGym.Address,
+		District: createdGym.District,
+		City: createdGym.City,
+		Postal_code: createdGym.Postal_code,
+	}
 	
 	gymDomain := gyms.Domain{
 		Name: createdGym.Name,
 		Telephone: createdGym.Telephone,
 		Picture: createdGym.Picture,
-		// Address: createdGym.Address,
+		Address: addressDomain,
 		Operational_admin_ID: createdGym.Operational_admin_ID,
 	}
 	
@@ -94,12 +103,18 @@ func (b *GymController) Update(c echo.Context) error {
 	updatedGym := requests.CreateGym{}
 	c.Bind(&updatedGym)
 
+	addressDomain := addresses.Domain{
+		Address: updatedGym.Address,
+		District: updatedGym.District,
+		City: updatedGym.City,
+		Postal_code: updatedGym.Postal_code,
+	}
 
 	gymDomain := gyms.Domain{
 		Name: updatedGym.Name,
 		Telephone: updatedGym.Telephone,
 		Picture: updatedGym.Picture,
-		// Address: updatedGym.Address,
+		Address: addressDomain,
 		Operational_admin_ID: updatedGym.Operational_admin_ID,
 	}
 
