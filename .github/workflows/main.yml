@@ -29,7 +29,7 @@ jobs:
           ENV: ${{ secrets.ENV }}
         run: |
           touch config.json
-          echo "ENV=${{ secrets.ENV }}" > config.json
+          echo "${{ secrets.ENV }}" > config.json
           cat config.json
           chmod 777 config.json
       - uses: actions/checkout@v2

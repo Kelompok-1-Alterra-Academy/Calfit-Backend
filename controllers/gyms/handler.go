@@ -73,7 +73,7 @@ func (b *GymController) Create(c echo.Context) error {
 		Name: createdGym.Name,
 		Telephone: createdGym.Telephone,
 		Picture: createdGym.Picture,
-		Address: createdGym.Address,
+		// Address: createdGym.Address,
 		Operational_admin_ID: createdGym.Operational_admin_ID,
 	}
 	
@@ -99,7 +99,7 @@ func (b *GymController) Update(c echo.Context) error {
 		Name: updatedGym.Name,
 		Telephone: updatedGym.Telephone,
 		Picture: updatedGym.Picture,
-		Address: updatedGym.Address,
+		// Address: updatedGym.Address,
 		Operational_admin_ID: updatedGym.Operational_admin_ID,
 	}
 

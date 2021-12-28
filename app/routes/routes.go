@@ -26,7 +26,7 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",
 	}))
 
-	s := e.Group("/v1/schedules")
+	s := e.Group("api/v1/schedules")
 	s.POST("", handler.SchedulesHandler.Insert)
 	s.GET("", handler.SchedulesHandler.Get)
 	s.PUT("", handler.SchedulesHandler.Update)

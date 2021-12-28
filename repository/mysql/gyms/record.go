@@ -40,7 +40,7 @@ func (g *Gym) ToDomain() gyms.Domain {
 		Operational_admin_ID: g.Operational_adminID,
 		Address_ID:           g.AddressID,
 		// Operational_admin:   g.Operational_admin.ToDomain(),
-		// Address:             g.Address.ToDomain(),
+		Address:             g.Address.ToDomain(),
 		// Classes:             g.Classes.ToDomain(),
 		Created_at:          g.Created_at,
 		Updated_at:          g.Updated_at,

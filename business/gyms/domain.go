@@ -1,6 +1,7 @@
 package gyms
 
 import (
+	"CalFit/business/addresses"
 	context "context"
 	"time"
 )
@@ -13,7 +14,7 @@ type Domain struct {
 	Operational_admin_ID uint `validate:"required"`
 	Address_ID        	 uint
 	Operational_admin    uint
-	Address        		 uint
+	Address        		 addresses.Domain
 	Created_at     		 time.Time
 	Updated_at     		 time.Time
 }

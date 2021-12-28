@@ -3,6 +3,7 @@ package gyms
 import (
 	"CalFit/exceptions"
 	context "context"
+	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -41,10 +42,11 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
-
+	
 	validate := validator.New()
 	err := validate.Struct(domain)
 	if err != nil {
+		log.Println(err)
 		return Domain{}, exceptions.ErrValidationFailed
 	}
 
