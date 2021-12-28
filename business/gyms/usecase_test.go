@@ -1,6 +1,7 @@
 package gyms_test
 
 import (
+	"CalFit/business/addresses"
 	"CalFit/business/gyms"
 	"CalFit/business/gyms/mocks"
 	"context"
@@ -24,7 +25,12 @@ func setup() {
 		Telephone:   		  "08123456789",
 		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
-		Address_ID: 		  1,
+		Address: addresses.Domain{
+			Address: 			  "Jl. Gelud",
+			District: 			  "Kec. Kedungkandang",
+			City: 				  "Bandung",
+			Postal_code: 		  "40291",
+		},
 	}
 	updatedGymDomain = gyms.Domain{
 		Id:          		  1,
@@ -32,7 +38,12 @@ func setup() {
 		Telephone:   		  "08123456789",
 		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
-		Address_ID: 		  1,
+		Address: addresses.Domain{
+			Address: 			  "Jl. Gelud",
+			District: 			  "Kec. Kedungkandang",
+			City: 				  "Bandung",
+			Postal_code: 		  "40291",
+		},
 	}
 	emptyGymDomain = gyms.Domain{
 		Id:          		  0,
@@ -40,7 +51,12 @@ func setup() {
 		Telephone:   		  "",
 		Picture:	     	  "",
 		Operational_admin_ID: 0,
-		Address_ID: 		  0,
+		Address: addresses.Domain{
+			Address: 			  "",
+			District: 			  "",
+			City: 				  "",
+			Postal_code: 		  "",
+		},
 	}
 }
 
