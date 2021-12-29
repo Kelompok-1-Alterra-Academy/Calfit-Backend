@@ -20,7 +20,7 @@ type Gym struct {
 	AddressID           uint `gorm:"not null"`
 	Operational_admin   operational_admins.Operational_admin `gorm:"foreignkey:Operational_adminID"`
 	Address             addresses.Address `gorm:"foreignkey:AddressID"`
-	Classes             []classes.Class
+	Classes             []classes.Class `gorm:"foreignkey:GymID"`
 	Created_at          time.Time
 	Updated_at          time.Time
 }
