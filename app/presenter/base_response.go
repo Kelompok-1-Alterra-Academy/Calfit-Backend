@@ -11,7 +11,7 @@ type BaseResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-func SuccessResponse(c echo.Context, status int, data interface{}) error {
+func SuccessResponse(c echo.Context, data interface{}) error {
 	res := BaseResponse{
 		Status:  200,
 		Success: true,
