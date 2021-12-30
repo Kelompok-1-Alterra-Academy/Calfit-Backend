@@ -3,6 +3,8 @@ package addresses
 import (
 	"CalFit/business/addresses"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Address struct {
@@ -15,7 +17,7 @@ type Address struct {
 	Updated_at  time.Time
 }
 
-func (a *Address) BeforeCreate() error {
+func (a *Address) BeforeCreate(tx *gorm.DB) error {
 	a.Created_at = time.Now()
 	a.Updated_at = time.Now()
 	return nil
