@@ -4,12 +4,15 @@ import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
 	_addressUsecase "CalFit/business/addresses"
+	_classUsecase "CalFit/business/classes"
 	_gymUsecase "CalFit/business/gyms"
 	_schedulesUsecase "CalFit/business/schedules"
+	_classHandler "CalFit/controllers/classes"
 	_gymHandler "CalFit/controllers/gyms"
 	_schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
 	_addressDb "CalFit/repository/mysql/addresses"
+	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"
@@ -46,11 +49,14 @@ func main() {
 	addressUsecase := _addressUsecase.NewUsecase(_addressDb.NewAddressRepository(db), timeoutContext)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
 	gymHandler := _gymHandler.NewHandler(*gymUsecase,*addressUsecase)
+	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
+	classHandler := _classHandler.NewHandler(*classUsecase)
 	
 	routesInit := routes.HandlerList{
 		JWTMiddleware: configJWT.Init(),
 		SchedulesHandler: *schedulesHandler,
 		GymController: gymHandler,
+		ClassController: classHandler,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
