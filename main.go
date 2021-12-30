@@ -3,7 +3,6 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
-	_addressUsecase "CalFit/business/addresses"
 	_classUsecase "CalFit/business/classes"
 	_gymUsecase "CalFit/business/gyms"
 	_schedulesUsecase "CalFit/business/schedules"
@@ -11,7 +10,6 @@ import (
 	_gymHandler "CalFit/controllers/gyms"
 	_schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
-	_addressDb "CalFit/repository/mysql/addresses"
 	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
@@ -46,9 +44,8 @@ func main() {
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
 	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
-	addressUsecase := _addressUsecase.NewUsecase(_addressDb.NewAddressRepository(db), timeoutContext)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
-	gymHandler := _gymHandler.NewHandler(*gymUsecase,*addressUsecase)
+	gymHandler := _gymHandler.NewHandler(*gymUsecase)
 	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
 	classHandler := _classHandler.NewHandler(*classUsecase)
 	
