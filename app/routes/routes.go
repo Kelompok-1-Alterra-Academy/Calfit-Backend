@@ -36,17 +36,24 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	
 	// unprotected routes
 	{
+		// gym endpoint
 		v1.GET("/gyms", handler.GymController.GetAll)
 		v1.GET("/gyms/:gymId", handler.GymController.GetById)
+
+		// class endpoint
+		v1.GET("/classes/:classId", handler.ClassController.GetById)
 	}
 	
 	// superadmin routes
 	superadmin := v1.Group("")
 	// superadmin.Use(handler.JWTMiddleware.MiddlewareFunc())
 	{
+		// gym endpoint
 		superadmin.POST("/gyms", handler.GymController.Create)
 		superadmin.PUT("/gyms/:gymId", handler.GymController.Update)
 		superadmin.DELETE("/gyms/:gymId", handler.GymController.Delete)
+
+		// class endpoint
 		superadmin.GET("/classes", handler.ClassController.GetAll)
 	}
 }

@@ -44,3 +44,19 @@ func (b *ClassController) GetAll(c echo.Context) error {
 	}
 	return presenter.SuccessResponse(c, http.StatusOK, response)
 }
+
+func (u *ClassController) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id := c.Param("classId")
+	class, err := u.Usecase.GetById(ctx, id)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return presenter.ErrorResponse(c, http.StatusNotFound, exceptions.ErrClassNotFound)
+		}
+		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	
+	response := responses.FromDomain(class)
+	return presenter.SuccessResponse(c, http.StatusOK, response)
+}

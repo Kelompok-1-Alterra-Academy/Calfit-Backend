@@ -23,7 +23,7 @@ type Domain struct {
 
 type DomainRepository interface {
 	GetAll(ctx context.Context) ([]Domain, error)
-	// GetById(ctx context.Context, id string) (Domain, error)
+	GetById(ctx context.Context, id string) (Domain, error)
 	// Create(ctx context.Context, domain Domain) (Domain, error)
 	// Update(ctx context.Context, id string, domain Domain) (Domain, error)
 	// Delete(ctx context.Context, id string) (error)
@@ -31,7 +31,7 @@ type DomainRepository interface {
 
 type DomainService interface {
 	GetAll(ctx context.Context) ([]Domain, error)
-	// GetById(ctx context.Context, id string) (Domain, error)
+	GetById(ctx context.Context, id string) (Domain, error)
 	// Create(ctx context.Context, domain Domain) (Domain, error)
 	// Update(ctx context.Context, id string, domain Domain) (Domain, error)
 	// Delete(ctx context.Context, id string) (error)

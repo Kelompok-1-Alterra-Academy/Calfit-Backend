@@ -15,6 +15,8 @@ var (
 	ErrBookingNotFound = errors.New("booking not found")
 	// ErrGymNotFound is thrown when the gym is not found
 	ErrGymNotFound = errors.New("gym not found")
+	// ErrClassNotFound is thrown when the class is not found
+	ErrClassNotFound = errors.New("class not found")
 	// ErrUserNotFound is thrown when the user is not found
 	ErrUserNotFound = errors.New("user not found")
 	// ErrEmptyInput is thrown when the input is empty
