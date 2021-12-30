@@ -20,12 +20,12 @@ type Gym struct {
 	AddressID           uint `gorm:"not null"`
 	Operational_admin   operational_admins.Operational_admin `gorm:"foreignkey:Operational_adminID"`
 	Address             addresses.Address `gorm:"foreignkey:AddressID"`
-	Classes             []classes.Class
+	Classes             []classes.Class `gorm:"foreignkey:GymID"`
 	Created_at          time.Time
 	Updated_at          time.Time
 }
 
-func (g *Gym) BeforeCreate() error {
+func (g *Gym) BeforeCreate(tx *gorm.DB) error {
 	g.Created_at = time.Now()
 	g.Updated_at = time.Now()
 	return nil

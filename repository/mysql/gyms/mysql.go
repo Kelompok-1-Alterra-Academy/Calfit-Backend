@@ -48,7 +48,6 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 		City:      gym.Address.City,
 		Postal_code: gym.Address.Postal_code,
 	}
-	createdAddress.BeforeCreate()
 	insertAddressErr := b.Conn.Create(&createdAddress).Error
 	if insertAddressErr != nil {	
 		return gyms.Domain{}, insertAddressErr
@@ -62,7 +61,6 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 		Operational_adminID: gym.Operational_admin_ID,
 		AddressID:         	 createdAddress.Id,
 	}
-	createdGym.BeforeCreate()
 	insertGymErr := b.Conn.Create(&createdGym).Error
 	if insertGymErr != nil {
 		return gyms.Domain{}, insertGymErr

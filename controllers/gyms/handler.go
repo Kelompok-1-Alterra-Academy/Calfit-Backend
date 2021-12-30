@@ -20,17 +20,15 @@ import (
 
 type GymController struct {
 	Usecase gyms.Usecase
-	AddressUsecase addresses.Usecase
 }
 
 type Header struct {
 	Cookie string `json:"cookie"`
 }
 
-func NewHandler(u gyms.Usecase, a addresses.Usecase) *GymController {
+func NewHandler(u gyms.Usecase) *GymController {
 	return &GymController{
 		Usecase: u,
-		AddressUsecase: a,
 	}
 }
 
