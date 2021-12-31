@@ -3,11 +3,18 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
-	schedulesUsecase "CalFit/business/schedules"
-	schedulesHandler "CalFit/controllers/schedules"
+	_classUsecase "CalFit/business/classes"
+	_gymUsecase "CalFit/business/gyms"
+	_schedulesUsecase "CalFit/business/schedules"
+	_classHandler "CalFit/controllers/classes"
+	_gymHandler "CalFit/controllers/gyms"
+	_schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
-	schedulesRepo "CalFit/repository/mysql/schedules"
+	_classDb "CalFit/repository/mysql/classes"
+	_gymDb "CalFit/repository/mysql/gyms"
+	_schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -31,12 +38,9 @@ func main() {
 		ExpiresDuration: viper.GetInt("jwt.expired"),
 	}
 
+	timeoutContext := time.Duration(viper.GetInt("server.timeout")) * time.Second
+
 	// Schedules initialize
-<<<<<<< Updated upstream
-	schedulesRepo := schedulesRepo.NewSchedulesRepo(db)
-	schedulesUsecase := schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
-	schedulesHandler := schedulesHandler.NewHandler(schedulesUsecase)
-=======
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
 	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
@@ -44,16 +48,12 @@ func main() {
 	gymHandler := _gymHandler.NewHandler(*gymUsecase)
 	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
 	classHandler := _classHandler.NewHandler(*classUsecase)
->>>>>>> Stashed changes
-
+	
 	routesInit := routes.HandlerList{
-		JWTMiddleware:    configJWT.Init(),
+		JWTMiddleware: configJWT.Init(),
 		SchedulesHandler: *schedulesHandler,
-<<<<<<< Updated upstream
-=======
-		GymController:    gymHandler,
-		ClassController:  classHandler,
->>>>>>> Stashed changes
+		GymController: gymHandler,
+		ClassController: classHandler,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))

@@ -24,17 +24,15 @@ jobs:
     needs: unit-test
     steps:
       - uses: actions/checkout@v2
-      - name: create config json file
+      - name: create config.json and build docker
         env:
           ENV: ${{ secrets.ENV }}
         run: |
           touch config.json
-          echo "ENV=${{ secrets.ENV }}" > config.json
+          echo "${{ secrets.ENV }}" > config.json
           cat config.json
           chmod 777 config.json
-      - uses: actions/checkout@v2
-      - name: build docker
-        run: docker build -t sultanfariz/calfit:1.0.0 .
+          docker build -t sultanfariz/calfit:1.0.0 .
       - name: connect registry docker hub
         uses: docker/login-action@v1
         with:
@@ -66,4 +64,4 @@ jobs:
             StrictHostKeyChecking=no
           END
       - name: Connect EC2 & Remove All Container & Pull from Registry & Start
-        run: ssh development 'docker rm -f $(docker ps -a -q) && docker pull sultanfariz/calfit:1.0.0 && docker run -d -p 8080:8080 --name calfit sultanfariz/calfit:1.0.0'
+        run: ssh development 'docker rm -f calfit && docker rmi -f sultanfariz/calfit:1.0.0 && docker pull sultanfariz/calfit:1.0.0 &&  docker run -d -p 8080:8080 --name=calfit-backend sultanfariz/calfit:1.0.0'
