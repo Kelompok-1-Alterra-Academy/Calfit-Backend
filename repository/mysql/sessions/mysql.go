@@ -19,7 +19,7 @@ func NewSessionsRepo(db *gorm.DB) sessions.Repository {
 
 func (repo *SessionsRepo) Insert(ctx context.Context, domain sessions.Domain) (sessions.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Create(&data); err != nil {
+	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return sessions.Domain{}, nil
 	}
 	return data.toDomain(), nil

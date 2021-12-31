@@ -4,16 +4,18 @@ import (
 	"CalFit/controllers/classes"
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
+	"CalFit/controllers/sessions"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 type HandlerList struct {
-	JWTMiddleware    middleware.JWTConfig
-	SchedulesHandler schedules.Presenter
-	GymController *gyms.GymController
-	ClassController *classes.ClassController
+	JWTMiddleware      middleware.JWTConfig
+	SchedulesHandler   *schedules.Presenter
+	GymController      *gyms.GymController
+	ClassController    *classes.ClassController
+	SessionsController *sessions.Controller
 }
 
 func (handler HandlerList) RouteRegister(e *echo.Echo) {
@@ -33,7 +35,7 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 	s.GET("", handler.SchedulesHandler.Get)
 	s.PUT("", handler.SchedulesHandler.Update)
 	s.DELETE("", handler.SchedulesHandler.Delete)
-	
+
 	// unprotected routes
 	{
 		// gym endpoint
@@ -43,7 +45,7 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 		// class endpoint
 		v1.GET("/classes/:classId", handler.ClassController.GetById)
 	}
-	
+
 	// superadmin routes
 	superadmin := v1.Group("")
 	// superadmin.Use(handler.JWTMiddleware.MiddlewareFunc())
@@ -56,4 +58,6 @@ func (handler HandlerList) RouteRegister(e *echo.Echo) {
 		// class endpoint
 		superadmin.GET("/classes", handler.ClassController.GetAll)
 	}
+	session := e.Group("/v1/sessions")
+	session.POST("", handler.SessionsController.Insert)
 }

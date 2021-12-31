@@ -1,6 +1,8 @@
 package request
 
-import "CalFit/business/sessions"
+import (
+	"CalFit/business/sessions"
+)
 
 type Sessions struct {
 	Name        string `json:"name" form:"name"`
