@@ -11,8 +11,8 @@ type Sessions struct {
 	Schedules   []schedules.Domain `json:",omitempty"`
 }
 
-func FromDomain(s sessions.Domain) *Sessions {
-	return &Sessions{
+func FromDomain(s sessions.Domain) Sessions {
+	return Sessions{
 		Name:        s.Name,
 		Description: s.Description,
 		Schedules:   s.Schedules,

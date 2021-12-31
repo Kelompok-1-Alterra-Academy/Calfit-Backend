@@ -31,8 +31,14 @@ func (su *SessionsUsecase) GetById(ctx context.Context, sessions Domain) (Domain
 	return Domain{}, nil
 }
 
-func (su *SessionsUsecase) GetAll(ctx context.Context, sessions Domain) ([]Domain, error) {
-	return []Domain{}, nil
+func (su *SessionsUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, su.contextTimeout)
+	defer cancel()
+	res, err := su.sessionsRepo.GetAll(ctx)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return res, nil
 }
 
 func (su *SessionsUsecase) Update(ctx context.Context, sessions Domain) (Domain, error) {

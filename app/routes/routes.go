@@ -47,6 +47,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)
+		v1.GET("/sessions", controllers.SessionsController.GetAll)
 	}
 
 	// superadmin routes

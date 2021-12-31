@@ -3,6 +3,7 @@ package sessions
 import (
 	"CalFit/business/sessions"
 	"context"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -25,8 +26,19 @@ func (repo *SessionsRepo) Insert(ctx context.Context, domain sessions.Domain) (s
 	return data.toDomain(), nil
 }
 
-func (repo *SessionsRepo) GetAll(ctx context.Context, domain sessions.Domain) ([]sessions.Domain, error) {
-	return []sessions.Domain{}, nil
+func (repo *SessionsRepo) GetAll(ctx context.Context) ([]sessions.Domain, error) {
+	data := []Session{}
+	if err := repo.DBConn.Debug().Preload("Schedules").Find(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return []sessions.Domain{}, errors.New("record not found")
+		}
+		return []sessions.Domain{}, err
+	}
+	var domainSession []sessions.Domain
+	for _, val := range data {
+		domainSession = append(domainSession, val.toDomain())
+	}
+	return domainSession, nil
 
 }
 

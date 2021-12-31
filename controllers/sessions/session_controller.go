@@ -32,3 +32,16 @@ func (controller *Controllers) Insert(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusCreated, resFromDomain)
 }
+
+func (controller *Controllers) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+	res, err := controller.SessionUC.GetAll(ctx)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+	resFromDomain := []response.Sessions{}
+	for _, val := range res {
+		resFromDomain = append(resFromDomain, response.FromDomain(val))
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
