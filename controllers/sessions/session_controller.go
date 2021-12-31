@@ -2,7 +2,7 @@ package sessions
 
 import (
 	"CalFit/business/sessions"
-	presenter "CalFit/controllers"
+	"CalFit/controllers"
 	"CalFit/controllers/sessions/request"
 	"CalFit/controllers/sessions/response"
 	"net/http"
@@ -10,17 +10,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Controller struct {
+type Controllers struct {
 	SessionUC sessions.Usecase
 }
 
-func NewController(sessionUC sessions.Usecase) *Controller {
-	return &Controller{
+func NewControllers(sessionUC sessions.Usecase) *Controllers {
+	return &Controllers{
 		SessionUC: sessionUC,
 	}
 }
 
-func (controller *Controller) Insert(c echo.Context) error {
+func (controller *Controllers) Insert(c echo.Context) error {
 	ctx := c.Request().Context()
 	reqSession := request.Sessions{}
 	c.Bind(&reqSession)
@@ -28,7 +28,7 @@ func (controller *Controller) Insert(c echo.Context) error {
 	res, err := controller.SessionUC.Insert(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
-		return presenter.ErrorResponse(c, http.StatusInternalServerError, err)
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
-	return presenter.SuccessResponse(c, http.StatusCreated, resFromDomain)
+	return controllers.SuccessResponse(c, http.StatusCreated, resFromDomain)
 }

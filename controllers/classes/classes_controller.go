@@ -2,7 +2,7 @@ package classes
 
 import (
 	"CalFit/business/classes"
-	presenter "CalFit/controllers"
+	"CalFit/controllers"
 	responses "CalFit/controllers/classes/response"
 	"CalFit/exceptions"
 
@@ -35,14 +35,14 @@ func (b *ClassController) GetAll(c echo.Context) error {
 
 	classes, err := b.Usecase.GetAll(ctx)
 	if err != nil {
-		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 
 	response := make([]responses.ClassResponse, len(classes))
 	for i, gym := range classes {
 		response[i] = responses.FromDomain(gym)
 	}
-	return presenter.SuccessResponse(c, http.StatusOK, response)
+	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
 func (u *ClassController) GetById(c echo.Context) error {
@@ -52,11 +52,11 @@ func (u *ClassController) GetById(c echo.Context) error {
 	class, err := u.Usecase.GetById(ctx, id)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
-			return presenter.ErrorResponse(c, http.StatusNotFound, exceptions.ErrClassNotFound)
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrClassNotFound)
 		}
-		return presenter.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
-	
+
 	response := responses.FromDomain(class)
-	return presenter.SuccessResponse(c, http.StatusOK, response)
+	return controllers.SuccessResponse(c, http.StatusOK, response)
 }

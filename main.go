@@ -7,9 +7,9 @@ import (
 	_gymUsecase "CalFit/business/gyms"
 	_schedulesUsecase "CalFit/business/schedules"
 	_sessionsUsecase "CalFit/business/sessions"
-	_classHandler "CalFit/controllers/classes"
-	_gymHandler "CalFit/controllers/gyms"
-	_schedulesHandler "CalFit/controllers/schedules"
+	_classController "CalFit/controllers/classes"
+	_gymController "CalFit/controllers/gyms"
+	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
 	"CalFit/repository/mysql"
 	_classDb "CalFit/repository/mysql/classes"
@@ -46,23 +46,23 @@ func main() {
 	// Schedules initialize
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
-	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
+	schedulesController := _schedulesController.NewControllers(schedulesUsecase)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
-	gymHandler := _gymHandler.NewHandler(*gymUsecase)
+	gymHandler := _gymController.NewHandler(*gymUsecase)
 	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
-	classHandler := _classHandler.NewHandler(*classUsecase)
+	classHandler := _classController.NewHandler(*classUsecase)
 
 	// Sessions initialize
 	sessionsRepo := _sessionsRepo.NewSessionsRepo(db)
 	sessionsUsecase := _sessionsUsecase.NewSessionsUsecase(sessionsRepo, timeoutContext)
-	sessionsController := _sessionsController.NewController(sessionsUsecase)
+	sessionsController := _sessionsController.NewControllers(sessionsUsecase)
 
-	routesInit := routes.HandlerList{
-		JWTMiddleware:      configJWT.Init(),
-		SchedulesHandler:   schedulesHandler,
-		GymController:      gymHandler,
-		ClassController:    classHandler,
-		SessionsController: sessionsController,
+	routesInit := routes.ControllersList{
+		JWTMiddleware:       configJWT.Init(),
+		SchedulesController: schedulesController,
+		GymController:       gymHandler,
+		ClassController:     classHandler,
+		SessionsController:  sessionsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
