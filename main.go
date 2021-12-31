@@ -32,13 +32,28 @@ func main() {
 	}
 
 	// Schedules initialize
+<<<<<<< Updated upstream
 	schedulesRepo := schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
 	schedulesHandler := schedulesHandler.NewHandler(schedulesUsecase)
+=======
+	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
+	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
+	schedulesHandler := _schedulesHandler.NewHandler(schedulesUsecase)
+	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
+	gymHandler := _gymHandler.NewHandler(*gymUsecase)
+	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
+	classHandler := _classHandler.NewHandler(*classUsecase)
+>>>>>>> Stashed changes
 
 	routesInit := routes.HandlerList{
 		JWTMiddleware:    configJWT.Init(),
 		SchedulesHandler: *schedulesHandler,
+<<<<<<< Updated upstream
+=======
+		GymController:    gymHandler,
+		ClassController:  classHandler,
+>>>>>>> Stashed changes
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))

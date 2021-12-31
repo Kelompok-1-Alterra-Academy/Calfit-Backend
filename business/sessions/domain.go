@@ -1,6 +1,7 @@
 package sessions
 
 import (
+	"CalFit/business/schedules"
 	"context"
 	"time"
 )
@@ -9,6 +10,7 @@ type Domain struct {
 	Id          int
 	Name        string
 	Description string
+	Schedules   []schedules.Domain
 	Created_at  time.Time
 	Updated_at  time.Time
 }
