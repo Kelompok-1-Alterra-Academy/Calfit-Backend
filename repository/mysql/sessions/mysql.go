@@ -2,6 +2,7 @@ package sessions
 
 import (
 	"CalFit/business/sessions"
+	"CalFit/exceptions"
 	"context"
 	"errors"
 
@@ -30,7 +31,7 @@ func (repo *SessionsRepo) GetAll(ctx context.Context) ([]sessions.Domain, error)
 	data := []Session{}
 	if err := repo.DBConn.Debug().Preload("Schedules").Find(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return []sessions.Domain{}, errors.New("record not found")
+			return []sessions.Domain{}, exceptions.ErrNotFound
 		}
 		return []sessions.Domain{}, err
 	}

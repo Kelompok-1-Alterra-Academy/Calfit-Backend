@@ -5,6 +5,7 @@ import (
 	"CalFit/controllers"
 	"CalFit/controllers/sessions/request"
 	"CalFit/controllers/sessions/response"
+	"CalFit/exceptions"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -28,7 +29,7 @@ func (controller *Controllers) Insert(c echo.Context) error {
 	res, err := controller.SessionUC.Insert(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
-		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	return controllers.SuccessResponse(c, http.StatusCreated, resFromDomain)
 }
@@ -37,7 +38,10 @@ func (controller *Controllers) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 	res, err := controller.SessionUC.GetAll(ctx)
 	if err != nil {
-		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrSessionNotFound)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	resFromDomain := []response.Sessions{}
 	for _, val := range res {

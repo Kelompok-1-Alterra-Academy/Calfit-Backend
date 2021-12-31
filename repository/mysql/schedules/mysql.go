@@ -2,6 +2,7 @@ package schedules
 
 import (
 	"CalFit/business/schedules"
+	"CalFit/exceptions"
 	"errors"
 
 	"gorm.io/gorm"
@@ -28,6 +29,9 @@ func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, er
 func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, error) {
 	data := []Schedule{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return []schedules.Domain{}, exceptions.ErrNotFound
+		}
 		return []schedules.Domain{}, err
 	}
 	var domainSchedules []schedules.Domain
@@ -44,7 +48,7 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 	data.SessionID = sessionId.SessionID
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return schedules.Domain{}, errors.New("record not found")
+			return schedules.Domain{}, exceptions.ErrNotFound
 		}
 		return schedules.Domain{}, err
 	}
@@ -55,7 +59,7 @@ func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, er
 	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return schedules.Domain{}, errors.New("record not found")
+			return schedules.Domain{}, exceptions.ErrNotFound
 		}
 	}
 	repo.DBConn.Where("id=?", data.Id).Delete(&data)
