@@ -42,3 +42,19 @@ func TestInsert(t *testing.T) {
 		assert.NotNil(t, err)
 	})
 }
+
+func TestGetAll(t *testing.T) {
+	testSetup()
+	t.Run("Valid get", func(t *testing.T) {
+		repo.On("GetAll", mock.Anything).Return([]sessions.Domain{domain}, nil).Once()
+		session, err := usecase.GetAll(context.Background())
+		assert.Nil(t, err)
+		assert.Equal(t, domain, session[0])
+	})
+	t.Run("Server error", func(t *testing.T) {
+		repo.On("GetAll", mock.Anything).Return([]sessions.Domain{}, errors.New("Internal server error")).Once()
+		session, err := usecase.GetAll(context.Background())
+		assert.NotNil(t, err)
+		assert.NotEqual(t, domain, session)
+	})
+}
