@@ -39,9 +39,6 @@ func (controller *Controllers) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 	res, err := controller.SessionUC.GetAll(ctx)
 	if err != nil {
-		if err == exceptions.ErrNotFound {
-			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrSessionNotFound)
-		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	resFromDomain := []response.Sessions{}

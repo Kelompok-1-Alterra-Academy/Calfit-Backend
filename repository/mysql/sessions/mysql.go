@@ -30,9 +30,6 @@ func (repo *SessionsRepo) Insert(ctx context.Context, domain sessions.Domain) (s
 func (repo *SessionsRepo) GetAll(ctx context.Context) ([]sessions.Domain, error) {
 	data := []Session{}
 	if err := repo.DBConn.Debug().Preload("Schedules").Find(&data).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return []sessions.Domain{}, exceptions.ErrNotFound
-		}
 		return []sessions.Domain{}, err
 	}
 	var domainSession []sessions.Domain
