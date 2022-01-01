@@ -103,3 +103,26 @@ func TestUpdate(t *testing.T) {
 		assert.NotEqual(t, domain, session)
 	})
 }
+
+func TestDelete(t *testing.T) {
+	testSetup()
+	t.Run("Test case 1 | Valid get", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+		session, err := usecase.Delete(context.Background(), 1)
+		assert.Nil(t, err)
+		assert.Equal(t, domain, session)
+	})
+	t.Run("Test case 2 | Server error", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(sessions.Domain{}, errors.New("Internal server error")).Once()
+		session, err := usecase.Delete(context.Background(), 1)
+		assert.NotNil(t, err)
+		assert.NotEqual(t, domain, session)
+	})
+	t.Run("Test case 3 | Empty input param", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(sessions.Domain{}, errors.New("Input params is empty")).Once()
+		domain.Id = 0
+		session, err := usecase.Delete(context.Background(), 0)
+		assert.NotNil(t, err)
+		assert.NotEqual(t, domain, session)
+	})
+}
