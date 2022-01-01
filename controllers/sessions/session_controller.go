@@ -7,6 +7,7 @@ import (
 	"CalFit/controllers/sessions/response"
 	"CalFit/exceptions"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,7 +40,7 @@ func (controller *Controllers) GetAll(c echo.Context) error {
 	res, err := controller.SessionUC.GetAll(ctx)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
-			return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrSessionNotFound)
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrSessionNotFound)
 		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
@@ -47,5 +48,19 @@ func (controller *Controllers) GetAll(c echo.Context) error {
 	for _, val := range res {
 		resFromDomain = append(resFromDomain, response.FromDomain(val))
 	}
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+	res, err := controller.SessionUC.GetById(ctx, id)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrSessionNotFound)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	resFromDomain := response.FromDomain(res)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }

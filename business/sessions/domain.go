@@ -18,7 +18,7 @@ type Domain struct {
 type Usecase interface {
 	Insert(ctx context.Context, sessions Domain) (Domain, error)
 	GetAll(ctx context.Context) ([]Domain, error)
-	GetById(ctx context.Context, sessions Domain) (Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, sessions Domain) (Domain, error)
 	Delete(ctx context.Context, sessions Domain) (Domain, error)
 }
@@ -26,7 +26,7 @@ type Usecase interface {
 type Repository interface {
 	Insert(ctx context.Context, sessions Domain) (Domain, error)
 	GetAll(ctx context.Context) ([]Domain, error)
-	GetById(ctx context.Context, sessions Domain) (Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, sessions Domain) (Domain, error)
 	Delete(ctx context.Context, sessions Domain) (Domain, error)
 }

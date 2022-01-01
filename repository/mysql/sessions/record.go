@@ -26,7 +26,7 @@ func FromDomain(domain sessions.Domain) Session {
 	}
 }
 
-func (s Session) toDomain() sessions.Domain {
+func (s Session) ToDomain() sessions.Domain {
 	return sessions.Domain{
 		Id:          s.Id,
 		Name:        s.Name,
