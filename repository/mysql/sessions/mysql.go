@@ -42,7 +42,7 @@ func (repo *SessionsRepo) GetAll(ctx context.Context) ([]sessions.Domain, error)
 
 func (repo *SessionsRepo) GetById(ctx context.Context, id int) (sessions.Domain, error) {
 	data := Session{}
-	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
+	if err := repo.DBConn.Debug().Where("id=?", id).Preload("Schedules").First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return sessions.Domain{}, exceptions.ErrNotFound
 		}
