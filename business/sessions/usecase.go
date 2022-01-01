@@ -1,6 +1,7 @@
 package sessions
 
 import (
+	"CalFit/exceptions"
 	"context"
 	"time"
 )
@@ -40,6 +41,9 @@ func (su *SessionsUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 func (su *SessionsUsecase) GetById(ctx context.Context, id int) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, su.contextTimeout)
 	defer cancel()
+	if id == 0 {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 	res, err := su.sessionsRepo.GetById(ctx, id)
 	if err != nil {
 		return Domain{}, err
