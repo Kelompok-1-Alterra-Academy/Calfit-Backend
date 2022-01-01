@@ -24,9 +24,9 @@ func NewControllers(sessionUC sessions.Usecase) *Controllers {
 
 func (controller *Controllers) Insert(c echo.Context) error {
 	ctx := c.Request().Context()
-	reqSession := request.Sessions{}
-	c.Bind(&reqSession)
-	domain := request.ToDomain(reqSession)
+	req := request.Sessions{}
+	c.Bind(&req)
+	domain := req.ToDomain()
 	res, err := controller.SessionUC.Insert(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
@@ -60,4 +60,23 @@ func (controller *Controllers) GetById(c echo.Context) error {
 	}
 	resFromDomain := response.FromDomain(res)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.Sessions{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrEmptyInput)
+	}
+	id, _ := strconv.Atoi(c.Param("id"))
+	domain := req.ToDomain()
+	domain.Id = id
+	res, err := controller.SessionUC.Update(ctx, domain)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrSessionNotFound)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
 }

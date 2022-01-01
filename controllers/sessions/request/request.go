@@ -9,7 +9,7 @@ type Sessions struct {
 	Description string `json:"description" form:"description"`
 }
 
-func ToDomain(s Sessions) sessions.Domain {
+func (s Sessions) ToDomain() sessions.Domain {
 	return sessions.Domain{
 		Name:        s.Name,
 		Description: s.Description,
