@@ -49,8 +49,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.POST("/sessions", controllers.SessionsController.Insert)
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
-		v1.PUT("/sessions/:id", controllers.SessionsController.Update)
-		v1.DELETE("/sessions/:id", controllers.SessionsController.Delete)
+
 	}
 
 	// superadmin routes
@@ -64,5 +63,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// class endpoint
 		superadmin.GET("/classes", controllers.ClassController.GetAll)
+
+		// session endpoint
+		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
+		superadmin.DELETE("/sessions/:id", controllers.SessionsController.Delete)
 	}
 }
