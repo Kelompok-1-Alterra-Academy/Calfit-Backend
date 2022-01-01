@@ -57,6 +57,12 @@ func (su *SessionsUsecase) Update(ctx context.Context, sessions Domain) (Domain,
 	return res, nil
 }
 
-func (su *SessionsUsecase) Delete(ctx context.Context, sessions Domain) (Domain, error) {
-	return Domain{}, nil
+func (su *SessionsUsecase) Delete(ctx context.Context, id int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, su.contextTimeout)
+	defer cancel()
+	res, err := su.sessionsRepo.Delete(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
 }

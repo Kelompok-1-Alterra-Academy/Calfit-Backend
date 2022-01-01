@@ -50,6 +50,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 		v1.PUT("/sessions/:id", controllers.SessionsController.Update)
+		v1.DELETE("/sessions/:id", controllers.SessionsController.Delete)
 	}
 
 	// superadmin routes

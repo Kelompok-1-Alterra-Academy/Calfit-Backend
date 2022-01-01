@@ -80,3 +80,16 @@ func (controller *Controllers) Update(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
 }
+
+func (controller *Controllers) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+	res, err := controller.SessionUC.Delete(ctx, id)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrSessionNotFound)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
+}
