@@ -14,6 +14,27 @@ type DomainRepository struct {
 	mock.Mock
 }
 
+// Create provides a mock function with given fields: ctx, domain
+func (_m *DomainRepository) Create(ctx context.Context, domain classes.Domain) (classes.Domain, error) {
+	ret := _m.Called(ctx, domain)
+
+	var r0 classes.Domain
+	if rf, ok := ret.Get(0).(func(context.Context, classes.Domain) classes.Domain); ok {
+		r0 = rf(ctx, domain)
+	} else {
+		r0 = ret.Get(0).(classes.Domain)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, classes.Domain) error); ok {
+		r1 = rf(ctx, domain)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAll provides a mock function with given fields: ctx
 func (_m *DomainRepository) GetAll(ctx context.Context) ([]classes.Domain, error) {
 	ret := _m.Called(ctx)

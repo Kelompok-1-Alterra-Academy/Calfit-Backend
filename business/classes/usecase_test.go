@@ -14,7 +14,7 @@ import (
 var classRepository mocks.DomainRepository
 
 var classService classes.DomainService
-var classDomain classes.Domain
+var classDomain, emptyClassDomain classes.Domain
 
 func setup() {
 	classService = classes.NewUsecase(&classRepository, time.Minute*15)
@@ -28,6 +28,17 @@ func setup() {
 		Status: 		 "Active",
 		// Membership_typeID: 1,
 		GymID: 			  1,
+	}
+	emptyClassDomain = classes.Domain{
+		Id:          		0,
+		Name:        		"",
+		Description: 		"",
+		Banner_picture_url: "",
+		Card_picture_url:   "",
+		Category: 		    "",
+		Status: 		    "",
+		// Membership_typeID: 0,
+		GymID: 			    0,
 	}
 }
 
@@ -60,6 +71,27 @@ func TestGetClassByClassId(t *testing.T) {
 	})
 	t.Run("Test Case 2 | Invalid Get Class By Empty ClassId", func(t *testing.T) {
 		class, err := classService.GetById(context.Background(), "")
+		assert.NotNil(t, err)
+		assert.NotEqual(t, class, classDomain)
+	})
+}
+
+func TestCreateNewClass(t *testing.T) {
+	setup()
+	classRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain")).Return(classDomain, nil)
+	t.Run("Test Case 1 | Valid Create New Class", func(t *testing.T) {
+		class, err := classService.Create(context.Background(), classDomain)
+		if err != nil {
+			t.Errorf("Error: %s", err)
+		}
+		if class.Id == 0 {
+			t.Errorf("Error: %s", "class Id is empty")
+		}
+		assert.Nil(t, err)
+		assert.Equal(t, classDomain, class)
+	})
+	t.Run("Test Case 2 | Invalid Create New class with Empty Fields", func(t *testing.T) {
+		class, err := classService.Create(context.Background(), emptyClassDomain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, class, classDomain)
 	})
