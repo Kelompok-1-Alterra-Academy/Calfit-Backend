@@ -97,7 +97,7 @@ func TestGetGymByGymId(t *testing.T) {
 func TestCreateNewGym(t *testing.T) {
 	setup()
 	gymRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain")).Return(gymDomain, nil)
-	t.Run("Test Case 1 | Valid Create New gym", func(t *testing.T) {
+	t.Run("Test Case 1 | Valid Create New Gym", func(t *testing.T) {
 		gym, err := gymService.Create(context.Background(), gymDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
@@ -108,7 +108,7 @@ func TestCreateNewGym(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, gymDomain, gym)
 	})
-	t.Run("Test Case 2 | Invalid Create New gym with Empty Fields", func(t *testing.T) {
+	t.Run("Test Case 2 | Invalid Create New Gym with Empty Fields", func(t *testing.T) {
 		gym, err := gymService.Create(context.Background(), emptyGymDomain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, gym, gymDomain)

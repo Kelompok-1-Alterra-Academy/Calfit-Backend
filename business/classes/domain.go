@@ -13,7 +13,7 @@ type Domain struct {
 	Card_picture_url   string `validate:"required"`
 	Category           string `validate:"required"`
 	Status             string `validate:"required"`
-	Membership_typeID  uint `validate:"required"`
+	// Membership_typeID  uint `validate:"required"`
 	GymID              uint `validate:"required"`
 	// Booking_details    []booking_details.Domain
 	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
