@@ -4,6 +4,7 @@ import (
 	"CalFit/business/schedules"
 	"CalFit/exceptions"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -20,6 +21,7 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 
 func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
+	data.CreatedAt = time.Now()
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
@@ -45,6 +47,7 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 	data := FromDomain(domain)
 	sessionId := Schedule{}
 	repo.DBConn.Debug().Where("id=?", domain.Id).First(&sessionId)
+	data.UpdatedAt = time.Now()
 	data.SessionID = sessionId.SessionID
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
