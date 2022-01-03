@@ -1,6 +1,7 @@
 package users
 
 import (
+	"CalFit/app/middlewares"
 	"CalFit/exceptions"
 	"context"
 	"time"
@@ -9,12 +10,14 @@ import (
 type UsersUsecase struct {
 	Repo           Repository
 	ContextTimeout time.Duration
+	JWTAuth        *middlewares.ConfigJWT
 }
 
-func NewUsersUsecase(repo Repository, timeout time.Duration) Usecase {
+func NewUsersUsecase(repo Repository, timeout time.Duration, jwtAuth *middlewares.ConfigJWT) Usecase {
 	return &UsersUsecase{
 		Repo:           repo,
 		ContextTimeout: timeout,
+		JWTAuth:        jwtAuth,
 	}
 }
 
@@ -28,5 +31,6 @@ func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error)
 	if err != nil {
 		return Domain{}, err
 	}
+	res.Token, _ = uu.JWTAuth.GenerateToken(res.Email)
 	return res, nil
 }

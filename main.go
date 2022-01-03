@@ -68,7 +68,7 @@ func main() {
 
 	// Users initialize
 	usersRepo := _usersRepo.NewUsersRepo(db)
-	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext)
+	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext, &configJWT)
 
 	// Auth initialize
 	authController := _authController.NewControllers(usersUsecase)
