@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"CalFit/repository/mysql/addresses"
-	"CalFit/repository/mysql/booking_details"
+	bookingdetails "CalFit/repository/mysql/booking_details"
 	"CalFit/repository/mysql/classes"
 	"CalFit/repository/mysql/gyms"
 	"CalFit/repository/mysql/membership_types"
@@ -50,7 +50,7 @@ func InitDB() *gorm.DB {
 		&schedules.Schedule{},
 		&classes.Class{},
 		&video_contents.Video_content{},
-		&booking_details.Booking_detail{},
+		&bookingdetails.Booking_detail{},
 	)
 	return DB
 }
