@@ -20,7 +20,7 @@ func NewGymRepository(conn *gorm.DB) gyms.DomainRepository {
 
 func (b *GymRepository) GetAll(ctx context.Context) ([]gyms.Domain, error) {
 	var gymsModel []Gym
-	if err := b.Conn.Preload("Address").Find(&gymsModel).Error; err != nil {
+	if err := b.Conn.Preload("Address").Preload("Classes").Find(&gymsModel).Error; err != nil {
 		return nil, err
 	}
 	var result []gyms.Domain = ToListDomain(gymsModel)
@@ -29,7 +29,7 @@ func (b *GymRepository) GetAll(ctx context.Context) ([]gyms.Domain, error) {
 
 func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, error) {
 	var gym Gym
-	if err := b.Conn.Preload("Address").Where("id = ?", id).First(&gym).Error; err != nil {
+	if err := b.Conn.Preload("Address").Preload("Classes").Where("id = ?", id).First(&gym).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return gyms.Domain{}, exceptions.ErrNotFound
 		}
@@ -87,7 +87,6 @@ func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) 
 	gymModel.Telephone = gym.Telephone
 	gymModel.Picture = gym.Picture
 	gymModel.Operational_adminID = gym.Operational_admin_ID
-	gymModel.AddressID = 1
 	gymModel.Updated_at = time.Now()
 
 	updateErr := b.Conn.Save(&gymModel).Error

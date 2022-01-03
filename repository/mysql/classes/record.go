@@ -3,8 +3,12 @@ package classes
 import (
 	"CalFit/business/classes"
 	"CalFit/repository/mysql/booking_details"
+
+	// "CalFit/repository/mysql/gyms"
 	"CalFit/repository/mysql/schedules"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Class struct {
@@ -17,13 +21,14 @@ type Class struct {
 	Status             string
 	Membership_typeID  uint
 	GymID              uint
+	// Gym				   gyms.Gym
 	Booking_details    []booking_details.Booking_detail
 	Schedules          []schedules.Schedule `gorm:"many2many:class_schedules"`
 	Created_at         time.Time
 	Updated_at         time.Time
 }
 
-func (c *Class) BeforeCreate() error {
+func (c *Class) BeforeCreate(tx *gorm.DB) error {
 	c.Created_at = time.Now()
 	c.Updated_at = time.Now()
 	return nil

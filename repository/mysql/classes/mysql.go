@@ -36,3 +36,29 @@ func (b *ClassRepository) GetById(ctx context.Context, id string) (classes.Domai
 	}
 	return class.ToDomain(), nil
 }
+
+func (b *ClassRepository) Create(ctx context.Context, class classes.Domain) (classes.Domain, error) {
+	var classModel Class
+
+	createdClass := Class{
+		Name:      			class.Name,
+		Description: 		class.Description,
+		Banner_picture_url: class.Banner_picture_url,
+		Card_picture_url:   class.Card_picture_url,
+		Category: 			class.Category,
+		Status: 			class.Status,
+		GymID: 				class.GymID,
+		Membership_typeID:  class.Membership_typeID,
+	}
+	err := b.Conn.Create(&createdClass).Error
+	if err != nil {
+		return classes.Domain{}, err
+	}
+
+	// get gym data
+	if  getErr := b.Conn.Preload("Gym").Where("id = ?", createdClass.Id).First(&classModel).Error; getErr != nil {
+		return classes.Domain{}, getErr
+	}
+
+	return classModel.ToDomain(), nil
+}
