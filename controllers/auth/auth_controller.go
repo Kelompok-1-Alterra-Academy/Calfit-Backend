@@ -6,6 +6,7 @@ import (
 	"CalFit/controllers/auth/request"
 	"CalFit/controllers/auth/response"
 	"CalFit/exceptions"
+	"CalFit/helpers"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,5 +32,7 @@ func (controller *Controllers) Login(c echo.Context) error {
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
+	cookie := helpers.CreateCookie(resFromDomain.Token)
+	c.SetCookie(cookie)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
