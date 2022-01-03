@@ -31,9 +31,6 @@ func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, er
 func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, error) {
 	data := []Schedule{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return []schedules.Domain{}, exceptions.ErrNotFound
-		}
 		return []schedules.Domain{}, err
 	}
 	var domainSchedules []schedules.Domain

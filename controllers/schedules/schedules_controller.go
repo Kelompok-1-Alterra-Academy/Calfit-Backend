@@ -39,9 +39,6 @@ func (controller *Controllers) Get(c echo.Context) error {
 	domain := request.ToDomain(reqSchedule)
 	res, err := controller.SchedulesUC.Get(domain)
 	if err != nil {
-		if err == exceptions.ErrNotFound {
-			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrScheduleNotFound)
-		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	resFromDomain := []response.Schedules{}
