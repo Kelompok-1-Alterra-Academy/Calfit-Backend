@@ -5,13 +5,13 @@ import (
 )
 
 type Schedules struct {
-	Time_schedule string `json:"time_schedule"`
-	Duration      int    `json:"duration"`
+	TimeSchedule string `json:"time_schedule"`
+	Duration     int    `json:"duration"`
 }
 
 func FromDomain(s schedules.Domain) Schedules {
 	return Schedules{
-		Time_schedule: s.Time_schedule,
-		Duration:      s.Duration,
+		TimeSchedule: s.TimeSchedule,
+		Duration:     s.Duration,
 	}
 }

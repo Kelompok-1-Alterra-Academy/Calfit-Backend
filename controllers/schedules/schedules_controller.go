@@ -8,7 +8,6 @@ import (
 	"CalFit/exceptions"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -53,15 +52,11 @@ func (controller *Controllers) Get(c echo.Context) error {
 }
 
 func (controller *Controllers) Update(c echo.Context) error {
-	id := c.FormValue("id")
-	if strings.TrimSpace(id) == "" {
-		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrMissingId)
-	}
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
+	id, _ := strconv.Atoi(c.Param("id"))
 	domain := request.ToDomain(reqSchedule)
-	idInt, _ := strconv.Atoi(id)
-	domain.Id = idInt
+	domain.Id = id
 	res, err := controller.SchedulesUC.Update(domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
@@ -76,7 +71,9 @@ func (controller *Controllers) Update(c echo.Context) error {
 func (controller *Controllers) Delete(c echo.Context) error {
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
+	id, _ := strconv.Atoi(c.Param("id"))
 	domain := request.ToDomain(reqSchedule)
+	domain.Id = id
 	res, err := controller.SchedulesUC.Delete(domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {

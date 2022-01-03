@@ -6,32 +6,32 @@ import (
 )
 
 type Schedule struct {
-	Id            int `gorm:"primaryKey"`
-	Time_schedule string
-	Duration      int
-	SessionID     int
-	Created_at    time.Time
-	Updated_at    time.Time
+	Id           int `gorm:"primaryKey"`
+	TimeSchedule string
+	Duration     int
+	SessionID    int
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 func FromDomain(domain schedules.Domain) Schedule {
 	return Schedule{
-		Id:            domain.Id,
-		Time_schedule: domain.Time_schedule,
-		Duration:      domain.Duration,
-		SessionID:     domain.SessionID,
-		Created_at:    time.Now(),
-		Updated_at:    time.Now(),
+		Id:           domain.Id,
+		TimeSchedule: domain.TimeSchedule,
+		Duration:     domain.Duration,
+		SessionID:    domain.SessionID,
+		CreatedAt:    domain.CreatedAt,
+		UpdatedAt:    domain.UpdatedAt,
 	}
 }
 
 func (s Schedule) toDomain() schedules.Domain {
 	return schedules.Domain{
-		Id:            s.Id,
-		Time_schedule: s.Time_schedule,
-		Duration:      s.Duration,
-		SessionID:     s.SessionID,
-		Created_at:    s.Created_at,
-		Updated_at:    s.Updated_at,
+		Id:           s.Id,
+		TimeSchedule: s.TimeSchedule,
+		Duration:     s.Duration,
+		SessionID:    s.SessionID,
+		CreatedAt:    s.CreatedAt,
+		UpdatedAt:    s.UpdatedAt,
 	}
 }
