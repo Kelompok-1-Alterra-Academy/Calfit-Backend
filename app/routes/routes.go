@@ -25,8 +25,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 	v1 := e.Group("/api/v1")
 	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+		AllowCredentials: true,
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 	v1.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",
