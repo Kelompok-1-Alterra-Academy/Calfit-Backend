@@ -54,12 +54,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
-		// auth endpoint
-<<<<<<< HEAD
 		v1.POST("/auth/login", controllers.AuthController.Login)
-=======
-		v1.GET("/auth/login", controllers.AuthController.Login)
->>>>>>> refactor(route): adding auth endpoint
 	}
 
 	// superadmin routes
