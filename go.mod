@@ -14,6 +14,7 @@ require (
 	cloud.google.com/go/storage v1.18.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20211216145620-d92e9ce0af51 // indirect
 	github.com/go-playground/validator/v10 v10.9.0
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/googleapis/google-cloud-go-testing v0.0.0-20210719221736-1c9a4c676720 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
