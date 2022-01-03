@@ -12,15 +12,15 @@ import (
 
 type Gym struct {
 	gorm.Model
-	Id                  uint `gorm:"primaryKey"`
-	Name                string `gorm:"type:varchar(100);not null"`
-	Telephone           string `gorm:"type:varchar(20);not null"`
-	Picture             string `gorm:"type:varchar(500);not null"`
-	Operational_adminID uint `gorm:"not null"`
-	AddressID           uint `gorm:"not null"`
+	Id                  uint                                 `gorm:"primaryKey"`
+	Name                string                               `gorm:"type:varchar(100);not null"`
+	Telephone           string                               `gorm:"type:varchar(20);not null"`
+	Picture             string                               `gorm:"type:varchar(500);not null"`
+	Operational_adminID uint                                 `gorm:"not null"`
+	AddressID           uint                                 `gorm:"not null"`
 	Operational_admin   operational_admins.Operational_admin `gorm:"foreignkey:Operational_adminID"`
-	Address             addresses.Address `gorm:"foreignkey:AddressID"`
-	Classes             []classes.Class `gorm:"foreignkey:GymID"`
+	Address             addresses.Address                    `gorm:"foreignkey:AddressID"`
+	Classes             []classes.Class                      `gorm:"foreignkey:GymID"`
 	Created_at          time.Time
 	Updated_at          time.Time
 }
@@ -33,17 +33,17 @@ func (g *Gym) BeforeCreate(tx *gorm.DB) error {
 
 func (g *Gym) ToDomain() gyms.Domain {
 	return gyms.Domain{
-		Id:                  g.Id,
-		Name:                g.Name,
-		Telephone:           g.Telephone,
-		Picture:             g.Picture,
+		Id:                   g.Id,
+		Name:                 g.Name,
+		Telephone:            g.Telephone,
+		Picture:              g.Picture,
 		Operational_admin_ID: g.Operational_adminID,
 		Address_ID:           g.AddressID,
 		// Operational_admin:   g.Operational_admin.ToDomain(),
-		Address:             g.Address.ToDomain(),
+		Address: g.Address.ToDomain(),
 		// Classes:             g.Classes.ToDomain(),
-		Created_at:          g.Created_at,
-		Updated_at:          g.Updated_at,
+		Created_at: g.Created_at,
+		Updated_at: g.Updated_at,
 	}
 }
 
@@ -58,8 +58,8 @@ func FromDomain(domain gyms.Domain) Gym {
 		// Operational_admin:   domain.Operational_admin.FromDomain(),
 		// Address:             domain.Address.FromDomain(),
 		// Classes:             domain.Classes.FromDomain(),
-		Created_at:          domain.Created_at,
-		Updated_at:          domain.Updated_at,
+		Created_at: domain.Created_at,
+		Updated_at: domain.Updated_at,
 	}
 }
 

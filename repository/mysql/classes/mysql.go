@@ -38,7 +38,7 @@ func (b *ClassRepository) GetById(ctx context.Context, id string) (classes.Domai
 }
 
 func (b *ClassRepository) Create(ctx context.Context, class classes.Domain, gymId string) (classes.Domain, error) {
-	var classModel Class
+	// var classModel Class
 
 	createdClass := Class{
 		Name:               class.Name,
@@ -55,10 +55,10 @@ func (b *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 		return classes.Domain{}, err
 	}
 
-	// get gym data
-	if getErr := b.Conn.Preload("Gym").Where("id = ?", createdClass.Id).First(&classModel).Error; getErr != nil {
-		return classes.Domain{}, getErr
-	}
+	// // get gym data
+	// if getErr := b.Conn.Preload("Gym").Where("id = ?", createdClass.Id).First(&classModel).Error; getErr != nil {
+	// 	return classes.Domain{}, getErr
+	// }
 
-	return classModel.ToDomain(), nil
+	return createdClass.ToDomain(), nil
 }

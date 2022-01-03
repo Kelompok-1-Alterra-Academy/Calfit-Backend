@@ -44,12 +44,12 @@ func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Doma
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
 
-	check for gymId
-	_, gymErr := u.GymRepo.GetById(ctx, gymId)
-	// if (gymErr != nil) || (gym.Id == 0) {
-	if gymErr != nil {
-		return Domain{}, exceptions.ErrGymNotFound
-	}
+	// // check for gymId
+	// _, gymErr := u.GymRepo.GetById(ctx, gymId)
+	// // if (gymErr != nil) || (gym.Id == 0) {
+	// if gymErr != nil {
+	// 	return Domain{}, exceptions.ErrGymNotFound
+	// }
 
 	validate := validator.New()
 	err := validate.Struct(domain)
