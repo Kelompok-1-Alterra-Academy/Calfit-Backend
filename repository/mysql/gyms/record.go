@@ -41,7 +41,8 @@ func (g *Gym) ToDomain() gyms.Domain {
 		Address_ID:           g.AddressID,
 		// Operational_admin:   g.Operational_admin.ToDomain(),
 		Address: g.Address.ToDomain(),
-		// Classes:             g.Classes.ToDomain(),
+		Classes: ToListClassDomain(g.Classes),
+		// Classes:    g.Classes.T
 		Created_at: g.Created_at,
 		Updated_at: g.Updated_at,
 	}
@@ -67,6 +68,28 @@ func ToListDomain(data []Gym) []gyms.Domain {
 	var listDomain []gyms.Domain
 	for _, item := range data {
 		listDomain = append(listDomain, item.ToDomain())
+	}
+	return listDomain
+}
+
+func ToClassDomain(data classes.Class) gyms.ClassDomain {
+	return gyms.ClassDomain{
+		Id:                 data.Id,
+		Name:               data.Name,
+		Description:        data.Description,
+		Banner_picture_url: data.Banner_picture_url,
+		Card_picture_url:   data.Card_picture_url,
+		Category:           data.Category,
+		Status:             data.Status,
+		Created_at:         data.Created_at,
+		Updated_at:         data.Updated_at,
+	}
+}
+
+func ToListClassDomain(data []classes.Class) []gyms.ClassDomain {
+	var listDomain []gyms.ClassDomain
+	for _, item := range data {
+		listDomain = append(listDomain, ToClassDomain(item))
 	}
 	return listDomain
 }
