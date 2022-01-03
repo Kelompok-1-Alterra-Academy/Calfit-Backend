@@ -1,4 +1,4 @@
-package booking_details
+package bookingdetails
 
 import "time"
 
