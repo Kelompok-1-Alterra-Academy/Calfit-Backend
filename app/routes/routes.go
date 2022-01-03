@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"CalFit/controllers/auth"
 	"CalFit/controllers/classes"
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
@@ -16,6 +17,7 @@ type ControllersList struct {
 	GymController       *gyms.GymController
 	ClassController     *classes.ClassController
 	SessionsController  *sessions.Controllers
+	AuthController      *auth.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -51,6 +53,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
+		// auth endpoint
+		v1.GET("/auth/login", controllers.AuthController.Login)
 	}
 
 	// superadmin routes
