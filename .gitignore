@@ -1,4 +1,5 @@
 .env
 .cli
+.vscode
 config.json
 config_*.json

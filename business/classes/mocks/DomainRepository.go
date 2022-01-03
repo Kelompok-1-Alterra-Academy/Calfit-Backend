@@ -14,20 +14,20 @@ type DomainRepository struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: ctx, domain
-func (_m *DomainRepository) Create(ctx context.Context, domain classes.Domain) (classes.Domain, error) {
-	ret := _m.Called(ctx, domain)
+// Create provides a mock function with given fields: ctx, domain, gymId
+func (_m *DomainRepository) Create(ctx context.Context, domain classes.Domain, gymId string) (classes.Domain, error) {
+	ret := _m.Called(ctx, domain, gymId)
 
 	var r0 classes.Domain
-	if rf, ok := ret.Get(0).(func(context.Context, classes.Domain) classes.Domain); ok {
-		r0 = rf(ctx, domain)
+	if rf, ok := ret.Get(0).(func(context.Context, classes.Domain, string) classes.Domain); ok {
+		r0 = rf(ctx, domain, gymId)
 	} else {
 		r0 = ret.Get(0).(classes.Domain)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, classes.Domain) error); ok {
-		r1 = rf(ctx, domain)
+	if rf, ok := ret.Get(1).(func(context.Context, classes.Domain, string) error); ok {
+		r1 = rf(ctx, domain, gymId)
 	} else {
 		r1 = ret.Error(1)
 	}

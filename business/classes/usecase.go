@@ -1,6 +1,7 @@
 package classes
 
 import (
+	"CalFit/business/gyms"
 	"CalFit/exceptions"
 	context "context"
 	"time"
@@ -10,6 +11,7 @@ import (
 
 type Usecase struct {
 	Repo           DomainRepository
+	GymRepo        gyms.DomainRepository
 	ContextTimeout time.Duration
 }
 
@@ -38,9 +40,16 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 	return u.Repo.GetById(ctx, id)
 }
 
-func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
+func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
+
+	check for gymId
+	_, gymErr := u.GymRepo.GetById(ctx, gymId)
+	// if (gymErr != nil) || (gym.Id == 0) {
+	if gymErr != nil {
+		return Domain{}, exceptions.ErrGymNotFound
+	}
 
 	validate := validator.New()
 	err := validate.Struct(domain)
@@ -48,5 +57,5 @@ func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
 		return Domain{}, exceptions.ErrValidationFailed
 	}
 
-	return u.Repo.Create(ctx, domain)
+	return u.Repo.Create(ctx, domain, gymId)
 }
