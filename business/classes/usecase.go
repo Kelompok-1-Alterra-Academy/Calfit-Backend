@@ -4,6 +4,8 @@ import (
 	"CalFit/exceptions"
 	context "context"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Usecase struct {
@@ -34,4 +36,17 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 	}
 
 	return u.Repo.GetById(ctx, id)
+}
+
+func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	validate := validator.New()
+	err := validate.Struct(domain)
+	if err != nil {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
+
+	return u.Repo.Create(ctx, domain)
 }
