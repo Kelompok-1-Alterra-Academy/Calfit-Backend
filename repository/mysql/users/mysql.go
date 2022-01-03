@@ -5,6 +5,7 @@ import (
 	"CalFit/repository/mysql/addresses"
 	"context"
 	"errors"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -27,6 +28,7 @@ func (repo *UsersRepo) Login(ctx context.Context, domain users.Domain) (users.Do
 	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
+			data.CreatedAt = time.Now()
 			address := addresses.Address{
 				Address:     "default",
 				District:    "default",
