@@ -16,7 +16,7 @@ jobs:
         with:
           go-version: 1.17
       - name: unit-test
-        run: go test -v ./business/... -cover
+        run: go test -v ./... -cover
 
   build-push-docker:
     name: build-push-docker

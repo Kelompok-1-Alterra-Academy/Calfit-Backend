@@ -23,4 +23,10 @@ var (
 	ErrEmptyInput = errors.New("empty input")
 	// ErrValidationFailed is thrown when the input validation is failed
 	ErrValidationFailed = errors.New("validation failed")
+	// ErrSessionNotFound is thrown when the session is not found
+	ErrSessionNotFound = errors.New("session not found")
+	// ErrScheduleNotFound is thrown when the schedule is not found
+	ErrScheduleNotFound = errors.New("schedule not found")
+	// ErrMissingId is thrown when id is missing
+	ErrMissingId = errors.New("missing require id")
 )
