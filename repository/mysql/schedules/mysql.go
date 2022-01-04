@@ -3,6 +3,7 @@ package schedules
 import (
 	"CalFit/business/schedules"
 	"CalFit/exceptions"
+	"context"
 	"errors"
 	"time"
 
@@ -19,7 +20,7 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 	}
 }
 
-func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Insert(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
 	data.CreatedAt = time.Now()
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
@@ -28,7 +29,7 @@ func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, er
 	return data.toDomain(), nil
 }
 
-func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, error) {
+func (repo *SchedulesRepo) Get(ctx context.Context) ([]schedules.Domain, error) {
 	data := []Schedule{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
 		return []schedules.Domain{}, err
@@ -40,7 +41,7 @@ func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, err
 	return domainSchedules, nil
 }
 
-func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -55,9 +56,9 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 	return data.toDomain(), nil
 }
 
-func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {
-	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
+func (repo *SchedulesRepo) Delete(ctx context.Context, id int) (schedules.Domain, error) {
+	data := Schedule{}
+	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}

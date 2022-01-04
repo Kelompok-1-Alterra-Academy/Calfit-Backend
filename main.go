@@ -45,7 +45,7 @@ func main() {
 
 	// Schedules initialize
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
-	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
+	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo, timeoutContext)
 	schedulesController := _schedulesController.NewControllers(schedulesUsecase)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
 	gymHandler := _gymController.NewHandler(*gymUsecase)
