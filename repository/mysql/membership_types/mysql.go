@@ -2,6 +2,7 @@ package membership_types
 
 import (
 	"CalFit/business/memberships"
+	"CalFit/exceptions"
 	"errors"
 
 	"gorm.io/gorm"
@@ -22,7 +23,7 @@ func (repo *MembershipsRepo) Insert(domain memberships.Domain) (memberships.Doma
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return memberships.Domain{}, err
 	}
-	return data.toDomain(), nil
+	return data.ToDomain(), nil
 }
 
 func (repo *MembershipsRepo) Get(domain memberships.Domain) ([]memberships.Domain, error) {
@@ -32,7 +33,7 @@ func (repo *MembershipsRepo) Get(domain memberships.Domain) ([]memberships.Domai
 	}
 	var domainMemberships []memberships.Domain
 	for _, val := range data {
-		domainMemberships = append(domainMemberships, val.toDomain())
+		domainMemberships = append(domainMemberships, val.ToDomain())
 	}
 	return domainMemberships, nil
 }
@@ -44,9 +45,9 @@ func (repo *MembershipsRepo) Update(domain memberships.Domain) (memberships.Doma
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return memberships.Domain{}, errors.New("record not found")
 		}
-		return memberships.Domain{}, err
+		return memberships.Domain{}, exceptions.ErrNotFound
 	}
-	return data.toDomain(), nil
+	return data.ToDomain(), nil
 }
 
 func (repo *MembershipsRepo) Delete(domain memberships.Domain) (memberships.Domain, error) {
@@ -57,5 +58,5 @@ func (repo *MembershipsRepo) Delete(domain memberships.Domain) (memberships.Doma
 		}
 	}
 	repo.DBConn.Where("id=?", data.Id).Delete(&data)
-	return data.toDomain(), nil
+	return data.ToDomain(), nil
 }
