@@ -60,6 +60,9 @@ func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) 
 		}
 		return schedules.Domain{}, err
 	}
+	data.Duration = domain.Duration
+	data.TimeSchedule = domain.TimeSchedule
+	data.SessionID = domain.SessionID
 	data.UpdatedAt = time.Now()
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
 		return schedules.Domain{}, err
