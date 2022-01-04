@@ -1,6 +1,7 @@
 package schedules
 
 import (
+	"CalFit/exceptions"
 	"context"
 	"time"
 )
@@ -40,6 +41,9 @@ func (schedulesUseCase *SchedulesUsecase) Get(ctx context.Context) ([]Domain, er
 func (schedulesUseCase *SchedulesUsecase) GetById(ctx context.Context, id int) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, schedulesUseCase.ContextTimeout)
 	defer cancel()
+	if id == 0 {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 	res, err := schedulesUseCase.Repo.GetById(ctx, id)
 	if err != nil {
 		return Domain{}, err
@@ -50,6 +54,9 @@ func (schedulesUseCase *SchedulesUsecase) GetById(ctx context.Context, id int) (
 func (schedulesUseCase *SchedulesUsecase) Update(ctx context.Context, schedules Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, schedulesUseCase.ContextTimeout)
 	defer cancel()
+	if schedules.Id == 0 {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 	res, err := schedulesUseCase.Repo.Update(ctx, schedules)
 	if err != nil {
 		return Domain{}, err
@@ -60,6 +67,9 @@ func (schedulesUseCase *SchedulesUsecase) Update(ctx context.Context, schedules 
 func (schedulesUseCase *SchedulesUsecase) Delete(ctx context.Context, id int) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, schedulesUseCase.ContextTimeout)
 	defer cancel()
+	if id == 0 {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
 	res, err := schedulesUseCase.Repo.Delete(ctx, id)
 	if err != nil {
 		return Domain{}, err
