@@ -3,9 +3,12 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_membershipsUsecase "CalFit/business/memberships"
 	schedulesUsecase "CalFit/business/schedules"
+	_membershipsHandler "CalFit/controllers/memberships"
 	schedulesHandler "CalFit/controllers/schedules"
 	"CalFit/repository/mysql"
+	_membershipsRepo "CalFit/repository/mysql/membership_types"
 	schedulesRepo "CalFit/repository/mysql/schedules"
 	"log"
 
@@ -36,9 +39,14 @@ func main() {
 	schedulesUsecase := schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
 	schedulesHandler := schedulesHandler.NewHandler(schedulesUsecase)
 
+	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
+	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo)
+	membershipsHandler := _membershipsHandler.NewHandler(membershipsUsecase)
+
 	routesInit := routes.HandlerList{
-		JWTMiddleware:    configJWT.Init(),
-		SchedulesHandler: *schedulesHandler,
+		JWTMiddleware:      configJWT.Init(),
+		SchedulesHandler:   *schedulesHandler,
+		MembershipsHandler: *membershipsHandler,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
