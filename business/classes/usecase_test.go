@@ -120,9 +120,9 @@ func TestDeleteClass(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.NotEqual(t, err, nil)
 	})
-	// t.Run("Test Case 3 | Invalid Delete Class with Wrong Id", func(t *testing.T) {
-	// 	err := classService.Delete(context.Background(), "2")
-	// 	assert.NotNil(t, err)
-	// 	assert.NotEqual(t, err, nil)
-	// })
+	t.Run("Test Case 3 | Invalid Delete Class with Wrong Id", func(t *testing.T) {
+		err := classService.Delete(context.Background(), "20")
+		assert.NotNil(t, err)
+		assert.NotEqual(t, err, nil)
+	})
 }

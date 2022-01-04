@@ -60,10 +60,11 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		superadmin.POST("/gyms", controllers.GymController.Create)
 		superadmin.PUT("/gyms/:gymId", controllers.GymController.Update)
 		superadmin.DELETE("/gyms/:gymId", controllers.GymController.Delete)
-		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
 
 		// class endpoint
 		superadmin.GET("/classes", controllers.ClassController.GetAll)
+		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
+		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete)
 
 		// session endpoint
 		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
