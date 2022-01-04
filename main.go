@@ -3,14 +3,24 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_classUsecase "CalFit/business/classes"
+	_gymUsecase "CalFit/business/gyms"
 	_membershipsUsecase "CalFit/business/memberships"
-	schedulesUsecase "CalFit/business/schedules"
-	_membershipsHandler "CalFit/controllers/memberships"
-	schedulesHandler "CalFit/controllers/schedules"
+	_schedulesUsecase "CalFit/business/schedules"
+	_sessionsUsecase "CalFit/business/sessions"
+	_classController "CalFit/controllers/classes"
+	_gymController "CalFit/controllers/gyms"
+	_membershipsController "CalFit/controllers/memberships"
+	_schedulesController "CalFit/controllers/schedules"
+	_sessionsController "CalFit/controllers/sessions"
 	"CalFit/repository/mysql"
+	_classDb "CalFit/repository/mysql/classes"
+	_gymDb "CalFit/repository/mysql/gyms"
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
-	schedulesRepo "CalFit/repository/mysql/schedules"
+	_schedulesRepo "CalFit/repository/mysql/schedules"
+	_sessionsRepo "CalFit/repository/mysql/sessions"
 	"log"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -34,19 +44,34 @@ func main() {
 		ExpiresDuration: viper.GetInt("jwt.expired"),
 	}
 
-	// Schedules initialize
-	schedulesRepo := schedulesRepo.NewSchedulesRepo(db)
-	schedulesUsecase := schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
-	schedulesHandler := schedulesHandler.NewHandler(schedulesUsecase)
+	timeoutContext := time.Duration(viper.GetInt("server.timeout")) * time.Second
 
+	// Schedules initialize
+	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
+	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo)
+	schedulesController := _schedulesController.NewControllers(schedulesUsecase)
+	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
+	gymHandler := _gymController.NewHandler(*gymUsecase)
+	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
+	classHandler := _classController.NewHandler(*classUsecase)
+
+	// Sessions initialize
+	sessionsRepo := _sessionsRepo.NewSessionsRepo(db)
+	sessionsUsecase := _sessionsUsecase.NewSessionsUsecase(sessionsRepo, timeoutContext)
+	sessionsController := _sessionsController.NewControllers(sessionsUsecase)
+
+	// Memberships initialize
 	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
 	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo)
-	membershipsHandler := _membershipsHandler.NewHandler(membershipsUsecase)
+	membershipsHandler := _membershipsController.NewControllers(membershipsUsecase)
 
-	routesInit := routes.HandlerList{
-		JWTMiddleware:      configJWT.Init(),
-		SchedulesHandler:   *schedulesHandler,
-		MembershipsHandler: *membershipsHandler,
+	routesInit := routes.ControllersList{
+		JWTMiddleware:         configJWT.Init(),
+		SchedulesController:   schedulesController,
+		GymController:         gymHandler,
+		MembershipsController: membershipsHandler,
+		ClassController:       classHandler,
+		SessionsController:    sessionsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))

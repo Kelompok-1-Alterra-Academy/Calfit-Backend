@@ -1,7 +1,10 @@
 package routes
 
 import (
+	"CalFit/controllers/classes"
+	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
+	"CalFit/controllers/sessions"
 
 	"CalFit/controllers/memberships"
 
@@ -9,28 +12,68 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-type HandlerList struct {
-	JWTMiddleware      middleware.JWTConfig
-	SchedulesHandler   schedules.Presenter
-	MembershipsHandler memberships.Presenter
+type ControllersList struct {
+	JWTMiddleware         middleware.JWTConfig
+	MembershipsController *memberships.Controllers
+	SchedulesController   *schedules.Controllers
+	GymController         *gyms.GymController
+	ClassController       *classes.ClassController
+	SessionsController    *sessions.Controllers
 }
 
-func (handler HandlerList) RouteRegister(e *echo.Echo) {
+func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+
+	v1 := e.Group("/api/v1")
+	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
+	v1.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",
+	}))
 
-	s := e.Group("/v1/schedules")
-	s.POST("", handler.SchedulesHandler.Insert)
-	s.GET("", handler.SchedulesHandler.Get)
-	s.PUT("", handler.SchedulesHandler.Update)
-	s.DELETE("", handler.SchedulesHandler.Delete)
+	// unprotected routes
+	{
+		// gym endpoint
+		v1.GET("/gyms", controllers.GymController.GetAll)
+		v1.GET("/gyms/:gymId", controllers.GymController.GetById)
 
-	m := e.Group("/v1/memberships")
-	m.POST("", handler.MembershipsHandler.Insert)
-	m.GET("", handler.MembershipsHandler.Get)
-	m.PUT("", handler.MembershipsHandler.Update)
-	m.DELETE("", handler.MembershipsHandler.Delete)
+		// class endpoint
+		v1.GET("/classes/:classId", controllers.ClassController.GetById)
+
+		v1.POST("/memberships", controllers.MembershipsController.Insert)
+		v1.GET("/memberships", controllers.MembershipsController.Get)
+		v1.PUT("/memberships", controllers.MembershipsController.Update)
+		v1.DELETE("/memberships", controllers.MembershipsController.Delete)
+
+		// schedules endpoint
+		v1.POST("", controllers.SchedulesController.Insert)
+		v1.GET("", controllers.SchedulesController.Get)
+		v1.PUT("", controllers.SchedulesController.Update)
+		v1.DELETE("", controllers.SchedulesController.Delete)
+
+		// session endpoint
+		v1.POST("/sessions", controllers.SessionsController.Insert)
+		v1.GET("/sessions", controllers.SessionsController.GetAll)
+		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
+
+	}
+
+	// superadmin routes
+	superadmin := v1.Group("")
+	// superadmin.Use(controllers.JWTMiddleware.MiddlewareFunc())
+	{
+		// gym endpoint
+		superadmin.POST("/gyms", controllers.GymController.Create)
+		superadmin.PUT("/gyms/:gymId", controllers.GymController.Update)
+		superadmin.DELETE("/gyms/:gymId", controllers.GymController.Delete)
+
+		// class endpoint
+		superadmin.GET("/classes", controllers.ClassController.GetAll)
+
+		// session endpoint
+		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
+		superadmin.DELETE("/sessions/:id", controllers.SessionsController.Delete)
+	}
 }
