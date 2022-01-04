@@ -42,3 +42,18 @@ func TestInsert(t *testing.T) {
 		assert.NotNil(t, err)
 	})
 }
+
+func TestGet(t *testing.T) {
+	testSetup()
+	t.Run("Test case 1 || Valid data", func(t *testing.T) {
+		repo.On("Get", mock.Anything).Return([]schedules.Domain{domain}, nil).Once()
+		schedules, err := usecase.Get(context.Background())
+		assert.Nil(t, err)
+		assert.Equal(t, domain, schedules[0])
+	})
+	t.Run("Test case 2 || Server error", func(t *testing.T) {
+		repo.On("Get", mock.Anything).Return([]schedules.Domain{domain}, errors.New("Internal server error")).Once()
+		_, err := usecase.Get(context.Background())
+		assert.NotNil(t, err)
+	})
+}
