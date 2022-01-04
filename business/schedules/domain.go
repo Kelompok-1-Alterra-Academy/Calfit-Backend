@@ -1,6 +1,7 @@
 package schedules
 
 import (
+	"context"
 	"time"
 )
 
@@ -14,15 +15,15 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Insert(schedules Domain) (Domain, error)
-	Get(schedules Domain) ([]Domain, error)
-	Update(schedules Domain) (Domain, error)
-	Delete(schedules Domain) (Domain, error)
+	Insert(ctx context.Context, schedules Domain) (Domain, error)
+	Get(ctx context.Context) ([]Domain, error)
+	Update(ctx context.Context, schedules Domain) (Domain, error)
+	Delete(ctx context.Context, id int) (Domain, error)
 }
 
 type Repository interface {
-	Insert(schedules Domain) (Domain, error)
-	Get(schedules Domain) ([]Domain, error)
-	Update(schedules Domain) (Domain, error)
-	Delete(schedules Domain) (Domain, error)
+	Insert(ctx context.Context, schedules Domain) (Domain, error)
+	Get(ctx context.Context) ([]Domain, error)
+	Update(ctx context.Context, schedules Domain) (Domain, error)
+	Delete(ctx context.Context, id int) (Domain, error)
 }
