@@ -37,6 +37,16 @@ func (schedulesUseCase *SchedulesUsecase) Get(ctx context.Context) ([]Domain, er
 	return res, nil
 }
 
+func (schedulesUseCase *SchedulesUsecase) GetById(ctx context.Context, id int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, schedulesUseCase.ContextTimeout)
+	defer cancel()
+	res, err := schedulesUseCase.Repo.GetById(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}
+
 func (schedulesUseCase *SchedulesUsecase) Update(ctx context.Context, schedules Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, schedulesUseCase.ContextTimeout)
 	defer cancel()

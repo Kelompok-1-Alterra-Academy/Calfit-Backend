@@ -42,6 +42,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// schedules endpoint
 		v1.POST("/schedules", controllers.SchedulesController.Insert)
 		v1.GET("/schedules", controllers.SchedulesController.Get)
+		v1.GET("/schedules/:id", controllers.SchedulesController.Get)
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)

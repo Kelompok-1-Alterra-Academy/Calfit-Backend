@@ -48,6 +48,20 @@ func (controller *Controllers) Get(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
 
+func (controller *Controllers) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+	res, err := controller.SchedulesUC.GetById(ctx, id)
+	resFromDomain := response.FromDomain(res)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrScheduleNotFound)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusCreated, resFromDomain)
+}
+
 func (controller *Controllers) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 	reqSchedule := request.Schedules{}
