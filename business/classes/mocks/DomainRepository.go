@@ -35,6 +35,20 @@ func (_m *DomainRepository) Create(ctx context.Context, domain classes.Domain, g
 	return r0, r1
 }
 
+// Delete provides a mock function with given fields: ctx, id
+func (_m *DomainRepository) Delete(ctx context.Context, id string) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields: ctx
 func (_m *DomainRepository) GetAll(ctx context.Context) ([]classes.Domain, error) {
 	ret := _m.Called(ctx)
