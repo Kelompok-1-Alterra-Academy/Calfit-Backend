@@ -66,7 +66,7 @@ func TestGetById(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, domain, schedules)
 	})
-	t.Run("Test case 2 || Server error", func(t *testing.T) {
+	t.Run("Test case 2 || Empty input param", func(t *testing.T) {
 		repo.On("GetById", mock.Anything, mock.AnythingOfType("int")).Return(domain, errors.New("Empty input")).Once()
 		_, err := usecase.GetById(context.Background(), 0)
 		assert.NotNil(t, err)
@@ -86,14 +86,34 @@ func TestUpdate(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, domain, schedules)
 	})
-	t.Run("Test case 2 || Server error", func(t *testing.T) {
+	t.Run("Test case 2 || Empty input param", func(t *testing.T) {
 		repo.On("Update", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, errors.New("Empty input")).Once()
-		_, err := usecase.Update(context.Background(), domain)
+		_, err := usecase.Update(context.Background(), schedules.Domain{Id: 0})
 		assert.NotNil(t, err)
 	})
 	t.Run("Test case 3 || Server error", func(t *testing.T) {
 		repo.On("Update", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, errors.New("Internal server error")).Once()
 		_, err := usecase.Update(context.Background(), domain)
+		assert.NotNil(t, err)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	testSetup()
+	t.Run("Test case 1 || Valid data", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+		schedules, err := usecase.Delete(context.Background(), 1)
+		assert.Nil(t, err)
+		assert.Equal(t, domain, schedules)
+	})
+	t.Run("Test case 2 || Empty input param", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(domain, errors.New("Empty input")).Once()
+		_, err := usecase.Delete(context.Background(), 0)
+		assert.NotNil(t, err)
+	})
+	t.Run("Test case 3 || Server error", func(t *testing.T) {
+		repo.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(domain, errors.New("Internal server error")).Once()
+		_, err := usecase.Delete(context.Background(), 1)
 		assert.NotNil(t, err)
 	})
 }
