@@ -30,7 +30,7 @@ type ClassResponse struct {
 	Status             string `json:"status"`
 	Membership_typeID  uint   `json:"membership_typeID"`
 	// Booking_details    []booking_details.Domain
-	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
+	// Schedules          []schedules.Domain
 	Created_at time.Time `json:"createdAt"`
 	Updated_at time.Time `json:"updatedAt"`
 }
@@ -67,11 +67,9 @@ func FromDomain(domain gyms.Domain) GymResponse {
 		Telephone:            domain.Telephone,
 		Picture:              domain.Picture,
 		Operational_admin_ID: domain.Operational_admin_ID,
-		// Address_ID: 	domain.Address_ID,
-		Address: addresses.FromDomain(domain.Address),
-		Classes: FromClassDomainList(domain.Classes),
-		// Classes:    domain.Classes,
-		Created_at: domain.Created_at,
-		Updated_at: domain.Updated_at,
+		Address:              addresses.FromDomain(domain.Address),
+		Classes:              FromClassDomainList(domain.Classes),
+		Created_at:           domain.Created_at,
+		Updated_at:           domain.Updated_at,
 	}
 }
