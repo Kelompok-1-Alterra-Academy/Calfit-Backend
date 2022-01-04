@@ -11,22 +11,22 @@ type Memberships struct {
 	Description string `json:"description" form:"description"`
 }
 
-func ToDomain(s Memberships) memberships.Domain {
-	if s.Id == 0 {
+func ToDomain(m Memberships) memberships.Domain {
+	if m.Id == 0 {
 		return memberships.Domain{
-			Name:        s.Name,
-			Description: s.Description,
+			Name:        m.Name,
+			Description: m.Description,
 			Created_at:  time.Now(),
 		}
-	} else if s.Id != 0 {
+	} else if m.Id != 0 {
 		return memberships.Domain{
-			Id:          s.Id,
-			Name:        s.Name,
-			Description: s.Description,
+			Id:          m.Id,
+			Name:        m.Name,
+			Description: m.Description,
 			Updated_at:  time.Now(),
 		}
 	}
 	return memberships.Domain{
-		Id: s.Id,
+		Id: m.Id,
 	}
 }

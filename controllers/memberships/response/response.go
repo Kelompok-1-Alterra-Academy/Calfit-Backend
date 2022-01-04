@@ -13,12 +13,12 @@ type Memberships struct {
 	Updated_at  time.Time `json:"updated_at"`
 }
 
-func FromDomain(s memberships.Domain) Memberships {
+func FromDomain(m memberships.Domain) Memberships {
 	return Memberships{
-		Id:          s.Id,
-		Name:        s.Name,
-		Description: s.Description,
-		Created_at:  s.Created_at,
-		Updated_at:  s.Updated_at,
+		Id:          m.Id,
+		Name:        m.Name,
+		Description: m.Description,
+		Created_at:  m.Created_at,
+		Updated_at:  m.Updated_at,
 	}
 }
