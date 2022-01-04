@@ -19,7 +19,7 @@ var usecase schedules.Usecase
 func testSetup() {
 	domain = schedules.Domain{
 		Id:           1,
-		TimeSchedule: "07.00-09.00",
+		TimeSchedule: "domain7.00-09.00",
 		Duration:     120,
 		SessionID:    1,
 		CreatedAt:    time.Now(),
@@ -74,6 +74,26 @@ func TestGetById(t *testing.T) {
 	t.Run("Test case 3 || Server error", func(t *testing.T) {
 		repo.On("GetById", mock.Anything, mock.AnythingOfType("int")).Return(domain, errors.New("Internal server error")).Once()
 		_, err := usecase.GetById(context.Background(), 1)
+		assert.NotNil(t, err)
+	})
+}
+
+func TestUpdate(t *testing.T) {
+	testSetup()
+	t.Run("Test case 1 || Valid data", func(t *testing.T) {
+		repo.On("Update", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, nil).Once()
+		schedules, err := usecase.Update(context.Background(), domain)
+		assert.Nil(t, err)
+		assert.Equal(t, domain, schedules)
+	})
+	t.Run("Test case 2 || Server error", func(t *testing.T) {
+		repo.On("Update", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, errors.New("Empty input")).Once()
+		_, err := usecase.Update(context.Background(), domain)
+		assert.NotNil(t, err)
+	})
+	t.Run("Test case 3 || Server error", func(t *testing.T) {
+		repo.On("Update", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, errors.New("Internal server error")).Once()
+		_, err := usecase.Update(context.Background(), domain)
 		assert.NotNil(t, err)
 	})
 }
