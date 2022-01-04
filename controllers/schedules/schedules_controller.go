@@ -23,10 +23,11 @@ func NewControllers(schedules schedules.Usecase) *Controllers {
 }
 
 func (controller *Controllers) Insert(c echo.Context) error {
+	ctx := c.Request().Context()
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
 	domain := request.ToDomain(reqSchedule)
-	res, err := controller.SchedulesUC.Insert(domain)
+	res, err := controller.SchedulesUC.Insert(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
@@ -35,9 +36,8 @@ func (controller *Controllers) Insert(c echo.Context) error {
 }
 
 func (controller *Controllers) Get(c echo.Context) error {
-	reqSchedule := request.Schedules{}
-	domain := request.ToDomain(reqSchedule)
-	res, err := controller.SchedulesUC.Get(domain)
+	ctx := c.Request().Context()
+	res, err := controller.SchedulesUC.Get(ctx)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
@@ -49,12 +49,13 @@ func (controller *Controllers) Get(c echo.Context) error {
 }
 
 func (controller *Controllers) Update(c echo.Context) error {
+	ctx := c.Request().Context()
 	reqSchedule := request.Schedules{}
 	c.Bind(&reqSchedule)
 	id, _ := strconv.Atoi(c.Param("id"))
 	domain := request.ToDomain(reqSchedule)
 	domain.Id = id
-	res, err := controller.SchedulesUC.Update(domain)
+	res, err := controller.SchedulesUC.Update(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
@@ -66,12 +67,9 @@ func (controller *Controllers) Update(c echo.Context) error {
 }
 
 func (controller *Controllers) Delete(c echo.Context) error {
-	reqSchedule := request.Schedules{}
-	c.Bind(&reqSchedule)
+	ctx := c.Request().Context()
 	id, _ := strconv.Atoi(c.Param("id"))
-	domain := request.ToDomain(reqSchedule)
-	domain.Id = id
-	res, err := controller.SchedulesUC.Delete(domain)
+	res, err := controller.SchedulesUC.Delete(ctx, id)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
