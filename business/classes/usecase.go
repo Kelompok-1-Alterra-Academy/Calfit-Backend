@@ -1,7 +1,6 @@
 package classes
 
 import (
-	"CalFit/business/gyms"
 	"CalFit/exceptions"
 	context "context"
 	"time"
@@ -10,14 +9,16 @@ import (
 )
 
 type Usecase struct {
-	Repo           DomainRepository
-	GymRepo        gyms.DomainRepository
+	Repo DomainRepository
+	// GymRepo        gyms.DomainRepository
 	ContextTimeout time.Duration
 }
 
+// func NewUsecase(repo DomainRepository, gymRepo gyms.DomainRepository, timeout time.Duration) *Usecase {
 func NewUsecase(repo DomainRepository, timeout time.Duration) *Usecase {
 	return &Usecase{
-		Repo:           repo,
+		Repo: repo,
+		// GymRepo:        gymRepo,
 		ContextTimeout: timeout,
 	}
 }
@@ -46,8 +47,8 @@ func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Doma
 
 	// // check for gymId
 	// _, gymErr := u.GymRepo.GetById(ctx, gymId)
-	// // if (gymErr != nil) || (gym.Id == 0) {
-	// if gymErr != nil {
+	// if (gymErr != nil) || (gym.Id == 0) {
+	// 	// if gymErr != nil {
 	// 	return Domain{}, exceptions.ErrGymNotFound
 	// }
 
@@ -58,4 +59,15 @@ func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Doma
 	}
 
 	return u.Repo.Create(ctx, domain, gymId)
+}
+
+func (u *Usecase) Delete(ctx context.Context, id string) error {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return exceptions.ErrEmptyInput
+	}
+
+	return u.Repo.Delete(ctx, id)
 }

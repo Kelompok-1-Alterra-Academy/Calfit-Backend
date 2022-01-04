@@ -26,9 +26,9 @@ func (c *ClassRepository) GetAll(ctx context.Context) ([]classes.Domain, error) 
 	return result, nil
 }
 
-func (b *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
+func (c *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
 	var class Class
-	if err := b.Conn.Preload("Address").Where("id = ?", id).First(&class).Error; err != nil {
+	if err := c.Conn.Preload("Address").Where("id = ?", id).First(&class).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return classes.Domain{}, exceptions.ErrNotFound
 		}
@@ -37,9 +37,7 @@ func (b *ClassRepository) GetById(ctx context.Context, id string) (classes.Domai
 	return class.ToDomain(), nil
 }
 
-func (b *ClassRepository) Create(ctx context.Context, class classes.Domain, gymId string) (classes.Domain, error) {
-	// var classModel Class
-
+func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymId string) (classes.Domain, error) {
 	createdClass := Class{
 		Name:               class.Name,
 		Description:        class.Description,
@@ -50,15 +48,21 @@ func (b *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 		GymID:              class.GymID,
 		// Membership_typeID:  class.Membership_typeID,
 	}
-	err := b.Conn.Create(&createdClass).Error
+	err := c.Conn.Create(&createdClass).Error
 	if err != nil {
 		return classes.Domain{}, err
 	}
 
-	// // get gym data
-	// if getErr := b.Conn.Preload("Gym").Where("id = ?", createdClass.Id).First(&classModel).Error; getErr != nil {
-	// 	return classes.Domain{}, getErr
-	// }
-
 	return createdClass.ToDomain(), nil
+}
+
+func (c *ClassRepository) Delete(ctx context.Context, id string) error {
+	var class Class
+	if err := c.Conn.Where("id = ?", id).Delete(&class).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return exceptions.ErrNotFound
+		}
+		return err
+	}
+	return nil
 }
