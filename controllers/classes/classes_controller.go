@@ -93,3 +93,21 @@ func (u *ClassController) Create(c echo.Context) error {
 	response := responses.FromDomain(class)
 	return controllers.SuccessResponse(c, http.StatusCreated, response)
 }
+
+func (u *ClassController) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	id := c.Param("classId")
+	err := u.Usecase.Delete(ctx, id)
+	if err != nil {
+		if err == exceptions.ErrNotFound {
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrClassNotFound)
+		}
+		if err == exceptions.ErrEmptyInput {
+			return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrEmptyInput)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.SuccessResponse(c, http.StatusOK, nil)
+}
