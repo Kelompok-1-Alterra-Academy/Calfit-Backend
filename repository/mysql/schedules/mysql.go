@@ -42,14 +42,14 @@ func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, err
 
 func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
-	sessionId := Schedule{}
-	repo.DBConn.Debug().Where("id=?", domain.Id).First(&sessionId)
-	data.UpdatedAt = time.Now()
-	data.SessionID = sessionId.SessionID
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
+	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}
+		return schedules.Domain{}, err
+	}
+	data.UpdatedAt = time.Now()
+	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
 	return data.toDomain(), nil
