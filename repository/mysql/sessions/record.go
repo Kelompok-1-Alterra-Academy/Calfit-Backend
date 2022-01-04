@@ -47,11 +47,11 @@ func convertToArray(schedule []schedulesRepo.Schedule) []schedules.Domain {
 
 func toScheduleDomain(schedule schedulesRepo.Schedule) schedules.Domain {
 	return schedules.Domain{
-		Id:            schedule.Id,
-		Time_schedule: schedule.Time_schedule,
-		Duration:      schedule.Duration,
-		SessionID:     schedule.SessionID,
-		Created_at:    schedule.Created_at,
-		Updated_at:    schedule.Updated_at,
+		Id:           schedule.Id,
+		TimeSchedule: schedule.TimeSchedule,
+		Duration:     schedule.Duration,
+		SessionID:    schedule.SessionID,
+		CreatedAt:    schedule.CreatedAt,
+		UpdatedAt:    schedule.UpdatedAt,
 	}
 }

@@ -2,16 +2,25 @@ package response
 
 import (
 	"CalFit/business/schedules"
+	"time"
 )
 
 type Schedules struct {
-	Time_schedule string `json:"time_schedule"`
-	Duration      int    `json:"duration"`
+	ID           int       `json:"id"`
+	TimeSchedule string    `json:"time_schedule"`
+	Duration     int       `json:"duration"`
+	SessionID    int       `json:"session_id"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 func FromDomain(s schedules.Domain) Schedules {
 	return Schedules{
-		Time_schedule: s.Time_schedule,
-		Duration:      s.Duration,
+		ID:           s.Id,
+		TimeSchedule: s.TimeSchedule,
+		Duration:     s.Duration,
+		SessionID:    s.SessionID,
+		CreatedAt:    s.CreatedAt,
+		UpdatedAt:    s.UpdatedAt,
 	}
 }
