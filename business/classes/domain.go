@@ -25,7 +25,7 @@ type DomainRepository interface {
 	GetAll(ctx context.Context) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
-	// Update(ctx context.Context, id string, domain Domain) (Domain, error)
+	Update(ctx context.Context, id string, domain Domain) (Domain, error)
 	Delete(ctx context.Context, id string) error
 }
 
@@ -33,6 +33,6 @@ type DomainService interface {
 	GetAll(ctx context.Context) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
-	// Update(ctx context.Context, id string, domain Domain) (Domain, error)
+	Update(ctx context.Context, id string, domain Domain) (Domain, error)
 	Delete(ctx context.Context, id string) error
 }
