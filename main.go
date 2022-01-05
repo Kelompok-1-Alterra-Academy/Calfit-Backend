@@ -49,7 +49,7 @@ func main() {
 	schedulesController := _schedulesController.NewControllers(schedulesUsecase)
 	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
 	gymHandler := _gymController.NewHandler(*gymUsecase)
-	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), timeoutContext)
+	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), _gymDb.NewGymRepository(db), timeoutContext)
 	classHandler := _classController.NewHandler(*classUsecase)
 
 	// Sessions initialize

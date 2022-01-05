@@ -6,6 +6,7 @@ import (
 	requests "CalFit/controllers/classes/request"
 	responses "CalFit/controllers/classes/response"
 	"CalFit/exceptions"
+	"log"
 	"strconv"
 
 	// "encoding/json"
@@ -70,7 +71,7 @@ func (u *ClassController) Create(c echo.Context) error {
 	createdClass := requests.CreateClass{}
 	c.Bind(&createdClass)
 
-	uintGymId, err := strconv.Atoi(gymId)
+	intGymId, err := strconv.Atoi(gymId)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -82,8 +83,10 @@ func (u *ClassController) Create(c echo.Context) error {
 		Card_picture_url:   createdClass.Card_picture_url,
 		Category:           createdClass.Category,
 		Status:             createdClass.Status,
-		GymID:              uint(uintGymId),
+		GymID:              uint(intGymId),
 	}
+
+	log.Println(classDomain.GymID)
 
 	class, err := u.Usecase.Create(ctx, classDomain, gymId)
 	if err != nil {

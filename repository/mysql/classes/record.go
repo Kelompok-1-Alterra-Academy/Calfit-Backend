@@ -43,6 +43,7 @@ func (c *Class) ToDomain() classes.Domain {
 		Card_picture_url:   c.Card_picture_url,
 		Category:           c.Category,
 		Status:             c.Status,
+		GymID:              c.GymID,
 		Created_at:         c.Created_at,
 		Updated_at:         c.Updated_at,
 	}
