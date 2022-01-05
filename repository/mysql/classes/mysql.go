@@ -26,13 +26,43 @@ func (c *ClassRepository) GetAll(ctx context.Context) ([]classes.Domain, error) 
 	return result, nil
 }
 
-func (b *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
+func (c *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
 	var class Class
-	if err := b.Conn.Preload("Address").Where("id = ?", id).First(&class).Error; err != nil {
+	if err := c.Conn.Where("id = ?", id).First(&class).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return classes.Domain{}, exceptions.ErrNotFound
 		}
 		return classes.Domain{}, err
 	}
 	return class.ToDomain(), nil
+}
+
+func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymId string) (classes.Domain, error) {
+	createdClass := Class{
+		Name:               class.Name,
+		Description:        class.Description,
+		Banner_picture_url: class.Banner_picture_url,
+		Card_picture_url:   class.Card_picture_url,
+		Category:           class.Category,
+		Status:             class.Status,
+		GymID:              class.GymID,
+		// Membership_typeID:  class.Membership_typeID,
+	}
+	err := c.Conn.Create(&createdClass).Error
+	if err != nil {
+		return classes.Domain{}, err
+	}
+
+	return createdClass.ToDomain(), nil
+}
+
+func (c *ClassRepository) Delete(ctx context.Context, id string) error {
+	var class Class
+	if err := c.Conn.Where("id = ?", id).Delete(&class).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return exceptions.ErrNotFound
+		}
+		return err
+	}
+	return nil
 }

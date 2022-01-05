@@ -42,7 +42,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// schedules endpoint
 		v1.POST("/schedules", controllers.SchedulesController.Insert)
 		v1.GET("/schedules", controllers.SchedulesController.Get)
-		v1.GET("/schedules/:id", controllers.SchedulesController.Get)
+		v1.PUT("/schedules", controllers.SchedulesController.Update)
+		v1.DELETE("/schedules", controllers.SchedulesController.Delete)
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)
@@ -62,6 +63,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// class endpoint
 		superadmin.GET("/classes", controllers.ClassController.GetAll)
+		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
+		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete)
 
 		// session endpoint
 		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
