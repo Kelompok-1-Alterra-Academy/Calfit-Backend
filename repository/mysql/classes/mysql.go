@@ -56,6 +56,28 @@ func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 	return createdClass.ToDomain(), nil
 }
 
+func (c *ClassRepository) Update(ctx context.Context, id string, class classes.Domain) (classes.Domain, error) {
+	var classModel Class
+	if err := c.Conn.Where("id = ?", id).First(&classModel).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return classes.Domain{}, exceptions.ErrClassNotFound
+		}
+		return classes.Domain{}, err
+	}
+	classModel.Name = class.Name
+	classModel.Description = class.Description
+	classModel.Banner_picture_url = class.Banner_picture_url
+	classModel.Card_picture_url = class.Card_picture_url
+	classModel.Category = class.Category
+	classModel.Status = class.Status
+	classModel.GymID = class.GymID
+	// classModel.Membership_typeID = class.Membership_typeID
+	if err := c.Conn.Save(&classModel).Error; err != nil {
+		return classes.Domain{}, err
+	}
+	return classModel.ToDomain(), nil
+}
+
 func (c *ClassRepository) Delete(ctx context.Context, id string) error {
 	var class Class
 	if err := c.Conn.Where("id = ?", id).Delete(&class).Error; err != nil {
