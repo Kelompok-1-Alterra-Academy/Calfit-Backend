@@ -15,7 +15,7 @@ type User struct {
 	Password         string
 	MembershipTypeID int
 	AddressID        uint
-	BookingDetais    []bookingDetailsRepo.Booking_detail
+	BookingDetails   []bookingDetailsRepo.Booking_detail
 	Address          addresses.Address
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
@@ -42,7 +42,7 @@ func (u User) ToDomain() users.Domain {
 		Password:         u.Password,
 		MembershipTypeID: u.MembershipTypeID,
 		AddressID:        u.AddressID,
-		BookingDetails:   convertToArray(u.BookingDetais),
+		BookingDetails:   convertToArray(u.BookingDetails),
 		CreatedAt:        u.CreatedAt,
 		UpdatedAt:        u.UpdatedAt,
 	}
