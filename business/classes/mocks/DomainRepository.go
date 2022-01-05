@@ -92,3 +92,24 @@ func (_m *DomainRepository) GetById(ctx context.Context, id string) (classes.Dom
 
 	return r0, r1
 }
+
+// Update provides a mock function with given fields: ctx, id, domain
+func (_m *DomainRepository) Update(ctx context.Context, id string, domain classes.Domain) (classes.Domain, error) {
+	ret := _m.Called(ctx, id, domain)
+
+	var r0 classes.Domain
+	if rf, ok := ret.Get(0).(func(context.Context, string, classes.Domain) classes.Domain); ok {
+		r0 = rf(ctx, id, domain)
+	} else {
+		r0 = ret.Get(0).(classes.Domain)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string, classes.Domain) error); ok {
+		r1 = rf(ctx, id, domain)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
