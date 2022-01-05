@@ -3,6 +3,7 @@ package classes_test
 import (
 	"CalFit/business/classes"
 	"CalFit/business/classes/mocks"
+	gymMocks "CalFit/business/gyms/mocks"
 	"context"
 	"fmt"
 	"strconv"
@@ -14,12 +15,13 @@ import (
 )
 
 var classRepository mocks.DomainRepository
+var gymRepository gymMocks.DomainRepository
 
 var classService classes.DomainService
 var classDomain, emptyClassDomain classes.Domain
 
 func setup() {
-	classService = classes.NewUsecase(&classRepository, time.Minute*15)
+	classService = classes.NewUsecase(&classRepository, &gymRepository, time.Minute*15)
 	classDomain = classes.Domain{
 		Id:                 1,
 		Name:               "Muaythai class",
@@ -83,7 +85,6 @@ func TestCreateNewClass(t *testing.T) {
 	classRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain"), mock.AnythingOfType("string")).Return(classDomain, nil)
 	t.Run("Test Case 1 | Valid Create New Class", func(t *testing.T) {
 		class, err := classService.Create(context.Background(), classDomain, fmt.Sprintf("%d", classDomain.GymID))
-		// class, err := classService.Create(context.Background(), classDomain, strconv.Itoa(int(classDomain.GymID)))
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}
@@ -93,11 +94,11 @@ func TestCreateNewClass(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, classDomain, class)
 	})
-	// t.Run("Test Case 2 | Invalid Create New Class with wrong gymId", func(t *testing.T) {
-	// 	class, err := classService.Create(context.Background(), classDomain, strconv.Itoa(int(emptyClassDomain.GymID)))
-	// 	assert.NotNil(t, err)
-	// 	assert.NotEqual(t, class, classDomain)
-	// })
+	t.Run("Test Case 2 | Invalid Create New Class with wrong gymId", func(t *testing.T) {
+		class, err := classService.Create(context.Background(), classDomain, strconv.Itoa(int(emptyClassDomain.GymID)))
+		assert.NotNil(t, err)
+		assert.NotEqual(t, class, classDomain)
+	})
 	t.Run("Test Case 3 | Invalid Create New Class with Empty Fields", func(t *testing.T) {
 		class, err := classService.Create(context.Background(), emptyClassDomain, strconv.Itoa(int(classDomain.GymID)))
 		assert.NotNil(t, err)
