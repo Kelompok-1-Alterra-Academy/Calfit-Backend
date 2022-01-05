@@ -91,31 +91,31 @@ func TestGetClassByClassId(t *testing.T) {
 	})
 }
 
-// func TestCreateNewClass(t *testing.T) {
-// 	setup()
-// 	classRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain"), mock.AnythingOfType("string")).Return(classDomain, nil)
-// 	t.Run("Test Case 1 | Valid Create New Class", func(t *testing.T) {
-// 		class, err := classService.Create(context.Background(), classDomain, fmt.Sprintf("%d", classDomain.GymID))
-// 		if err != nil {
-// 			t.Errorf("Error: %s", err)
-// 		}
-// 		if class.Id == 0 {
-// 			t.Errorf("Error: %s", "class Id is empty")
-// 		}
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, classDomain, class)
-// 	})
-// 	t.Run("Test Case 2 | Invalid Create New Class with Wrong gymId", func(t *testing.T) {
-// 		class, err := classService.Create(context.Background(), classDomain, strconv.Itoa(int(emptyClassDomain.GymID)))
-// 		assert.NotNil(t, err)
-// 		assert.NotEqual(t, class, classDomain)
-// 	})
-// 	t.Run("Test Case 3 | Invalid Create New Class with Empty Fields", func(t *testing.T) {
-// 		class, err := classService.Create(context.Background(), emptyClassDomain, strconv.Itoa(int(classDomain.GymID)))
-// 		assert.NotNil(t, err)
-// 		assert.NotEqual(t, class, classDomain)
-// 	})
-// }
+func TestCreateNewClass(t *testing.T) {
+	setup()
+	classRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain"), mock.AnythingOfType("string")).Return(classDomain, nil)
+	// t.Run("Test Case 1 | Valid Create New Class", func(t *testing.T) {
+	// 	class, err := classService.Create(context.Background(), classDomain, fmt.Sprintf("%d", classDomain.GymID))
+	// 	if err != nil {
+	// 		t.Errorf("Error: %s", err)
+	// 	}
+	// 	if class.Id == 0 {
+	// 		t.Errorf("Error: %s", "class Id is empty")
+	// 	}
+	// 	assert.Nil(t, err)
+	// 	assert.Equal(t, classDomain, class)
+	// })
+	// t.Run("Test Case 2 | Invalid Create New Class with Wrong gymId", func(t *testing.T) {
+	// 	class, err := classService.Create(context.Background(), classDomain, strconv.Itoa(int(emptyClassDomain.GymID)))
+	// 	assert.NotNil(t, err)
+	// 	assert.NotEqual(t, class, classDomain)
+	// })
+	// t.Run("Test Case 3 | Invalid Create New Class with Empty Fields", func(t *testing.T) {
+	// 	class, err := classService.Create(context.Background(), emptyClassDomain, strconv.Itoa(int(classDomain.GymID)))
+	// 	assert.NotNil(t, err)
+	// 	assert.NotEqual(t, class, classDomain)
+	// })
+}
 
 func TestUpdateClass(t *testing.T) {
 	setup()
@@ -136,11 +136,11 @@ func TestUpdateClass(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.NotEqual(t, class, classDomain)
 	})
-	// t.Run("Test Case 3 | Invalid Update Class by Wrong Id", func(t *testing.T) {
-	// 	class, err := classService.Update(context.Background(), "50", classDomain)
-	// 	assert.NotNil(t, err)
-	// 	assert.NotEqual(t, class, classDomain)
-	// })
+	t.Run("Test Case 3 | Invalid Update Class by Empty Fields", func(t *testing.T) {
+		class, err := classService.Update(context.Background(), fmt.Sprintf("%d", classDomain.Id), emptyClassDomain)
+		assert.NotNil(t, err)
+		assert.NotEqual(t, class, classDomain)
+	})
 }
 
 func TestDeleteClass(t *testing.T) {
@@ -158,9 +158,4 @@ func TestDeleteClass(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.NotEqual(t, err, nil)
 	})
-	// t.Run("Test Case 3 | Invalid Delete Class with Wrong Id", func(t *testing.T) {
-	// 	err := classService.Delete(context.Background(), "20")
-	// 	assert.NotNil(t, err)
-	// 	assert.NotEqual(t, err, nil)
-	// })
 }
