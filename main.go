@@ -24,7 +24,7 @@ import (
 )
 
 func init() {
-	viper.SetConfigFile("config.json")
+	viper.SetConfigFile(".env")
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
@@ -37,20 +37,26 @@ func main() {
 	e := echo.New()
 	db := mysql.InitDB()
 	configJWT := middlewares.ConfigJWT{
-		SecretJWT:       viper.GetString("jwt.secret"),
-		ExpiresDuration: viper.GetInt("jwt.expired"),
+		SecretJWT:       viper.GetString("JWT_SECRET"),
+		ExpiresDuration: viper.GetInt("JWT_EXPIRED"),
 	}
 
-	timeoutContext := time.Duration(viper.GetInt("server.timeout")) * time.Second
+	timeoutContext := time.Duration(viper.GetInt("SERVER_TIMEOUT")) * time.Second
 
 	// Schedules initialize
 	schedulesRepo := _schedulesRepo.NewSchedulesRepo(db)
 	schedulesUsecase := _schedulesUsecase.NewSchedulesUsecase(schedulesRepo, timeoutContext)
 	schedulesController := _schedulesController.NewControllers(schedulesUsecase)
-	gymUsecase := _gymUsecase.NewUsecase(_gymDb.NewGymRepository(db), timeoutContext)
-	gymHandler := _gymController.NewHandler(*gymUsecase)
-	classUsecase := _classUsecase.NewUsecase(_classDb.NewClassRepository(db), _gymDb.NewGymRepository(db), timeoutContext)
-	classHandler := _classController.NewHandler(*classUsecase)
+
+	// Gyms initialize
+	gymsRepo := _gymDb.NewGymRepository(db)
+	gymsUsecase := _gymUsecase.NewUsecase(gymsRepo, timeoutContext)
+	gymsHandler := _gymController.NewHandler(*gymsUsecase)
+
+	// Classes initialize
+	classesRepo := _classDb.NewClassRepository(db)
+	classesUsecase := _classUsecase.NewUsecase(classesRepo, gymsRepo, timeoutContext)
+	classesHandler := _classController.NewHandler(*classesUsecase)
 
 	// Sessions initialize
 	sessionsRepo := _sessionsRepo.NewSessionsRepo(db)
@@ -60,10 +66,10 @@ func main() {
 	routesInit := routes.ControllersList{
 		JWTMiddleware:       configJWT.Init(),
 		SchedulesController: schedulesController,
-		GymController:       gymHandler,
-		ClassController:     classHandler,
+		GymController:       gymsHandler,
+		ClassController:     classesHandler,
 		SessionsController:  sessionsController,
 	}
 	routesInit.RouteRegister(e)
-	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
+	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
 }
