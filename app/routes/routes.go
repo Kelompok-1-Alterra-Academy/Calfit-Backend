@@ -55,6 +55,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
 		v1.POST("/auth/login", controllers.AuthController.Login)
+		v1.POST("/auth/register", controllers.AuthController.Register)
 	}
 
 	// superadmin routes
