@@ -8,11 +8,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
-
-var mysqlErr *mysql.MySQLError
 
 type UsersRepo struct {
 	DBConn *gorm.DB
@@ -34,13 +31,11 @@ func (repo *UsersRepo) Login(ctx context.Context, domain users.Domain) (users.Do
 				Address:     "default",
 				District:    "default",
 				City:        "default",
-				Postal_code: "default",
+				Postal_code: "11111",
 			}
 			repo.DBConn.Debug().Create(&address)
 			data.AddressID = address.Id
 			repo.DBConn.Debug().Create(&data)
-			return data.ToDomain(), nil
-		} else if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 			return data.ToDomain(), nil
 		}
 		return users.Domain{}, err
@@ -50,7 +45,7 @@ func (repo *UsersRepo) Login(ctx context.Context, domain users.Domain) (users.Do
 
 func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
+	if err := repo.DBConn.Debug().Where("email=? and password=?", data.Email, data.Password).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
 			data.CreatedAt = time.Now()
@@ -58,16 +53,14 @@ func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users
 				Address:     "default",
 				District:    "default",
 				City:        "default",
-				Postal_code: "default",
+				Postal_code: "11111",
 			}
 			repo.DBConn.Debug().Create(&address)
 			data.AddressID = address.Id
 			repo.DBConn.Debug().Create(&data)
 			return data.ToDomain(), nil
-		} else if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-			return data.ToDomain(), exceptions.ErrUserAlreadyExists
 		}
 		return users.Domain{}, err
 	}
-	return data.ToDomain(), nil
+	return users.Domain{}, exceptions.ErrUserAlreadyExists
 }

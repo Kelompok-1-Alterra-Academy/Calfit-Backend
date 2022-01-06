@@ -13,7 +13,7 @@ type BaseResponse struct {
 
 func SuccessResponse(c echo.Context, status int, data interface{}) error {
 	res := BaseResponse{
-		Status:  200,
+		Status:  status,
 		Success: true,
 		Message: "Success",
 		Data:    data,
