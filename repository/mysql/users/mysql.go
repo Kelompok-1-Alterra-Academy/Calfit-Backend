@@ -2,6 +2,7 @@ package users
 
 import (
 	"CalFit/business/users"
+	"CalFit/exceptions"
 	"CalFit/repository/mysql/addresses"
 	"context"
 	"errors"
@@ -64,7 +65,7 @@ func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users
 			repo.DBConn.Debug().Create(&data)
 			return data.ToDomain(), nil
 		} else if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-			return data.ToDomain(), nil
+			return data.ToDomain(), exceptions.ErrUserAlreadyExists
 		}
 		return users.Domain{}, err
 	}

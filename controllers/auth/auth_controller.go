@@ -7,6 +7,7 @@ import (
 	"CalFit/controllers/auth/response"
 	"CalFit/exceptions"
 	"CalFit/helpers"
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -35,4 +36,21 @@ func (controller *Controllers) Login(c echo.Context) error {
 	cookie := helpers.CreateCookie(resFromDomain.Token)
 	c.SetCookie(cookie)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) Register(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.Auth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	res, err := controller.UsersUC.Register(ctx, domain)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrUserAlreadyExists) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrUserAlreadyExists)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomain(res))
 }
