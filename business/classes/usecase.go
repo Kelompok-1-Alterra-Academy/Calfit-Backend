@@ -60,6 +60,23 @@ func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Doma
 	return u.Repo.Create(ctx, domain, gymId)
 }
 
+func (u *Usecase) Update(ctx context.Context, id string, domain Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return Domain{}, exceptions.ErrEmptyInput
+	}
+
+	validate := validator.New()
+	err := validate.Struct(domain)
+	if err != nil {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
+
+	return u.Repo.Update(ctx, id, domain)
+}
+
 func (u *Usecase) Delete(ctx context.Context, id string) error {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()

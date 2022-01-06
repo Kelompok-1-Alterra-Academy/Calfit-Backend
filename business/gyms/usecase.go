@@ -41,7 +41,7 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 func (u *Usecase) Create(ctx context.Context, domain Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
-	
+
 	validate := validator.New()
 	err := validate.Struct(domain)
 	if err != nil {
