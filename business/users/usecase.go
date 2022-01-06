@@ -28,6 +28,13 @@ func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error)
 	if users.Email == "" || users.Password == "" {
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
+	userDomain, err := uu.Repo.GetByUsername(ctx, users.Email)
+	if err != nil {
+		return Domain{}, err
+	}
+	if !helpers.ValidateHash(users.Password, userDomain.Password) {
+		return Domain{}, exceptions.ErrInternalServerError
+	}
 	res, err := uu.Repo.Login(ctx, users)
 	if err != nil {
 		return Domain{}, err
