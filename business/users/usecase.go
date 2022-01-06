@@ -3,6 +3,7 @@ package users
 import (
 	"CalFit/app/middlewares"
 	"CalFit/exceptions"
+	"CalFit/helpers"
 	"context"
 	"time"
 )
@@ -40,6 +41,11 @@ func (uu *UsersUsecase) Register(ctx context.Context, users Domain) (Domain, err
 	defer cancel()
 	if users.Email == "" || users.Password == "" {
 		return Domain{}, exceptions.ErrInvalidCredentials
+	}
+	var err error
+	users.Password, err = helpers.Hash(users.Password)
+	if err != nil {
+		return Domain{}, err
 	}
 	res, err := uu.Repo.Register(ctx, users)
 	if err != nil {

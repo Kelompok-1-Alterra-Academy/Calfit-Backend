@@ -45,7 +45,7 @@ func (repo *UsersRepo) Login(ctx context.Context, domain users.Domain) (users.Do
 
 func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("email=? and password=?", data.Email, data.Password).First(&data).Error; err != nil {
+	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
 			data.CreatedAt = time.Now()
