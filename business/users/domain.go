@@ -23,8 +23,10 @@ type Domain struct {
 
 type Usecase interface {
 	Login(ctx context.Context, users Domain) (Domain, error)
+	Register(ctx context.Context, users Domain) (Domain, error)
 }
 
 type Repository interface {
 	Login(ctx context.Context, users Domain) (Domain, error)
+	Register(ctx context.Context, users Domain) (Domain, error)
 }
