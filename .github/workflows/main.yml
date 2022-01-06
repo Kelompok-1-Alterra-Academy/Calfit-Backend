@@ -24,14 +24,14 @@ jobs:
     needs: unit-test
     steps:
       - uses: actions/checkout@v2
-      - name: create config.json and build docker
+      - name: create .env and build docker
         env:
           ENV: ${{ secrets.ENV }}
         run: |
-          touch config.json
-          echo "${{ secrets.ENV }}" > config.json
-          cat config.json
-          chmod 777 config.json
+          touch .env
+          echo "ENV=${{ secrets.ENV }}" > .env
+          cat .env
+          chmod 777 .env
           docker build -t sultanfariz/calfit:1.0.0 .
       - name: connect registry docker hub
         uses: docker/login-action@v1
