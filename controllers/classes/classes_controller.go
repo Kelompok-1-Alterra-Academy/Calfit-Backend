@@ -6,7 +6,6 @@ import (
 	requests "CalFit/controllers/classes/request"
 	responses "CalFit/controllers/classes/response"
 	"CalFit/exceptions"
-	"log"
 	"strconv"
 
 	// "encoding/json"
@@ -86,8 +85,6 @@ func (u *ClassController) Create(c echo.Context) error {
 		GymID:              uint(intGymId),
 	}
 
-	log.Println(classDomain.GymID)
-
 	class, err := u.Usecase.Create(ctx, classDomain, gymId)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
@@ -95,6 +92,38 @@ func (u *ClassController) Create(c echo.Context) error {
 
 	response := responses.FromDomain(class)
 	return controllers.SuccessResponse(c, http.StatusCreated, response)
+}
+
+func (u *ClassController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	classId := c.Param("classId")
+	gymId := c.Param("gymId")
+	updatedClass := requests.CreateClass{}
+	c.Bind(&updatedClass)
+
+	intGymId, err := strconv.Atoi(gymId)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	updatedClassDomain := classes.Domain{
+		Name:               updatedClass.Name,
+		Description:        updatedClass.Description,
+		Banner_picture_url: updatedClass.Banner_picture_url,
+		Card_picture_url:   updatedClass.Card_picture_url,
+		Category:           updatedClass.Category,
+		Status:             updatedClass.Status,
+		GymID:              uint(intGymId),
+	}
+
+	class, err := u.Usecase.Update(ctx, classId, updatedClassDomain)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	response := responses.FromDomain(class)
+	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
 func (u *ClassController) Delete(c echo.Context) error {

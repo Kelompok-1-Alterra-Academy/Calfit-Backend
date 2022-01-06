@@ -18,7 +18,6 @@ func NewClassRepository(conn *gorm.DB) classes.DomainRepository {
 
 func (c *ClassRepository) GetAll(ctx context.Context) ([]classes.Domain, error) {
 	var classesModel []Class
-	// if err := c.Conn.Preload("Address").Find(&classesModel).Error; err != nil {
 	if err := c.Conn.Find(&classesModel).Error; err != nil {
 		return nil, err
 	}
@@ -70,11 +69,12 @@ func (c *ClassRepository) Update(ctx context.Context, id string, class classes.D
 	classModel.Card_picture_url = class.Card_picture_url
 	classModel.Category = class.Category
 	classModel.Status = class.Status
-	classModel.GymID = class.GymID
+	// classModel.GymID = class.GymID
 	// classModel.Membership_typeID = class.Membership_typeID
 	if err := c.Conn.Save(&classModel).Error; err != nil {
 		return classes.Domain{}, err
 	}
+
 	return classModel.ToDomain(), nil
 }
 
