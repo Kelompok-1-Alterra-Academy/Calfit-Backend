@@ -2,6 +2,7 @@ package gyms
 
 import (
 	"CalFit/business/gyms"
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"CalFit/repository/mysql/addresses"
 	"context"
@@ -18,9 +19,11 @@ func NewGymRepository(conn *gorm.DB) gyms.DomainRepository {
 	return &GymRepository{Conn: conn}
 }
 
-func (b *GymRepository) GetAll(ctx context.Context) ([]gyms.Domain, error) {
+func (b *GymRepository) GetAll(ctx context.Context, pagination paginations.Domain) ([]gyms.Domain, error) {
 	var gymsModel []Gym
-	if err := b.Conn.Preload("Address").Preload("Classes").Find(&gymsModel).Error; err != nil {
+
+	offset := (pagination.Page - 1) * pagination.Limit
+	if err := b.Conn.Preload("Address").Preload("Classes").Limit(pagination.Limit).Offset(offset).Find(&gymsModel).Error; err != nil {
 		return nil, err
 	}
 	var result []gyms.Domain = ToListDomain(gymsModel)
@@ -43,23 +46,23 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 
 	// insert address
 	createdAddress := addresses.Address{
-		Address:   gym.Address.Address,
-		District: gym.Address.District,
-		City:      gym.Address.City,
+		Address:     gym.Address.Address,
+		District:    gym.Address.District,
+		City:        gym.Address.City,
 		Postal_code: gym.Address.Postal_code,
 	}
 	insertAddressErr := b.Conn.Create(&createdAddress).Error
-	if insertAddressErr != nil {	
+	if insertAddressErr != nil {
 		return gyms.Domain{}, insertAddressErr
 	}
 
 	// insert gym
 	createdGym := Gym{
-		Name:      			 gym.Name,
-		Telephone: 			 gym.Telephone,
-		Picture:   			 gym.Picture,
+		Name:                gym.Name,
+		Telephone:           gym.Telephone,
+		Picture:             gym.Picture,
 		Operational_adminID: gym.Operational_admin_ID,
-		AddressID:         	 createdAddress.Id,
+		AddressID:           createdAddress.Id,
 	}
 	insertGymErr := b.Conn.Create(&createdGym).Error
 	if insertGymErr != nil {
@@ -67,7 +70,7 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 	}
 
 	// get gym data
-	if  getErr := b.Conn.Preload("Address").Where("id = ?", createdGym.Id).First(&gymModel).Error; getErr != nil {
+	if getErr := b.Conn.Preload("Address").Where("id = ?", createdGym.Id).First(&gymModel).Error; getErr != nil {
 		return gyms.Domain{}, getErr
 	}
 
@@ -82,7 +85,7 @@ func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) 
 		}
 		return gyms.Domain{}, err
 	}
-	
+
 	gymModel.Name = gym.Name
 	gymModel.Telephone = gym.Telephone
 	gymModel.Picture = gym.Picture
