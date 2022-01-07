@@ -4,6 +4,7 @@ import (
 	"CalFit/business/classes"
 	"CalFit/business/classes/mocks"
 	gymMocks "CalFit/business/gyms/mocks"
+	"CalFit/business/paginations"
 	"context"
 	"fmt"
 	"testing"
@@ -18,6 +19,7 @@ var gymRepository gymMocks.DomainRepository
 
 var classService classes.DomainService
 var classDomain, updatedClassDomain, emptyClassDomain classes.Domain
+var paginationDomain paginations.Domain
 
 func setup() {
 	classService = classes.NewUsecase(&classRepository, &gymRepository, time.Minute*15)
@@ -56,13 +58,19 @@ func setup() {
 		// Membership_typeID: 0,
 		GymID: 0,
 	}
+
+	paginationDomain = paginations.Domain{
+		Page:  1,
+		Limit: 10,
+		Sort:  "asc",
+	}
 }
 
 func TestGetAllClasses(t *testing.T) {
 	setup()
-	classRepository.On("GetAll", mock.Anything).Return([]classes.Domain{classDomain}, nil)
+	classRepository.On("GetAll", mock.Anything, mock.AnythingOfType("paginations.Domain")).Return([]classes.Domain{classDomain}, nil)
 	t.Run("Test Case 1 | Get All Classes", func(t *testing.T) {
-		classes, err := classService.GetAll(context.Background())
+		classes, err := classService.GetAll(context.Background(), paginationDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}

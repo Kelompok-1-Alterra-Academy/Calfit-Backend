@@ -3,10 +3,12 @@ package gyms
 import (
 	"CalFit/business/addresses"
 	"CalFit/business/gyms"
+	"CalFit/business/paginations"
 	"CalFit/controllers"
 	requests "CalFit/controllers/gyms/request"
 	responses "CalFit/controllers/gyms/response"
 	"CalFit/exceptions"
+	"strconv"
 
 	// "encoding/json"
 	// "fmt"
@@ -35,7 +37,36 @@ func NewHandler(u gyms.Usecase) *GymController {
 func (b *GymController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	gyms, err := b.Usecase.GetAll(ctx)
+	paginationDomain := paginations.Domain{
+		Page:  1,
+		Limit: 50,
+	}
+
+	// get pagination query
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	sort := c.QueryParam("sort")
+
+	var intPage, intLimit int
+	var err error
+	if page != "" {
+		intPage, err = strconv.Atoi(page)
+		if err != nil {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		}
+		paginationDomain.Page = intPage
+	}
+	if limit != "" {
+		intLimit, err = strconv.Atoi(limit)
+		if err != nil {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		}
+		paginationDomain.Limit = intLimit
+	}
+
+	paginationDomain.Sort = sort
+
+	gyms, err := b.Usecase.GetAll(ctx, paginationDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
