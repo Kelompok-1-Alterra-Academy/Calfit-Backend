@@ -1,6 +1,7 @@
 package classes
 
 import (
+	"CalFit/business/paginations"
 	context "context"
 	"time"
 )
@@ -22,7 +23,7 @@ type Domain struct {
 }
 
 type DomainRepository interface {
-	GetAll(ctx context.Context) ([]Domain, error)
+	GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
 	Update(ctx context.Context, id string, domain Domain) (Domain, error)
@@ -30,7 +31,7 @@ type DomainRepository interface {
 }
 
 type DomainService interface {
-	GetAll(ctx context.Context) ([]Domain, error)
+	GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
 	Update(ctx context.Context, id string, domain Domain) (Domain, error)

@@ -2,6 +2,7 @@ package classes
 
 import (
 	"CalFit/business/classes"
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"context"
 
@@ -16,9 +17,12 @@ func NewClassRepository(conn *gorm.DB) classes.DomainRepository {
 	return &ClassRepository{Conn: conn}
 }
 
-func (c *ClassRepository) GetAll(ctx context.Context) ([]classes.Domain, error) {
+func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Domain) ([]classes.Domain, error) {
 	var classesModel []Class
-	if err := c.Conn.Find(&classesModel).Error; err != nil {
+
+	offset := (pagination.Page - 1) * pagination.Limit
+	if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
+		// if err := c.Conn.Find(&classesModel).Error; err != nil {
 		return nil, err
 	}
 	var result []classes.Domain = ToListDomain(classesModel)

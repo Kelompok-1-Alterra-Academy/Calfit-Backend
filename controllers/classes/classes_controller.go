@@ -2,6 +2,7 @@ package classes
 
 import (
 	"CalFit/business/classes"
+	"CalFit/business/paginations"
 	"CalFit/controllers"
 	requests "CalFit/controllers/classes/request"
 	responses "CalFit/controllers/classes/response"
@@ -35,7 +36,36 @@ func NewHandler(u classes.Usecase) *ClassController {
 func (b *ClassController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	classes, err := b.Usecase.GetAll(ctx)
+	paginationDomain := paginations.Domain{
+		Page:  1,
+		Limit: 50,
+	}
+
+	// get pagination query
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	sort := c.QueryParam("sort")
+
+	var intPage, intLimit int
+	var err error
+	if page != "" {
+		intPage, err = strconv.Atoi(page)
+		if err != nil {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		}
+		paginationDomain.Page = intPage
+	}
+	if limit != "" {
+		intLimit, err = strconv.Atoi(limit)
+		if err != nil {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+		}
+		paginationDomain.Limit = intLimit
+	}
+
+	paginationDomain.Sort = sort
+
+	classes, err := b.Usecase.GetAll(ctx, paginationDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
