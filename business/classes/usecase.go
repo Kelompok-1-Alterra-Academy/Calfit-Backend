@@ -2,6 +2,7 @@ package classes
 
 import (
 	"CalFit/business/gyms"
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	context "context"
 	"time"
@@ -23,11 +24,11 @@ func NewUsecase(repo DomainRepository, gymRepo gyms.DomainRepository, timeout ti
 	}
 }
 
-func (u *Usecase) GetAll(ctx context.Context) ([]Domain, error) {
+func (u *Usecase) GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
 
-	return u.Repo.GetAll(ctx)
+	return u.Repo.GetAll(ctx, pagination)
 }
 
 func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {

@@ -1,5 +1,5 @@
 .env
-.env*
+.env.*
 .cli
 .vscode
 config.json
