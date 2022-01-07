@@ -4,6 +4,7 @@ import (
 	"CalFit/business/addresses"
 	"CalFit/business/gyms"
 	"CalFit/business/gyms/mocks"
+	"CalFit/business/paginations"
 	"context"
 	"testing"
 	"time"
@@ -16,6 +17,7 @@ var gymRepository mocks.DomainRepository
 
 var gymService gyms.DomainService
 var gymDomain, updatedGymDomain, emptyGymDomain gyms.Domain
+var paginationDomain paginations.Domain
 
 func setup() {
 	gymService = gyms.NewUsecase(&gymRepository, time.Minute*15)
@@ -58,13 +60,18 @@ func setup() {
 			Postal_code: "",
 		},
 	}
+	paginationDomain = paginations.Domain{
+		Page:  1,
+		Limit: 10,
+		Sort:  "asc",
+	}
 }
 
 func TestGetAllGyms(t *testing.T) {
 	setup()
-	gymRepository.On("GetAll", mock.Anything).Return([]gyms.Domain{gymDomain}, nil)
+	gymRepository.On("GetAll", mock.Anything, mock.AnythingOfType("paginations.Domain")).Return([]gyms.Domain{gymDomain}, nil)
 	t.Run("Test Case 1 | Get All Gyms", func(t *testing.T) {
-		gyms, err := gymService.GetAll(context.Background())
+		gyms, err := gymService.GetAll(context.Background(), paginationDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}
