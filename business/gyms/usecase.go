@@ -1,8 +1,9 @@
 package gyms
 
 import (
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
-	context "context"
+	"context"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -20,11 +21,11 @@ func NewUsecase(repo DomainRepository, timeout time.Duration) *Usecase {
 	}
 }
 
-func (u *Usecase) GetAll(ctx context.Context) ([]Domain, error) {
+func (u *Usecase) GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
 
-	return u.Repo.GetAll(ctx)
+	return u.Repo.GetAll(ctx, pagination)
 }
 
 func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
