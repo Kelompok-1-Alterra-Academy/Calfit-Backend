@@ -22,7 +22,6 @@ func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Dom
 
 	offset := (pagination.Page - 1) * pagination.Limit
 	if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
-		// if err := c.Conn.Find(&classesModel).Error; err != nil {
 		return nil, err
 	}
 	var result []classes.Domain = ToListDomain(classesModel)
