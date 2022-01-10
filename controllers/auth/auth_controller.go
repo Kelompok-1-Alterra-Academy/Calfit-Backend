@@ -32,7 +32,7 @@ func (controller *Controllers) Login(c echo.Context) error {
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if errors.Is(err, exceptions.ErrInvalidCredentials) {
-			return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInvalidCredentials)
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
 		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
