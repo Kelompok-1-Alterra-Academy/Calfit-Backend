@@ -31,6 +31,9 @@ func (controller *Controllers) Login(c echo.Context) error {
 	res, err := controller.UsersUC.Login(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
+		if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInvalidCredentials)
+		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	cookie := helpers.CreateCookie(resFromDomain.Token)

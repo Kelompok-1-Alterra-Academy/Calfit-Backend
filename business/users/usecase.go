@@ -33,7 +33,7 @@ func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error)
 		return Domain{}, err
 	}
 	if !helpers.ValidateHash(users.Password, userDomain.Password) {
-		return Domain{}, exceptions.ErrInternalServerError
+		return Domain{}, exceptions.ErrInvalidCredentials
 	}
 	res, err := uu.Repo.Login(ctx, users)
 	if err != nil {
