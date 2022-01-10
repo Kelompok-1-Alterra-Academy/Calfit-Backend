@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+type KeyStruct struct {
+	Key string `json:"key"`
+}
+
 type Memberships struct {
 	Id          int    `json:"id" form:"id"`
 	Name        string `json:"name" form:"name"`

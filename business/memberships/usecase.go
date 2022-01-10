@@ -1,43 +1,78 @@
 package memberships
 
+import (
+	"CalFit/exceptions"
+	"context"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+)
+
 type MembershipsUsecase struct {
 	membershipsRepo Repository
+	ContextTimeout  time.Duration
 }
 
-func NewMembershipsUsecase(repo Repository) Usecase {
+func NewMembershipsUsecase(repo Repository, timeout time.Duration) *MembershipsUsecase {
 	return &MembershipsUsecase{
 		membershipsRepo: repo,
+		ContextTimeout:  timeout,
 	}
 }
 
-func (membershipsUseCase *MembershipsUsecase) Insert(memberships Domain) (Domain, error) {
-	res, err := membershipsUseCase.membershipsRepo.Insert(memberships)
+func (u *MembershipsUsecase) Insert(ctx context.Context, memberships Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	validate := validator.New()
+	err := validate.Struct(memberships)
 	if err != nil {
-		return Domain{}, err
+		return Domain{}, exceptions.ErrValidationFailed
 	}
-	return res, nil
+
+	return u.membershipsRepo.Insert(ctx, memberships)
 }
 
-func (membershipsUseCase *MembershipsUsecase) Get(memberships Domain) ([]Domain, error) {
-	res, err := membershipsUseCase.membershipsRepo.Get(memberships)
-	if err != nil {
-		return []Domain{}, err
-	}
-	return res, nil
+func (u *MembershipsUsecase) Get(ctx context.Context, memberships Domain) ([]Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	return u.membershipsRepo.Get(ctx, memberships)
 }
 
-func (membershipsUseCase *MembershipsUsecase) Update(memberships Domain) (Domain, error) {
-	res, err := membershipsUseCase.membershipsRepo.Update(memberships)
-	if err != nil {
-		return Domain{}, err
+func (u *MembershipsUsecase) GetById(ctx context.Context, id string) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return Domain{}, exceptions.ErrEmptyInput
 	}
-	return res, nil
+
+	return u.membershipsRepo.GetById(ctx, id)
 }
 
-func (membershipsUseCase *MembershipsUsecase) Delete(memberships Domain) (Domain, error) {
-	res, err := membershipsUseCase.membershipsRepo.Delete(memberships)
-	if err != nil {
-		return Domain{}, err
+func (u *MembershipsUsecase) Update(ctx context.Context, id string, memberships Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return Domain{}, exceptions.ErrEmptyInput
 	}
-	return res, nil
+	validate := validator.New()
+	err := validate.Struct(memberships)
+	if err != nil {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
+
+	return u.membershipsRepo.Update(ctx, id, memberships)
+}
+
+func (u *MembershipsUsecase) Delete(ctx context.Context, id string) error {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	if id == "" {
+		return exceptions.ErrEmptyInput
+	}
+	return u.membershipsRepo.Delete(ctx, id)
 }

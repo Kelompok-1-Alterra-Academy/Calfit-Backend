@@ -3,7 +3,8 @@ package membership_types
 import (
 	"CalFit/business/memberships"
 	"CalFit/exceptions"
-	"errors"
+	"context"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,12 +14,10 @@ type MembershipsRepo struct {
 }
 
 func NewMembershipsRepo(db *gorm.DB) memberships.Repository {
-	return &MembershipsRepo{
-		DBConn: db,
-	}
+	return &MembershipsRepo{DBConn: db}
 }
 
-func (repo *MembershipsRepo) Insert(domain memberships.Domain) (memberships.Domain, error) {
+func (repo *MembershipsRepo) Insert(ctx context.Context, domain memberships.Domain) (memberships.Domain, error) {
 	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return memberships.Domain{}, err
@@ -26,7 +25,7 @@ func (repo *MembershipsRepo) Insert(domain memberships.Domain) (memberships.Doma
 	return data.ToDomain(), nil
 }
 
-func (repo *MembershipsRepo) Get(domain memberships.Domain) ([]memberships.Domain, error) {
+func (repo *MembershipsRepo) Get(ctx context.Context, domain memberships.Domain) ([]memberships.Domain, error) {
 	data := []Membership_type{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
 		return []memberships.Domain{}, err
@@ -38,25 +37,49 @@ func (repo *MembershipsRepo) Get(domain memberships.Domain) ([]memberships.Domai
 	return domainMemberships, nil
 }
 
-func (repo *MembershipsRepo) Update(domain memberships.Domain) (memberships.Domain, error) {
+func (repo *MembershipsRepo) GetById(ctx context.Context, id string) (memberships.Domain, error) {
+	var membership_type Membership_type
+	if err := repo.DBConn.Preload("Classes").Where("id = ?", id).First(&membership_type).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return memberships.Domain{}, exceptions.ErrNotFound
+		}
+		return memberships.Domain{}, err
+	}
+	return membership_type.ToDomain(), nil
+}
+
+func (repo *MembershipsRepo) Update(ctx context.Context, id string, domain memberships.Domain) (memberships.Domain, error) {
 	data := FromDomain(domain)
+	var membershipModel Membership_type
+	var membership memberships.Domain
 	repo.DBConn.Debug().Where("id=?", domain.Id)
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return memberships.Domain{}, errors.New("record not found")
+		if err == gorm.ErrRecordNotFound {
+			return memberships.Domain{}, exceptions.ErrMembershipNotFound
 		}
 		return memberships.Domain{}, exceptions.ErrNotFound
+
+	}
+
+	membershipModel.Name = membership.Name
+	membershipModel.Description = membership.Description
+	membershipModel.Updated_at = time.Now()
+
+	updateErr := repo.DBConn.Save(&membershipModel).Error
+	if updateErr != nil {
+		return memberships.Domain{}, updateErr
 	}
 	return data.ToDomain(), nil
 }
 
-func (repo *MembershipsRepo) Delete(domain memberships.Domain) (memberships.Domain, error) {
-	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return memberships.Domain{}, errors.New("record not found")
-		}
+func (repo *MembershipsRepo) Delete(ctx context.Context, id string) error {
+	var membershipModel Membership_type
+	if err := repo.DBConn.Debug().Where("id=?", id).First(&membershipModel).Error; err != nil {
+		return err
 	}
-	repo.DBConn.Where("id=?", data.Id).Delete(&data)
-	return data.ToDomain(), nil
+	deleteErr := repo.DBConn.Delete(&membershipModel).Error
+	if deleteErr != nil {
+		return deleteErr
+	}
+	return nil
 }

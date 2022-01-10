@@ -14,7 +14,7 @@ import (
 
 type ControllersList struct {
 	JWTMiddleware         middleware.JWTConfig
-	MembershipsController *memberships.Controllers
+	MembershipsController *memberships.MembershipController
 	SchedulesController   *schedules.Controllers
 	GymController         *gyms.GymController
 	ClassController       *classes.ClassController
@@ -43,10 +43,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/classes", controllers.ClassController.GetAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
 
-		v1.POST("/memberships", controllers.MembershipsController.Insert)
+		// membership endpoint
 		v1.GET("/memberships", controllers.MembershipsController.Get)
-		v1.PUT("/memberships", controllers.MembershipsController.Update)
-		v1.DELETE("/memberships", controllers.MembershipsController.Delete)
+		v1.GET("/memberships/:Id", controllers.MembershipsController.GetById)
 
 		// schedules endpoint
 		v1.POST("/schedules", controllers.SchedulesController.Insert)
@@ -75,6 +74,11 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
 		superadmin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update)
 		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete)
+
+		//membership endpoint
+		superadmin.POST("/memberships", controllers.MembershipsController.Insert)
+		superadmin.PUT("/memberships/:Id", controllers.MembershipsController.Update)
+		superadmin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete)
 
 		// session endpoint
 		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)

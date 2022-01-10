@@ -39,3 +39,33 @@ func (m *Membership_type) ToDomain() memberships.Domain {
 		Updated_at:  m.Updated_at,
 	}
 }
+
+func ToListDomain(data []Membership_type) []memberships.Domain {
+	var listDomain []memberships.Domain
+	for _, item := range data {
+		listDomain = append(listDomain, item.ToDomain())
+	}
+	return listDomain
+}
+
+func ToClassDomain(data classes.Class) memberships.ClassDomain {
+	return memberships.ClassDomain{
+		Id:                 data.Id,
+		Name:               data.Name,
+		Description:        data.Description,
+		Banner_picture_url: data.Banner_picture_url,
+		Card_picture_url:   data.Card_picture_url,
+		Category:           data.Category,
+		Status:             data.Status,
+		Created_at:         data.Created_at,
+		Updated_at:         data.Updated_at,
+	}
+}
+
+func ToListClassDomain(data []classes.Class) []memberships.ClassDomain {
+	var listDomain []memberships.ClassDomain
+	for _, item := range data {
+		listDomain = append(listDomain, ToClassDomain(item))
+	}
+	return listDomain
+}
