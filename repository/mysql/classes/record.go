@@ -19,8 +19,8 @@ type Class struct {
 	Card_picture_url   string
 	Category           string
 	Status             string
-	// Membership_typeID  uint
-	GymID uint
+	Membership_typeID  uint
+	GymID              uint
 	// Gym				   gyms.Gym
 	Booking_details []bookingdetails.Booking_detail
 	Schedules       []schedules.Schedule `gorm:"many2many:class_schedules"`
