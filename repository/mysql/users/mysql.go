@@ -6,7 +6,6 @@ import (
 	"CalFit/repository/mysql/addresses"
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -71,6 +70,5 @@ func (repo *UsersRepo) GetByUsername(ctx context.Context, email string) (users.D
 	if err := repo.DBConn.Debug().Where("email=?", email).First(&data).Error; err != nil {
 		return users.Domain{}, err
 	}
-	fmt.Println("ini data", data)
 	return data.ToDomain(), nil
 }
