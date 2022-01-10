@@ -4,6 +4,7 @@ import (
 	"CalFit/business/addresses"
 	"CalFit/business/gyms"
 	"CalFit/business/gyms/mocks"
+	"CalFit/business/paginations"
 	"context"
 	"testing"
 	"time"
@@ -16,55 +17,61 @@ var gymRepository mocks.DomainRepository
 
 var gymService gyms.DomainService
 var gymDomain, updatedGymDomain, emptyGymDomain gyms.Domain
+var paginationDomain paginations.Domain
 
 func setup() {
 	gymService = gyms.NewUsecase(&gymRepository, time.Minute*15)
 	gymDomain = gyms.Domain{
-		Id:          		  1,
-		Name: 				  "Gelud Gym",
-		Telephone:   		  "08123456789",
-		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
+		Id:                   1,
+		Name:                 "Gelud Gym",
+		Telephone:            "08123456789",
+		Picture:              "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address: addresses.Domain{
-			Address: 			  "Jl. Gelud",
-			District: 			  "Kec. Kedungkandang",
-			City: 				  "Bandung",
-			Postal_code: 		  "40291",
+			Address:     "Jl. Gelud",
+			District:    "Kec. Kedungkandang",
+			City:        "Bandung",
+			Postal_code: "40291",
 		},
 	}
 	updatedGymDomain = gyms.Domain{
-		Id:          		  1,
-		Name: 				  "Geludd Gym",
-		Telephone:   		  "08123456789",
-		Picture:	     	  "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
+		Id:                   1,
+		Name:                 "Geludd Gym",
+		Telephone:            "08123456789",
+		Picture:              "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address: addresses.Domain{
-			Address: 			  "Jl. Gelud",
-			District: 			  "Kec. Kedungkandang",
-			City: 				  "Bandung",
-			Postal_code: 		  "40291",
+			Address:     "Jl. Gelud",
+			District:    "Kec. Kedungkandang",
+			City:        "Bandung",
+			Postal_code: "40291",
 		},
 	}
 	emptyGymDomain = gyms.Domain{
-		Id:          		  0,
-		Name: 				  "",
-		Telephone:   		  "",
-		Picture:	     	  "",
+		Id:                   0,
+		Name:                 "",
+		Telephone:            "",
+		Picture:              "",
 		Operational_admin_ID: 0,
 		Address: addresses.Domain{
-			Address: 			  "",
-			District: 			  "",
-			City: 				  "",
-			Postal_code: 		  "",
+			Address:     "",
+			District:    "",
+			City:        "",
+			Postal_code: "",
 		},
+	}
+	paginationDomain = paginations.Domain{
+		Page:  1,
+		Limit: 10,
+		Sort:  "asc",
 	}
 }
 
 func TestGetAllGyms(t *testing.T) {
 	setup()
-	gymRepository.On("GetAll", mock.Anything).Return([]gyms.Domain{gymDomain}, nil)
+	gymRepository.On("GetAll", mock.Anything, mock.AnythingOfType("paginations.Domain")).Return([]gyms.Domain{gymDomain}, nil)
 	t.Run("Test Case 1 | Get All Gyms", func(t *testing.T) {
-		gyms, err := gymService.GetAll(context.Background())
+		gyms, err := gymService.GetAll(context.Background(), paginationDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}
@@ -97,7 +104,7 @@ func TestGetGymByGymId(t *testing.T) {
 func TestCreateNewGym(t *testing.T) {
 	setup()
 	gymRepository.On("Create", mock.Anything, mock.AnythingOfType("Domain")).Return(gymDomain, nil)
-	t.Run("Test Case 1 | Valid Create New gym", func(t *testing.T) {
+	t.Run("Test Case 1 | Valid Create New Gym", func(t *testing.T) {
 		gym, err := gymService.Create(context.Background(), gymDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
@@ -108,7 +115,7 @@ func TestCreateNewGym(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, gymDomain, gym)
 	})
-	t.Run("Test Case 2 | Invalid Create New gym with Empty Fields", func(t *testing.T) {
+	t.Run("Test Case 2 | Invalid Create New Gym with Empty Fields", func(t *testing.T) {
 		gym, err := gymService.Create(context.Background(), emptyGymDomain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, gym, gymDomain)
@@ -118,7 +125,7 @@ func TestCreateNewGym(t *testing.T) {
 func TestUpdateGymByGymId(t *testing.T) {
 	setup()
 	gymRepository.On("Update", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("Domain")).Return(updatedGymDomain, nil)
-	
+
 	t.Run("Test Case 1 | Valid Update Gym", func(t *testing.T) {
 		gym, err := gymService.Update(context.Background(), "1", updatedGymDomain)
 		if err != nil {

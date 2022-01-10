@@ -40,6 +40,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/gyms/:gymId", controllers.GymController.GetById)
 
 		// class endpoint
+		v1.GET("/classes", controllers.ClassController.GetAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
 
 		v1.POST("/memberships", controllers.MembershipsController.Insert)
@@ -48,10 +49,10 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.DELETE("/memberships", controllers.MembershipsController.Delete)
 
 		// schedules endpoint
-		v1.POST("", controllers.SchedulesController.Insert)
-		v1.GET("", controllers.SchedulesController.Get)
-		v1.PUT("", controllers.SchedulesController.Update)
-		v1.DELETE("", controllers.SchedulesController.Delete)
+		v1.POST("/schedules", controllers.SchedulesController.Insert)
+		v1.GET("/schedules", controllers.SchedulesController.Get)
+		v1.PUT("/schedules", controllers.SchedulesController.Update)
+		v1.DELETE("/schedules", controllers.SchedulesController.Delete)
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)
@@ -71,9 +72,14 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// class endpoint
 		superadmin.GET("/classes", controllers.ClassController.GetAll)
+		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
+		superadmin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update)
+		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete)
 
 		// session endpoint
 		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
 		superadmin.DELETE("/sessions/:id", controllers.SessionsController.Delete)
+		superadmin.PUT("/schedules/:id", controllers.SchedulesController.Update)
+		superadmin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete)
 	}
 }

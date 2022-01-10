@@ -3,7 +3,9 @@ package schedules
 import (
 	"CalFit/business/schedules"
 	"CalFit/exceptions"
+	"context"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -18,20 +20,18 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 	}
 }
 
-func (repo *SchedulesRepo) Insert(domain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Insert(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
+	data.CreatedAt = time.Now()
 	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
 	return data.toDomain(), nil
 }
 
-func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, error) {
+func (repo *SchedulesRepo) Get(ctx context.Context) ([]schedules.Domain, error) {
 	data := []Schedule{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return []schedules.Domain{}, exceptions.ErrNotFound
-		}
 		return []schedules.Domain{}, err
 	}
 	var domainSchedules []schedules.Domain
@@ -41,12 +41,9 @@ func (repo *SchedulesRepo) Get(domain schedules.Domain) ([]schedules.Domain, err
 	return domainSchedules, nil
 }
 
-func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, error) {
-	data := FromDomain(domain)
-	sessionId := Schedule{}
-	repo.DBConn.Debug().Where("id=?", domain.Id).First(&sessionId)
-	data.SessionID = sessionId.SessionID
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
+func (repo *SchedulesRepo) GetById(ctx context.Context, id int) (schedules.Domain, error) {
+	data := Schedule{}
+	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}
@@ -55,12 +52,31 @@ func (repo *SchedulesRepo) Update(domain schedules.Domain) (schedules.Domain, er
 	return data.toDomain(), nil
 }
 
-func (repo *SchedulesRepo) Delete(domain schedules.Domain) (schedules.Domain, error) {
+func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}
+		return schedules.Domain{}, err
+	}
+	data.Duration = domain.Duration
+	data.TimeSchedule = domain.TimeSchedule
+	data.SessionID = domain.SessionID
+	data.UpdatedAt = time.Now()
+	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
+		return schedules.Domain{}, err
+	}
+	return data.toDomain(), nil
+}
+
+func (repo *SchedulesRepo) Delete(ctx context.Context, id int) (schedules.Domain, error) {
+	data := Schedule{}
+	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return schedules.Domain{}, exceptions.ErrNotFound
+		}
+		return schedules.Domain{}, err
 	}
 	repo.DBConn.Where("id=?", data.Id).Delete(&data)
 	return data.toDomain(), nil
