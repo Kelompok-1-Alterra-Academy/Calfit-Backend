@@ -26,7 +26,9 @@ func NewControllers(usersUC users.Usecase) *Controllers {
 func (controller *Controllers) LoginOauth(c echo.Context) error {
 	ctx := c.Request().Context()
 	req := request.Auth{}
-	c.Bind(&req)
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
 	domain := req.ToDomain()
 	res, err := controller.UsersUC.LoginOauth(ctx, domain)
 	resFromDomain := response.FromDomain(res)
