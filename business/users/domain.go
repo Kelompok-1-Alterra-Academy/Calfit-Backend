@@ -22,12 +22,13 @@ type Domain struct {
 }
 
 type Usecase interface {
-	LoginOauth(ctx context.Context, users Domain) (Domain, error)
+	LoginOAuth(ctx context.Context, users Domain) (Domain, error)
 	Register(ctx context.Context, users Domain) (Domain, error)
+	Login(ctx context.Context, users Domain) (Domain, error)
 }
 
 type Repository interface {
-	LoginOauth(ctx context.Context, users Domain) (Domain, error)
+	LoginOAuth(ctx context.Context, users Domain) (Domain, error)
 	Register(ctx context.Context, users Domain) (Domain, error)
 	GetByUsername(ctx context.Context, email string) (Domain, error)
 }

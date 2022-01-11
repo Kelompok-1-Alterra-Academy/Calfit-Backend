@@ -22,13 +22,13 @@ func NewUsersUsecase(repo Repository, timeout time.Duration, jwtAuth *middleware
 	}
 }
 
-func (uu *UsersUsecase) LoginOauth(ctx context.Context, users Domain) (Domain, error) {
+func (uu *UsersUsecase) LoginOAuth(ctx context.Context, users Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
 	defer cancel()
 	if users.Email == "" || users.Password == "" {
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
-	res, err := uu.Repo.LoginOauth(ctx, users)
+	res, err := uu.Repo.LoginOAuth(ctx, users)
 	if err != nil {
 		return Domain{}, err
 	}
@@ -51,5 +51,22 @@ func (uu *UsersUsecase) Register(ctx context.Context, users Domain) (Domain, err
 	if err != nil {
 		return Domain{}, err
 	}
+	return res, nil
+}
+
+func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
+	defer cancel()
+	if users.Email == "" || users.Password == "" {
+		return Domain{}, exceptions.ErrInvalidCredentials
+	}
+	res, err := uu.Repo.GetByUsername(ctx, users.Email)
+	if err != nil {
+		return Domain{}, err
+	}
+	if !helpers.ValidateHash(users.Password, res.Password) {
+		return Domain{}, exceptions.ErrValidationFailed
+	}
+	res.Token, _ = uu.JWTAuth.GenerateToken(res.Email)
 	return res, nil
 }
