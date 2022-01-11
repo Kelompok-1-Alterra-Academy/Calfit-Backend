@@ -54,7 +54,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
-		v1.POST("/auth/login", controllers.AuthController.Login)
+		v1.POST("/auth/loginOauth", controllers.AuthController.LoginOauth)
 		v1.POST("/auth/register", controllers.AuthController.Register)
 	}
 

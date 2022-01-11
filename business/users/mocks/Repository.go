@@ -35,8 +35,8 @@ func (_m *Repository) GetByUsername(ctx context.Context, email string) (users.Do
 	return r0, r1
 }
 
-// Login provides a mock function with given fields: ctx, _a1
-func (_m *Repository) Login(ctx context.Context, _a1 users.Domain) (users.Domain, error) {
+// LoginOauth provides a mock function with given fields: ctx, _a1
+func (_m *Repository) LoginOauth(ctx context.Context, _a1 users.Domain) (users.Domain, error) {
 	ret := _m.Called(ctx, _a1)
 
 	var r0 users.Domain

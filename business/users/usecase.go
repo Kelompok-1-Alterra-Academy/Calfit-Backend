@@ -22,20 +22,13 @@ func NewUsersUsecase(repo Repository, timeout time.Duration, jwtAuth *middleware
 	}
 }
 
-func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error) {
+func (uu *UsersUsecase) LoginOauth(ctx context.Context, users Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
 	defer cancel()
 	if users.Email == "" || users.Password == "" {
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
-	userDomain, err := uu.Repo.GetByUsername(ctx, users.Email)
-	if err != nil {
-		return Domain{}, err
-	}
-	if !helpers.ValidateHash(users.Password, userDomain.Password) {
-		return Domain{}, exceptions.ErrInvalidCredentials
-	}
-	res, err := uu.Repo.Login(ctx, users)
+	res, err := uu.Repo.LoginOauth(ctx, users)
 	if err != nil {
 		return Domain{}, err
 	}

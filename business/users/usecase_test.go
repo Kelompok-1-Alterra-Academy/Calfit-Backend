@@ -38,26 +38,26 @@ func testSetup() {
 	usecase = users.NewUsersUsecase(&repo, time.Minute*1, &configJWT)
 }
 
-func TestLogin(t *testing.T) {
+func TestLoginOauth(t *testing.T) {
 	testSetup()
 	t.Run("Test case 1 | Valid get", func(t *testing.T) {
-		repo.On("Login", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, nil).Once()
-		user, err := usecase.Login(context.Background(), domain)
+		repo.On("LoginOauth", mock.Anything, mock.AnythingOfType("Domain")).Return(domain, nil).Once()
+		user, err := usecase.LoginOauth(context.Background(), domain)
 		user.Token = "dummy"
 		assert.Nil(t, err)
 		assert.Equal(t, domain, user)
 	})
 	t.Run("Test case 2 | Server error", func(t *testing.T) {
-		repo.On("Login", mock.Anything, mock.AnythingOfType("Domain")).Return(users.Domain{}, errors.New("Internal server error")).Once()
-		user, err := usecase.Login(context.Background(), domain)
+		repo.On("LoginOauth", mock.Anything, mock.AnythingOfType("Domain")).Return(users.Domain{}, errors.New("Internal server error")).Once()
+		user, err := usecase.LoginOauth(context.Background(), domain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, domain, user)
 	})
 	t.Run("Test case 3 | Empty email or password", func(t *testing.T) {
-		repo.On("Login", mock.Anything, mock.AnythingOfType("Domain")).Return(users.Domain{}, errors.New("Email or password is empty")).Once()
+		repo.On("LoginOauth", mock.Anything, mock.AnythingOfType("Domain")).Return(users.Domain{}, errors.New("Email or password is empty")).Once()
 		domain.Email = ""
 		domain.Password = ""
-		user, err := usecase.Login(context.Background(), domain)
+		user, err := usecase.LoginOauth(context.Background(), domain)
 		assert.NotNil(t, err)
 		assert.NotEqual(t, domain, user)
 	})

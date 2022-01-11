@@ -21,7 +21,7 @@ func NewUsersRepo(db *gorm.DB) users.Repository {
 	}
 }
 
-func (repo *UsersRepo) Login(ctx context.Context, domain users.Domain) (users.Domain, error) {
+func (repo *UsersRepo) LoginOauth(ctx context.Context, domain users.Domain) (users.Domain, error) {
 	data := FromDomain(domain)
 	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

@@ -23,12 +23,12 @@ func NewControllers(usersUC users.Usecase) *Controllers {
 	}
 }
 
-func (controller *Controllers) Login(c echo.Context) error {
+func (controller *Controllers) LoginOauth(c echo.Context) error {
 	ctx := c.Request().Context()
 	req := request.Auth{}
 	c.Bind(&req)
 	domain := req.ToDomain()
-	res, err := controller.UsersUC.Login(ctx, domain)
+	res, err := controller.UsersUC.LoginOauth(ctx, domain)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if errors.Is(err, exceptions.ErrInvalidCredentials) {
