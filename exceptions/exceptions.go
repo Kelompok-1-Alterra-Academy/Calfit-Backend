@@ -29,4 +29,6 @@ var (
 	ErrScheduleNotFound = errors.New("schedule not found")
 	// ErrMissingId is thrown when id is missing
 	ErrMissingId = errors.New("missing require id")
+	// ErrBadRequest is thrown when request message is invalid
+	ErrBadRequest = errors.New("invalid request message")
 )
