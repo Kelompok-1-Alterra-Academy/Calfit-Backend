@@ -9,15 +9,14 @@ import (
 )
 
 type User struct {
-<<<<<<< HEAD
-	Id               int `gorm:"primaryKey"`
-	Email            string
+	Id               int    `gorm:"primaryKey"`
+	Email            string `gorm:"not null"`
 	Photo            string
 	Password         string
 	MembershipTypeID int
-	AddressID        uint
+	AddressID        uint `gorm:"not null"`
 	BookingDetails   []bookingDetailsRepo.Booking_detail
-	Address          addresses.Address
+	Address          addresses.Address `gorm:"foreignkey:AddressID"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }
@@ -69,17 +68,4 @@ func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) bo
 		CreatedAt:          bookingDetails.CreatedAt,
 		UpdatedAt:          bookingDetails.UpdatedAt,
 	}
-=======
-	Id                int    `gorm:"primaryKey"`
-	Username          string `gorm:"not null"`
-	Email             string `gorm:"not null"`
-	Photo             string
-	Password          string
-	Membership_typeID int
-	AddressID         int `gorm:"not null"`
-	Booking_details   []booking_details.Booking_detail
-	Address           addresses.Address `gorm:"foreignkey:AddressID"`
-	Created_at        time.Time
-	Updated_at        time.Time
->>>>>>> d5b800f... fix: foreign key error when migrating tables
 }

@@ -45,17 +45,12 @@ func InitDB() *gorm.DB {
 		&sessions.Session{},
 		&schedules.Schedule{},
 		&classes.Class{},
-<<<<<<< HEAD
 		&video_contents.Video_content{},
 		&bookingdetails.Booking_detail{},
-=======
 		&users.User{},
-		&booking_details.Booking_detail{},
 		&membership_types.Membership_type{},
 		&payments.Payment{},
-		&video_contents.Video_content{},
 		&newsletters.Newsletter{},
->>>>>>> d5b800f... fix: foreign key error when migrating tables
 	)
 	return DB
 }
