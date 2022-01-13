@@ -25,7 +25,7 @@ func (repo *MembershipsRepo) Insert(ctx context.Context, domain memberships.Doma
 	return data.ToDomain(), nil
 }
 
-func (repo *MembershipsRepo) Get(ctx context.Context, domain memberships.Domain) ([]memberships.Domain, error) {
+func (repo *MembershipsRepo) Get(ctx context.Context) ([]memberships.Domain, error) {
 	data := []Membership_type{}
 	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
 		return []memberships.Domain{}, err

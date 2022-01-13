@@ -68,14 +68,14 @@ func main() {
 
 	// Memberships initialize
 	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
-	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo)
-	membershipsHandler := _membershipsController.NewControllers(membershipsUsecase)
+	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo, timeoutContext)
+	membershipsController := _membershipsController.NewHandler(*membershipsUsecase)
 
 	routesInit := routes.ControllersList{
 		JWTMiddleware:         configJWT.Init(),
 		SchedulesController:   schedulesController,
 		GymController:         gymsHandler,
-		MembershipsController: membershipsHandler,
+		MembershipsController: membershipsController,
 		ClassController:       classesHandler,
 		SessionsController:    sessionsController,
 	}

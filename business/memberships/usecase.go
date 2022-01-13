@@ -33,11 +33,11 @@ func (u *MembershipsUsecase) Insert(ctx context.Context, memberships Domain) (Do
 	return u.membershipsRepo.Insert(ctx, memberships)
 }
 
-func (u *MembershipsUsecase) Get(ctx context.Context, memberships Domain) ([]Domain, error) {
+func (u *MembershipsUsecase) Get(ctx context.Context) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()
 
-	return u.membershipsRepo.Get(ctx, memberships)
+	return u.membershipsRepo.Get(ctx)
 }
 
 func (u *MembershipsUsecase) GetById(ctx context.Context, id string) (Domain, error) {

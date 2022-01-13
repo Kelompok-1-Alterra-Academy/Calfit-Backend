@@ -34,7 +34,10 @@ func (m *MembershipController) Insert(c echo.Context) error {
 	createdMembership := requests.Memberships{}
 	c.Bind(&createdMembership)
 
-	membershipDomain := requests.ToDomain(createdMembership)
+	membershipDomain := memberships.Domain{
+		Name:        createdMembership.Name,
+		Description: createdMembership.Description,
+	}
 	membership, err := m.Usecase.Insert(ctx, membershipDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
@@ -46,15 +49,13 @@ func (m *MembershipController) Insert(c echo.Context) error {
 
 func (m *MembershipController) Get(c echo.Context) error {
 	ctx := c.Request().Context()
-	reqMembership_type := requests.Memberships{}
-	membershipDomain := requests.ToDomain(reqMembership_type)
-	membership, err := m.Usecase.Get(ctx, membershipDomain)
+	membership, err := m.Usecase.Get(ctx)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	resFromDomain := []responses.Memberships{}
-	for i, val := range membership {
-		resFromDomain[i] = responses.FromDomain(val)
+	for _, val := range membership {
+		resFromDomain = append(resFromDomain, responses.FromDomain(val))
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
@@ -64,14 +65,13 @@ func (u *MembershipController) GetById(c echo.Context) error {
 
 	id := c.Param("Id")
 	membership, err := u.Usecase.GetById(ctx, id)
+	resFromDomain := responses.FromDomain(membership)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
 			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrMembershipNotFound)
 		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
-
-	resFromDomain := responses.FromDomain(membership)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
 
@@ -82,7 +82,10 @@ func (m *MembershipController) Update(c echo.Context) error {
 	updatedMembership := requests.Memberships{}
 	c.Bind(&updatedMembership)
 
-	membershipDomain := requests.ToDomain(updatedMembership)
+	membershipDomain := memberships.Domain{
+		Name:        updatedMembership.Name,
+		Description: updatedMembership.Description,
+	}
 	membership, err := m.Usecase.Update(ctx, id, membershipDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)

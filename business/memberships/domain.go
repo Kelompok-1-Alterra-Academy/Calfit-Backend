@@ -13,7 +13,7 @@ type ClassDomain struct {
 	Card_picture_url   string
 	Category           string
 	Status             string
-	// Membership_typeID  uint
+	Membership_typeID  int
 	// Booking_details    []booking_details.Domain
 	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
 	Created_at time.Time
@@ -28,9 +28,9 @@ type Domain struct {
 	Updated_at  time.Time
 }
 
-type Usecase interface {
+type DomainService interface {
 	Insert(ctx context.Context, memberships Domain) (Domain, error)
-	Get(ctx context.Context, memberships Domain) ([]Domain, error)
+	Get(ctx context.Context) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Update(ctx context.Context, id string, memberships Domain) (Domain, error)
 	Delete(ctx context.Context, id string) error
@@ -38,7 +38,7 @@ type Usecase interface {
 
 type Repository interface {
 	Insert(ctx context.Context, memberships Domain) (Domain, error)
-	Get(ctx context.Context, memberships Domain) ([]Domain, error)
+	Get(ctx context.Context) ([]Domain, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Update(ctx context.Context, id string, memberships Domain) (Domain, error)
 	Delete(ctx context.Context, id string) error
