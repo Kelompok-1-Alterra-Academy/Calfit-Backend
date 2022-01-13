@@ -23,7 +23,7 @@ func setup() {
 		Name:        "Basic",
 		Description: "Get basic membership for free to all member",
 	}
-	membershipDomain = memberships.Domain{
+	updatedMembershipDomain = memberships.Domain{
 		Id:          1,
 		Name:        "Silver",
 		Description: "Get silver membership for free to all member",
@@ -84,12 +84,15 @@ func TestCreateNewMembership(t *testing.T) {
 	})
 }
 
-/* func TestUpdateMembershipByMembershipId(t *testing.T) {
+func TestUpdateMembershipByMembershipId(t *testing.T) {
 	setup()
 	membershipRepository.On("Update", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("Domain")).Return(updatedMembershipDomain, nil)
 
 	t.Run("Test Case 1 | Valid Update Membership", func(t *testing.T) {
 		memberships, err := membershipService.Update(context.Background(), "1", updatedMembershipDomain)
+		if err != nil {
+			t.Errorf("Error: %s", err)
+		}
 		assert.Nil(t, err)
 		assert.Equal(t, updatedMembershipDomain, memberships)
 	})
@@ -98,7 +101,7 @@ func TestCreateNewMembership(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.NotEqual(t, memberships, membershipDomain)
 	})
-} */
+}
 
 func TestDeleteMembershipByMembershipId(t *testing.T) {
 	setup()
