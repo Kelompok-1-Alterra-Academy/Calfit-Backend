@@ -9,6 +9,7 @@ import (
 type GymResponse struct {
 	ID                   uint   `json:"id"`
 	Name                 string `json:"name"`
+	Description          string `json:"description"`
 	Telephone            string `json:"telephone"`
 	Picture              string `json:"picture"`
 	Operational_admin_ID uint   `json:"operationalAdminId"`
@@ -64,6 +65,7 @@ func FromDomain(domain gyms.Domain) GymResponse {
 	return GymResponse{
 		ID:                   domain.Id,
 		Name:                 domain.Name,
+		Description:          domain.Description,
 		Telephone:            domain.Telephone,
 		Picture:              domain.Picture,
 		Operational_admin_ID: domain.Operational_admin_ID,

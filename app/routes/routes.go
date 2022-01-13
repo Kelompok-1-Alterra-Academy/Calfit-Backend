@@ -25,9 +25,14 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 	v1 := e.Group("/api/v1")
 	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+<<<<<<< HEAD
 		AllowCredentials: true,
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+=======
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+>>>>>>> d5b800f... fix: foreign key error when migrating tables
 	}))
 	v1.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",

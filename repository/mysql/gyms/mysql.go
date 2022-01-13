@@ -59,6 +59,7 @@ func (b *GymRepository) Create(ctx context.Context, gym gyms.Domain) (gyms.Domai
 	// insert gym
 	createdGym := Gym{
 		Name:                gym.Name,
+		Description:         gym.Description,
 		Telephone:           gym.Telephone,
 		Picture:             gym.Picture,
 		Operational_adminID: gym.Operational_admin_ID,
@@ -87,6 +88,7 @@ func (b *GymRepository) Update(ctx context.Context, id string, gym gyms.Domain) 
 	}
 
 	gymModel.Name = gym.Name
+	gymModel.Description = gym.Description
 	gymModel.Telephone = gym.Telephone
 	gymModel.Picture = gym.Picture
 	gymModel.Operational_adminID = gym.Operational_admin_ID

@@ -109,6 +109,7 @@ func (b *GymController) Create(c echo.Context) error {
 
 	gymDomain := gyms.Domain{
 		Name:                 createdGym.Name,
+		Description:          createdGym.Description,
 		Telephone:            createdGym.Telephone,
 		Picture:              createdGym.Picture,
 		Address:              addressDomain,
@@ -141,6 +142,7 @@ func (b *GymController) Update(c echo.Context) error {
 
 	gymDomain := gyms.Domain{
 		Name:                 updatedGym.Name,
+		Description:          updatedGym.Description,
 		Telephone:            updatedGym.Telephone,
 		Picture:              updatedGym.Picture,
 		Address:              addressDomain,

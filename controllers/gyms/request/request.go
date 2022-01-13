@@ -6,6 +6,7 @@ type KeyStruct struct {
 
 type CreateGym struct {
 	Name                 string `json:"name" form:"name"`
+	Description          string `json:"description" form:"description"`
 	Telephone            string `json:"telephone" form:"telephone"`
 	Picture              string `json:"picture" form:"picture"`
 	Operational_admin_ID uint   `json:"operationalAdminId" form:"operationalAdminId"`
