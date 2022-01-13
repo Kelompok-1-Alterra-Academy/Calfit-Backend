@@ -8,6 +8,8 @@ import (
 	_membershipsUsecase "CalFit/business/memberships"
 	_schedulesUsecase "CalFit/business/schedules"
 	_sessionsUsecase "CalFit/business/sessions"
+	_usersUsecase "CalFit/business/users"
+	_authController "CalFit/controllers/auth"
 	_classController "CalFit/controllers/classes"
 	_gymController "CalFit/controllers/gyms"
 	_membershipsController "CalFit/controllers/memberships"
@@ -19,6 +21,7 @@ import (
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	_sessionsRepo "CalFit/repository/mysql/sessions"
+	_usersRepo "CalFit/repository/mysql/users"
 	"log"
 	"time"
 
@@ -70,14 +73,21 @@ func main() {
 	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
 	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo, timeoutContext)
 	membershipsController := _membershipsController.NewHandler(*membershipsUsecase)
+	// Users initialize
+	usersRepo := _usersRepo.NewUsersRepo(db)
+	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext, &configJWT)
+
+	// Auth initialize
+	authController := _authController.NewControllers(usersUsecase)
 
 	routesInit := routes.ControllersList{
-		JWTMiddleware:         configJWT.Init(),
-		SchedulesController:   schedulesController,
-		GymController:         gymsHandler,
-		MembershipsController: membershipsController,
-		ClassController:       classesHandler,
-		SessionsController:    sessionsController,
+		JWTMiddleware:       configJWT.Init(),
+		SchedulesController: schedulesController,
+		GymController:       gymsHandler,
+    MembershipsController: membershipsController,
+		ClassController:     classesHandler,
+		SessionsController:  sessionsController,
+		AuthController:      authController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"CalFit/controllers/auth"
 	"CalFit/controllers/classes"
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
@@ -13,12 +14,13 @@ import (
 )
 
 type ControllersList struct {
-	JWTMiddleware         middleware.JWTConfig
-	MembershipsController *memberships.MembershipController
-	SchedulesController   *schedules.Controllers
-	GymController         *gyms.GymController
-	ClassController       *classes.ClassController
-	SessionsController    *sessions.Controllers
+	JWTMiddleware       middleware.JWTConfig
+  MembershipsController *memberships.MembershipController
+	SchedulesController *schedules.Controllers
+	GymController       *gyms.GymController
+	ClassController     *classes.ClassController
+	SessionsController  *sessions.Controllers
+	AuthController      *auth.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -26,8 +28,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 	v1 := e.Group("/api/v1")
 	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+		AllowCredentials: true,
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 	v1.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method} ${uri} ${status} ${time_rfc3339} ${latency_human}\n",
@@ -58,6 +61,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions", controllers.SessionsController.GetAll)
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
+		v1.POST("/auth/loginOauth", controllers.AuthController.LoginOauth)
+		v1.POST("/auth/register", controllers.AuthController.Register)
 	}
 
 	// superadmin routes

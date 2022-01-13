@@ -2,7 +2,7 @@ package classes
 
 import (
 	"CalFit/business/classes"
-	"CalFit/repository/mysql/booking_details"
+	bookingdetails "CalFit/repository/mysql/booking_details"
 
 	// "CalFit/repository/mysql/gyms"
 	"CalFit/repository/mysql/schedules"
@@ -19,10 +19,10 @@ type Class struct {
 	Card_picture_url   string
 	Category           string
 	Status             string
-	// Membership_typeID  uint
-	GymID uint
+	Membership_typeID  uint
+	GymID              uint
 	// Gym				   gyms.Gym
-	Booking_details []booking_details.Booking_detail
+	Booking_details []bookingdetails.Booking_detail
 	Schedules       []schedules.Schedule `gorm:"many2many:class_schedules"`
 	Created_at      time.Time
 	Updated_at      time.Time
