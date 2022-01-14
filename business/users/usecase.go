@@ -32,7 +32,7 @@ func (uu *UsersUsecase) LoginOAuth(ctx context.Context, users Domain) (Domain, e
 	if err != nil {
 		return Domain{}, err
 	}
-	res.Token, _ = uu.JWTAuth.GenerateToken(res.Email)
+	res.Token, _ = uu.JWTAuth.GenerateToken(res.Id, res.Email, true, false, false)
 	return res, nil
 }
 
@@ -67,6 +67,6 @@ func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error)
 	if !helpers.ValidateHash(users.Password, res.Password) {
 		return Domain{}, exceptions.ErrValidationFailed
 	}
-	res.Token, _ = uu.JWTAuth.GenerateToken(res.Email)
+	res.Token, _ = uu.JWTAuth.GenerateToken(res.Id, res.Email, true, false, false)
 	return res, nil
 }
