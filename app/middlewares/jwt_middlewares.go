@@ -8,7 +8,11 @@ import (
 )
 
 type JWTMyClaims struct {
-	Email string
+	Id         int
+	Email      string
+	Member     bool
+	Admin      bool
+	Superadmin bool
 	jwt.StandardClaims
 }
 
@@ -24,9 +28,13 @@ func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 	}
 }
 
-func (jwtConf *ConfigJWT) GenerateToken(Email string) (string, error) {
+func (jwtConf *ConfigJWT) GenerateToken(Id int, Email string, Member bool, Admin bool, Superadmin bool) (string, error) {
 	claims := JWTMyClaims{
+		1,
 		Email,
+		Member,
+		Admin,
+		Superadmin,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(jwtConf.ExpiresDuration)).Unix(),
 		},
