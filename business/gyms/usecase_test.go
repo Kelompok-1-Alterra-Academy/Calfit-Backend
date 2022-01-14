@@ -25,6 +25,7 @@ func setup() {
 		Id:                   1,
 		Name:                 "Gelud Gym",
 		Telephone:            "08123456789",
+		Description:          "Gelud Gym is a place where you can train your body",
 		Picture:              "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address: addresses.Domain{
@@ -38,6 +39,7 @@ func setup() {
 		Id:                   1,
 		Name:                 "Geludd Gym",
 		Telephone:            "08123456789",
+		Description:          "Geludd Gym is a place where you can train your body",
 		Picture:              "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAS9iRN.img?h=531&w=799&m=6&q=60&o=f&l=f&x=246&y=140",
 		Operational_admin_ID: 1,
 		Address: addresses.Domain{
@@ -51,6 +53,7 @@ func setup() {
 		Id:                   0,
 		Name:                 "",
 		Telephone:            "",
+		Description:          "",
 		Picture:              "",
 		Operational_admin_ID: 0,
 		Address: addresses.Domain{
