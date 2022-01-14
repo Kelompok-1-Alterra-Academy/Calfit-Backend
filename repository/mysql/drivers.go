@@ -44,12 +44,12 @@ func InitDB() *gorm.DB {
 		&gyms.Gym{},
 		&sessions.Session{},
 		&schedules.Schedule{},
-		&classes.Class{},
-		&video_contents.Video_content{},
-		&bookingdetails.Booking_detail{},
 		&users.User{},
 		&membership_types.Membership_type{},
 		&payments.Payment{},
+		&classes.Class{},
+		&video_contents.Video_content{},
+		&bookingdetails.Booking_detail{},
 		&newsletters.Newsletter{},
 	)
 	return DB
