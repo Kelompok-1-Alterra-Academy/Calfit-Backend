@@ -59,3 +59,23 @@ func (controller *Controllers) Register(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomain(res))
 }
+
+func (controller *Controllers) Login(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.Auth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	res, err := controller.UsersUC.Login(ctx, domain)
+	resFromDomain := response.FromDomain(res)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	cookie := helpers.CreateCookie(resFromDomain.Token)
+	c.SetCookie(cookie)
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}

@@ -14,13 +14,13 @@ import (
 )
 
 type ControllersList struct {
-	JWTMiddleware       middleware.JWTConfig
-  MembershipsController *memberships.MembershipController
-	SchedulesController *schedules.Controllers
-	GymController       *gyms.GymController
-	ClassController     *classes.ClassController
-	SessionsController  *sessions.Controllers
-	AuthController      *auth.Controllers
+	JWTMiddleware         middleware.JWTConfig
+	MembershipsController *memberships.MembershipController
+	SchedulesController   *schedules.Controllers
+	GymController         *gyms.GymController
+	ClassController       *classes.ClassController
+	SessionsController    *sessions.Controllers
+	AuthController        *auth.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -62,6 +62,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/sessions/:id", controllers.SessionsController.GetById)
 
 		v1.POST("/auth/loginOauth", controllers.AuthController.LoginOAuth)
+		v1.POST("/auth/login", controllers.AuthController.Login)
 		v1.POST("/auth/register", controllers.AuthController.Register)
 	}
 
