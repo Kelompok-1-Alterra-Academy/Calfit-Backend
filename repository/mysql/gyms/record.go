@@ -82,6 +82,8 @@ func ToClassDomain(data classes.Class) gyms.ClassDomain {
 		Description:        data.Description,
 		Banner_picture_url: data.Banner_picture_url,
 		Card_picture_url:   data.Card_picture_url,
+		Online:             data.Online,
+		Link:               data.Link,
 		Category:           data.Category,
 		Status:             data.Status,
 		Created_at:         data.Created_at,

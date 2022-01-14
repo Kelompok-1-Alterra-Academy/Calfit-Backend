@@ -13,6 +13,8 @@ type ClassDomain struct {
 	Description        string
 	Banner_picture_url string
 	Card_picture_url   string
+	Online             bool
+	Link               string
 	Category           string
 	Status             string
 	// Membership_typeID  uint

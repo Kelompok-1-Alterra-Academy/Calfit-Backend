@@ -20,6 +20,8 @@ type ClassResponse struct {
 	Description        string `json:"description"`
 	Banner_picture_url string `json:"banner_picture_url"`
 	Card_picture_url   string `json:"card_picture_url"`
+	Online             bool   `json:"online"`
+	Link               string `json:"link"`
 	Category           string `json:"category"`
 	Status             string `json:"status"`
 	Membership_typeID  uint   `json:"membership_typeID"`
@@ -36,6 +38,8 @@ func FromClassDomain(domain memberships.ClassDomain) ClassResponse {
 		Description:        domain.Description,
 		Banner_picture_url: domain.Banner_picture_url,
 		Card_picture_url:   domain.Card_picture_url,
+		Online:             domain.Online,
+		Link:               domain.Link,
 		Category:           domain.Category,
 		Status:             domain.Status,
 		// Membership_typeID:  domain.Membership_typeID,

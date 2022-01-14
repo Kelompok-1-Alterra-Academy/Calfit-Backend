@@ -17,6 +17,8 @@ type Class struct {
 	Description        string
 	Banner_picture_url string
 	Card_picture_url   string
+	Online             bool
+	Link               string
 	Category           string
 	Status             string
 	Membership_typeID  uint
@@ -41,6 +43,8 @@ func (c *Class) ToDomain() classes.Domain {
 		Description:        c.Description,
 		Banner_picture_url: c.Banner_picture_url,
 		Card_picture_url:   c.Card_picture_url,
+		Online:             c.Online,
+		Link:               c.Link,
 		Category:           c.Category,
 		Status:             c.Status,
 		GymID:              c.GymID,
@@ -56,6 +60,8 @@ func FromDomain(domain classes.Domain) Class {
 		Description:        domain.Description,
 		Banner_picture_url: domain.Banner_picture_url,
 		Card_picture_url:   domain.Card_picture_url,
+		Online:             domain.Online,
+		Link:               domain.Link,
 		Category:           domain.Category,
 		Status:             domain.Status,
 		Created_at:         domain.Created_at,
