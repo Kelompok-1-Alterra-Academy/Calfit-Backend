@@ -41,16 +41,16 @@ func InitDB() *gorm.DB {
 		&super_admins.Super_admin{},
 		&operational_admins.Operational_admin{},
 		&addresses.Address{},
-		&membership_types.Membership_type{},
-		&users.User{},
-		&newsletters.Newsletter{},
 		&gyms.Gym{},
-		&payments.Payment{},
 		&sessions.Session{},
 		&schedules.Schedule{},
 		&classes.Class{},
 		&video_contents.Video_content{},
 		&bookingdetails.Booking_detail{},
+		&users.User{},
+		&membership_types.Membership_type{},
+		&payments.Payment{},
+		&newsletters.Newsletter{},
 	)
 	return DB
 }

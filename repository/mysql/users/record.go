@@ -9,14 +9,14 @@ import (
 )
 
 type User struct {
-	Id               int `gorm:"primaryKey"`
-	Email            string
+	Id               int    `gorm:"primaryKey"`
+	Email            string `gorm:"not null"`
 	Photo            string
 	Password         string
 	MembershipTypeID int
-	AddressID        uint
+	AddressID        uint `gorm:"not null"`
 	BookingDetails   []bookingDetailsRepo.Booking_detail
-	Address          addresses.Address
+	Address          addresses.Address `gorm:"foreignkey:AddressID"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }

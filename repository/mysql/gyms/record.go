@@ -14,6 +14,7 @@ type Gym struct {
 	gorm.Model
 	Id                  uint                                 `gorm:"primaryKey"`
 	Name                string                               `gorm:"type:varchar(100);not null"`
+	Description         string                               `gorm:"type:varchar(1024);not null"`
 	Telephone           string                               `gorm:"type:varchar(20);not null"`
 	Picture             string                               `gorm:"type:varchar(500);not null"`
 	Operational_adminID uint                                 `gorm:"not null"`
@@ -35,6 +36,7 @@ func (g *Gym) ToDomain() gyms.Domain {
 	return gyms.Domain{
 		Id:                   g.Id,
 		Name:                 g.Name,
+		Description:          g.Description,
 		Telephone:            g.Telephone,
 		Picture:              g.Picture,
 		Operational_admin_ID: g.Operational_adminID,
@@ -52,6 +54,7 @@ func FromDomain(domain gyms.Domain) Gym {
 	return Gym{
 		Id:                  domain.Id,
 		Name:                domain.Name,
+		Description:         domain.Description,
 		Telephone:           domain.Telephone,
 		Picture:             domain.Picture,
 		Operational_adminID: domain.Operational_admin_ID,

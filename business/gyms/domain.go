@@ -25,6 +25,7 @@ type ClassDomain struct {
 type Domain struct {
 	Id                   uint
 	Name                 string `validate:"required"`
+	Description          string `validate:"required"`
 	Telephone            string `validate:"required,min=7,max=20,numeric"`
 	Picture              string `validate:"required"`
 	Operational_admin_ID uint   `validate:"required"`
