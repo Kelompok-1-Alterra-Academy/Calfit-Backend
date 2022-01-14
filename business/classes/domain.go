@@ -12,6 +12,8 @@ type Domain struct {
 	Description        string `validate:"required"`
 	Banner_picture_url string `validate:"required"`
 	Card_picture_url   string `validate:"required"`
+	Online             bool   `validate:"required"`
+	Link               string `validate:"required"`
 	Category           string `validate:"required"`
 	Status             string `validate:"required"`
 	// Membership_typeID  uint `validate:"required"`
