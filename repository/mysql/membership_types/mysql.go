@@ -38,22 +38,19 @@ func (repo *MembershipsRepo) Get(ctx context.Context) ([]memberships.Domain, err
 }
 
 func (repo *MembershipsRepo) GetById(ctx context.Context, id string) (memberships.Domain, error) {
-	var membership_type Membership_type
-	if err := repo.DBConn.Preload("Classes").Where("id = ?", id).First(&membership_type).Error; err != nil {
+	var membershipModel Membership_type
+	if err := repo.DBConn.Preload("Classes").Where("id = ?", id).First(&membershipModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return memberships.Domain{}, exceptions.ErrNotFound
 		}
 		return memberships.Domain{}, err
 	}
-	return membership_type.ToDomain(), nil
+	return membershipModel.ToDomain(), nil
 }
 
-func (repo *MembershipsRepo) Update(ctx context.Context, id string, domain memberships.Domain) (memberships.Domain, error) {
-	data := FromDomain(domain)
+func (repo *MembershipsRepo) Update(ctx context.Context, id string, membership memberships.Domain) (memberships.Domain, error) {
 	var membershipModel Membership_type
-	var membership memberships.Domain
-	repo.DBConn.Debug().Where("id=?", domain.Id)
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
+	if err := repo.DBConn.Debug().Where("id = ?", id).First(&membershipModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return memberships.Domain{}, exceptions.ErrMembershipNotFound
 		}
@@ -69,7 +66,7 @@ func (repo *MembershipsRepo) Update(ctx context.Context, id string, domain membe
 	if updateErr != nil {
 		return memberships.Domain{}, updateErr
 	}
-	return data.ToDomain(), nil
+	return membershipModel.ToDomain(), nil
 }
 
 func (repo *MembershipsRepo) Delete(ctx context.Context, id string) error {
