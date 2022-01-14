@@ -17,6 +17,8 @@ var (
 	ErrGymNotFound = errors.New("gym not found")
 	// ErrClassNotFound is thrown when the class is not found
 	ErrClassNotFound = errors.New("class not found")
+	// ErrMembershipNotFound is thrown when the membership is not found
+	ErrMembershipNotFound = errors.New("membership not found")
 	// ErrUserNotFound is thrown when the user is not found
 	ErrUserNotFound = errors.New("user not found")
 	// ErrEmptyInput is thrown when the input is empty
