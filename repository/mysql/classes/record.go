@@ -2,10 +2,11 @@ package classes
 
 import (
 	"CalFit/business/classes"
+	"CalFit/business/schedules"
 	bookingdetails "CalFit/repository/mysql/booking_details"
 
 	// "CalFit/repository/mysql/gyms"
-	"CalFit/repository/mysql/schedules"
+	schedulesRepo "CalFit/repository/mysql/schedules"
 	"time"
 
 	"gorm.io/gorm"
@@ -25,7 +26,7 @@ type Class struct {
 	GymID              uint
 	// Gym				   gyms.Gym
 	Booking_details []bookingdetails.Booking_detail
-	Schedules       []schedules.Schedule `gorm:"many2many:class_schedules"`
+	Schedules       []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
 	Created_at      time.Time
 	Updated_at      time.Time
 }
@@ -50,6 +51,7 @@ func (c *Class) ToDomain() classes.Domain {
 		GymID:              c.GymID,
 		Created_at:         c.Created_at,
 		Updated_at:         c.Updated_at,
+		Schedules:          convertToSchedulesArray(c.Schedules),
 	}
 }
 
@@ -75,4 +77,23 @@ func ToListDomain(data []Class) []classes.Domain {
 		listDomain = append(listDomain, item.ToDomain())
 	}
 	return listDomain
+}
+
+func convertToSchedulesArray(schedule []schedulesRepo.Schedule) []schedules.Domain {
+	schedulesDomain := []schedules.Domain{}
+	for _, val := range schedule {
+		schedulesDomain = append(schedulesDomain, toScheduleDomain(val))
+	}
+	return schedulesDomain
+}
+
+func toScheduleDomain(schedule schedulesRepo.Schedule) schedules.Domain {
+	return schedules.Domain{
+		Id:           schedule.Id,
+		TimeSchedule: schedule.TimeSchedule,
+		Duration:     schedule.Duration,
+		SessionID:    schedule.SessionID,
+		CreatedAt:    schedule.CreatedAt,
+		UpdatedAt:    schedule.UpdatedAt,
+	}
 }

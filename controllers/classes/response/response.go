@@ -2,6 +2,7 @@ package response
 
 import (
 	"CalFit/business/classes"
+	"CalFit/business/schedules"
 	"time"
 )
 
@@ -18,9 +19,9 @@ type ClassResponse struct {
 	Membership_typeID  uint   `json:"membership_typeID"`
 	GymID              uint   `json:"gymID"`
 	// Booking_details    []booking_details.Domain
-	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
-	Created_at time.Time `json:"createdAt"`
-	Updated_at time.Time `json:"updatedAt"`
+	Schedules  []schedules.Domain `json:"schedules,omitempty"`
+	Created_at time.Time          `json:"createdAt"`
+	Updated_at time.Time          `json:"updatedAt"`
 }
 
 func FromDomain(domain classes.Domain) ClassResponse {
@@ -37,7 +38,7 @@ func FromDomain(domain classes.Domain) ClassResponse {
 		// Membership_typeID:  domain.Membership_typeID,
 		GymID: domain.GymID,
 		// Booking_details:    domain.Booking_details,
-		// Schedules:          domain.Schedules,
+		Schedules:  domain.Schedules,
 		Created_at: domain.Created_at,
 		Updated_at: domain.Updated_at,
 	}

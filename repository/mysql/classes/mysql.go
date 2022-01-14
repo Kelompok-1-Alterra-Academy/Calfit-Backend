@@ -30,7 +30,7 @@ func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Dom
 
 func (c *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
 	var class Class
-	if err := c.Conn.Where("id = ?", id).First(&class).Error; err != nil {
+	if err := c.Conn.Where("id = ?", id).Preload("Schedules").First(&class).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return classes.Domain{}, exceptions.ErrNotFound
 		}
