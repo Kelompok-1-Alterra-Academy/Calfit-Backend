@@ -16,7 +16,7 @@ type Membership_type struct {
 	Name        string `gorm:"type:varchar(50);not null"`
 	Description string `gorm:"type:varchar(500);not null"`
 	// Users       []users.User    `gorm:"foreignkey:UserID"`
-	Classes    []classes.Class `gorm:"foreignkey:GymID"`
+	Classes    []classes.Class
 	Created_at time.Time
 	Updated_at time.Time
 }
