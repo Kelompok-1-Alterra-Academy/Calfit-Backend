@@ -17,4 +17,10 @@ func NewBookingDetailsRepo(db *gorm.DB) bookingdetails.Repository {
 	}
 }
 
-func (repo *BookingDetailsRepo) Insert(ctx context.Context, bookingDetails bookingdetails.Domain) (bookingdetails.Domain, error)
+func (repo *BookingDetailsRepo) Insert(ctx context.Context, domain bookingdetails.Domain) (bookingdetails.Domain, error) {
+	data := FromDomain(domain)
+	if err := repo.DBConn.Create(&data).Error; err != nil {
+		return bookingdetails.Domain{}, err
+	}
+	return data.ToDomain(), nil
+}
