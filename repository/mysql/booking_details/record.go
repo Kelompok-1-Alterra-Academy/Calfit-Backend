@@ -3,6 +3,8 @@ package bookingdetails
 import (
 	bookingdetails "CalFit/business/booking_details"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Booking_detail struct {
@@ -15,6 +17,12 @@ type Booking_detail struct {
 	ClassID            int
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
+}
+
+func (repo *Booking_detail) BeforeCreate(tx *gorm.DB) error {
+	repo.CreatedAt = time.Now()
+	repo.UpdatedAt = time.Now()
+	return nil
 }
 
 func FromDomain(domain bookingdetails.Domain) Booking_detail {
