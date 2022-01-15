@@ -47,7 +47,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// class endpoint
 		v1.GET("/classes", controllers.ClassController.GetAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
-		v1.POST("/classes/:class_id", controllers.BookingDetailsController.Insert)
+		v1.POST("/classes/:class_id/bookings", controllers.BookingDetailsController.Insert)
 
 		// membership endpoint
 		v1.GET("/memberships", controllers.MembershipsController.Get)
