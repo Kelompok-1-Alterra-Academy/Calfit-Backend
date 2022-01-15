@@ -8,7 +8,7 @@ type Booking_details struct {
 	UserID             int    `json:"user_id" form:"user_id"`
 	OperationalAdminID int    `json:"operational_admin_id" form:"operational_admin_id"`
 	PaymentID          int    `json:"payment_id" form:"payment_id"`
-	ClassID            int    `json:"class_id" form:"class_id"`
+	ClassID            int    `json:"class_id" form:"class_id" param:"class_id"`
 }
 
 func (request *Booking_details) ToDomain() bookingdetails.Domain {
