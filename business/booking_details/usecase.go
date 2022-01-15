@@ -17,8 +17,4 @@ func NewBookingDetailsUsecase(repo Repository, timeout time.Duration) Usecase {
 	}
 }
 
-func (bdu *BookingDetailsUsecase) Insert(ctx context.Context, bookingDetails Domain) (Domain, error) {
-	ctx, cancel := context.WithTimeout(ctx, bdu.ContextTimeout)
-	defer cancel()
-	return Domain{}, nil
-}
+func (usecase *BookingDetailsUsecase) Insert(ctx context.Context, bookingDetails Domain) (Domain, error)
