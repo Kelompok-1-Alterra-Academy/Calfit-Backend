@@ -2,6 +2,7 @@ package routes
 
 import (
 	"CalFit/controllers/auth"
+	bookingdetails "CalFit/controllers/booking_details"
 	"CalFit/controllers/classes"
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
@@ -14,13 +15,14 @@ import (
 )
 
 type ControllersList struct {
-	JWTMiddleware         middleware.JWTConfig
-	MembershipsController *memberships.MembershipController
-	SchedulesController   *schedules.Controllers
-	GymController         *gyms.GymController
-	ClassController       *classes.ClassController
-	SessionsController    *sessions.Controllers
-	AuthController        *auth.Controllers
+	JWTMiddleware            middleware.JWTConfig
+	MembershipsController    *memberships.MembershipController
+	SchedulesController      *schedules.Controllers
+	GymController            *gyms.GymController
+	ClassController          *classes.ClassController
+	SessionsController       *sessions.Controllers
+	AuthController           *auth.Controllers
+	BookingDetailsController *bookingdetails.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -45,6 +47,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		// class endpoint
 		v1.GET("/classes", controllers.ClassController.GetAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
+		v1.POST("/classes/:class_id", controllers.BookingDetailsController.Insert)
 
 		// membership endpoint
 		v1.GET("/memberships", controllers.MembershipsController.Get)
