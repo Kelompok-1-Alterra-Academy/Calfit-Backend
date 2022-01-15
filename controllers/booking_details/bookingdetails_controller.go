@@ -15,9 +15,9 @@ type Controllers struct {
 	BookingDetailsUC bookingdetails.Usecase
 }
 
-func NewControllers(usecase bookingdetails.BookingDetailsUsecase) *Controllers {
+func NewControllers(usecase bookingdetails.Usecase) *Controllers {
 	return &Controllers{
-		BookingDetailsUC: &usecase,
+		BookingDetailsUC: usecase,
 	}
 }
 
