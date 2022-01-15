@@ -19,6 +19,7 @@ func NewBookingDetailsRepo(db *gorm.DB) bookingdetails.Repository {
 
 func (repo *BookingDetailsRepo) Insert(ctx context.Context, domain bookingdetails.Domain) (bookingdetails.Domain, error) {
 	data := FromDomain(domain)
+	data.Status = "waiting"
 	if err := repo.DBConn.Create(&data).Error; err != nil {
 		return bookingdetails.Domain{}, err
 	}
