@@ -21,11 +21,11 @@ func Member() echo.MiddlewareFunc {
 	}
 }
 
-func Admin() echo.MiddlewareFunc {
+func OperationalAdmin() echo.MiddlewareFunc {
 	return func(hf echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			claims := GetUser(c)
-			if claims.Admin {
+			if claims.OperationalAdmin {
 				return hf(c)
 			} else {
 				return controllers.ErrorResponse(c, http.StatusForbidden, errors.New("forbidden roles"))
