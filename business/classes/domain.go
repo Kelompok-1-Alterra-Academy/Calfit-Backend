@@ -2,6 +2,7 @@ package classes
 
 import (
 	"CalFit/business/paginations"
+	"CalFit/business/schedules"
 	context "context"
 	"time"
 )
@@ -19,7 +20,7 @@ type Domain struct {
 	// Membership_typeID  uint `validate:"required"`
 	GymID uint `validate:"required"`
 	// Booking_details    []booking_details.Domain
-	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
+	Schedules  []schedules.Domain
 	Created_at time.Time
 	Updated_at time.Time
 }
