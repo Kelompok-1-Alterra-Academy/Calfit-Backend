@@ -19,6 +19,7 @@ type ClassResponse struct {
 	Category           string `json:"category"`
 	Status             string `json:"status"`
 	Membership_typeID  uint   `json:"membership_typeID"`
+	Price              int    `json:"price"`
 	// Booking_details    []booking_details.Domain
 	GymName    string              `json:"gym_name"`
 	Schedules  []request.Schedules `json:"schedules,omitempty"`
@@ -40,6 +41,7 @@ func FromDomain(domain classes.Domain) ClassResponse {
 		Status:             domain.Status,
 		// Membership_typeID:  domain.Membership_typeID,
 		GymName: domain.GymName,
+		Price:   domain.Price,
 		// Booking_details:    domain.Booking_details,
 		Schedules:  toListSchedules(domain.Schedules),
 		Created_at: domain.Created_at,

@@ -13,4 +13,5 @@ type CreateClass struct {
 	Link               string `json:"link" form:"link"`
 	Category           string `json:"category" form:"category"`
 	Status             string `json:"status" form:"status"`
+	Price              int    `json:"price" form:"price"`
 }
