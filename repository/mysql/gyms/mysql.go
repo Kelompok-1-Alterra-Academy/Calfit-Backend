@@ -30,6 +30,14 @@ func (b *GymRepository) GetAll(ctx context.Context, pagination paginations.Domai
 	return result, nil
 }
 
+func (b *GymRepository) CountAll(ctx context.Context) (int, error) {
+	var count int64
+	if err := b.Conn.Model(&Gym{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return int(count), nil
+}
+
 func (b *GymRepository) GetById(ctx context.Context, id string) (gyms.Domain, error) {
 	var gym Gym
 	if err := b.Conn.Preload("Address").Preload("Classes").Where("id = ?", id).First(&gym).Error; err != nil {

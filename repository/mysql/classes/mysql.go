@@ -28,6 +28,14 @@ func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Dom
 	return result, nil
 }
 
+func (c *ClassRepository) CountAll(ctx context.Context) (int, error) {
+	var count int64
+	if err := c.Conn.Model(&Class{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return int(count), nil
+}
+
 func (c *ClassRepository) GetById(ctx context.Context, id string) (classes.Domain, error) {
 	var class Class
 	if err := c.Conn.Where("id = ?", id).Preload("Schedules").First(&class).Error; err != nil {

@@ -38,7 +38,7 @@ func (b *ClassController) GetAll(c echo.Context) error {
 
 	paginationDomain := paginations.Domain{
 		Page:  1,
-		Limit: 50,
+		Limit: 0,
 	}
 
 	// get pagination query
