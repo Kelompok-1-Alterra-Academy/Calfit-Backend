@@ -3,6 +3,8 @@ package response
 import (
 	"CalFit/business/classes"
 	"CalFit/business/schedules"
+	"CalFit/controllers/schedules/request"
+	"fmt"
 	"time"
 )
 
@@ -17,14 +19,15 @@ type ClassResponse struct {
 	Category           string `json:"category"`
 	Status             string `json:"status"`
 	Membership_typeID  uint   `json:"membership_typeID"`
-	GymID              uint   `json:"gymID"`
 	// Booking_details    []booking_details.Domain
-	Schedules  []schedules.Domain `json:"schedules,omitempty"`
-	Created_at time.Time          `json:"createdAt"`
-	Updated_at time.Time          `json:"updatedAt"`
+	GymName    string              `json:"gym_name"`
+	Schedules  []request.Schedules `json:"schedules,omitempty"`
+	Created_at time.Time           `json:"createdAt"`
+	Updated_at time.Time           `json:"updatedAt"`
 }
 
 func FromDomain(domain classes.Domain) ClassResponse {
+	fmt.Println("ini domain", domain.Schedules)
 	return ClassResponse{
 		ID:                 domain.Id,
 		Name:               domain.Name,
@@ -36,10 +39,26 @@ func FromDomain(domain classes.Domain) ClassResponse {
 		Category:           domain.Category,
 		Status:             domain.Status,
 		// Membership_typeID:  domain.Membership_typeID,
-		GymID: domain.GymID,
+		GymName: domain.GymName,
 		// Booking_details:    domain.Booking_details,
-		Schedules:  domain.Schedules,
+		Schedules:  toListSchedules(domain.Schedules),
 		Created_at: domain.Created_at,
 		Updated_at: domain.Updated_at,
+	}
+}
+
+func toListSchedules(domain []schedules.Domain) []request.Schedules {
+	req := []request.Schedules{}
+	for _, val := range domain {
+		req = append(req, toReqSchedule(val))
+	}
+	return req
+}
+
+func toReqSchedule(domain schedules.Domain) request.Schedules {
+	return request.Schedules{
+		TimeSchedule: domain.TimeSchedule,
+		Duration:     domain.Duration,
+		SessionID:    domain.Duration,
 	}
 }

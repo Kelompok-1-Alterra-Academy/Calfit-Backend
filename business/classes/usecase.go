@@ -5,6 +5,7 @@ import (
 	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	context "context"
+	"strconv"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -45,8 +46,11 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 	if id == "" {
 		return Domain{}, exceptions.ErrEmptyInput
 	}
-
-	return u.Repo.GetById(ctx, id)
+	domain, _ := u.Repo.GetById(ctx, id)
+	gymID := strconv.Itoa(int(domain.GymID))
+	gymDomain, _ := u.GymRepo.GetById(ctx, gymID)
+	domain.GymName = gymDomain.Name
+	return domain, nil
 }
 
 func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Domain, error) {
