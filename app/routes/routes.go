@@ -45,6 +45,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// class endpoint
 		v1.GET("/classes", controllers.ClassController.GetAll)
+		v1.GET("/classes/count", controllers.ClassController.CountAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
 
 		// membership endpoint

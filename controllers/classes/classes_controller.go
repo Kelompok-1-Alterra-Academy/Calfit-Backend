@@ -33,7 +33,7 @@ func NewHandler(u classes.Usecase) *ClassController {
 	}
 }
 
-func (b *ClassController) GetAll(c echo.Context) error {
+func (u *ClassController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	paginationDomain := paginations.Domain{
@@ -65,7 +65,7 @@ func (b *ClassController) GetAll(c echo.Context) error {
 
 	paginationDomain.Sort = sort
 
-	classes, err := b.Usecase.GetAll(ctx, paginationDomain)
+	classes, err := u.Usecase.GetAll(ctx, paginationDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -75,6 +75,17 @@ func (b *ClassController) GetAll(c echo.Context) error {
 		response[i] = responses.FromDomain(gym)
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, response)
+}
+
+func (u *ClassController) CountAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	count, err := u.Usecase.CountAll(ctx)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.SuccessResponse(c, http.StatusOK, count)
 }
 
 func (u *ClassController) GetById(c echo.Context) error {
