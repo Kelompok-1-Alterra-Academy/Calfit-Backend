@@ -31,6 +31,13 @@ func (u *Usecase) GetAll(ctx context.Context, pagination paginations.Domain) ([]
 	return u.Repo.GetAll(ctx, pagination)
 }
 
+func (u *Usecase) CountAll(ctx context.Context) (int, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
+	defer cancel()
+
+	return u.Repo.CountAll(ctx)
+}
+
 func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ContextTimeout)
 	defer cancel()

@@ -34,12 +34,12 @@ func NewHandler(u gyms.Usecase) *GymController {
 	}
 }
 
-func (b *GymController) GetAll(c echo.Context) error {
+func (g *GymController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	paginationDomain := paginations.Domain{
 		Page:  1,
-		Limit: 50,
+		Limit: 0,
 	}
 
 	// get pagination query
@@ -66,7 +66,7 @@ func (b *GymController) GetAll(c echo.Context) error {
 
 	paginationDomain.Sort = sort
 
-	gyms, err := b.Usecase.GetAll(ctx, paginationDomain)
+	gyms, err := g.Usecase.GetAll(ctx, paginationDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
@@ -76,6 +76,17 @@ func (b *GymController) GetAll(c echo.Context) error {
 		response[i] = responses.FromDomain(gym)
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, response)
+}
+
+func (g *GymController) CountAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	count, err := g.Usecase.CountAll(ctx)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.SuccessResponse(c, http.StatusOK, count)
 }
 
 func (u *GymController) GetById(c echo.Context) error {
@@ -94,7 +105,7 @@ func (u *GymController) GetById(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
-func (b *GymController) Create(c echo.Context) error {
+func (g *GymController) Create(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	createdGym := requests.CreateGym{}
@@ -116,7 +127,7 @@ func (b *GymController) Create(c echo.Context) error {
 		Operational_admin_ID: createdGym.Operational_admin_ID,
 	}
 
-	gym, err := b.Usecase.Create(ctx, gymDomain)
+	gym, err := g.Usecase.Create(ctx, gymDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -126,7 +137,7 @@ func (b *GymController) Create(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusCreated, gymResponse)
 }
 
-func (b *GymController) Update(c echo.Context) error {
+func (g *GymController) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := c.Param("gymId")
@@ -149,7 +160,7 @@ func (b *GymController) Update(c echo.Context) error {
 		Operational_admin_ID: updatedGym.Operational_admin_ID,
 	}
 
-	gym, err := b.Usecase.Update(ctx, id, gymDomain)
+	gym, err := g.Usecase.Update(ctx, id, gymDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -159,12 +170,12 @@ func (b *GymController) Update(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusAccepted, gymResponse)
 }
 
-func (b *GymController) Delete(c echo.Context) error {
+func (g *GymController) Delete(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := c.Param("gymId")
 
-	err := b.Usecase.Delete(ctx, id)
+	err := g.Usecase.Delete(ctx, id)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}

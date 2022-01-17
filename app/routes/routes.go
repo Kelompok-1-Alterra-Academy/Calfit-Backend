@@ -40,10 +40,12 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		// gym endpoint
 		v1.GET("/gyms", controllers.GymController.GetAll)
+		v1.GET("/gyms/count", controllers.GymController.CountAll)
 		v1.GET("/gyms/:gymId", controllers.GymController.GetById)
 
 		// class endpoint
 		v1.GET("/classes", controllers.ClassController.GetAll)
+		v1.GET("/classes/count", controllers.ClassController.CountAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
 
 		// membership endpoint
