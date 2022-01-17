@@ -3,6 +3,7 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_bookingDetailsUsecase "CalFit/business/booking_details"
 	_classUsecase "CalFit/business/classes"
 	_gymUsecase "CalFit/business/gyms"
 	_membershipsUsecase "CalFit/business/memberships"
@@ -10,12 +11,14 @@ import (
 	_sessionsUsecase "CalFit/business/sessions"
 	_usersUsecase "CalFit/business/users"
 	_authController "CalFit/controllers/auth"
+	bookingdetails "CalFit/controllers/booking_details"
 	_classController "CalFit/controllers/classes"
 	_gymController "CalFit/controllers/gyms"
 	_membershipsController "CalFit/controllers/memberships"
 	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
 	"CalFit/repository/mysql"
+	_bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
@@ -80,14 +83,20 @@ func main() {
 	// Auth initialize
 	authController := _authController.NewControllers(usersUsecase)
 
+	// BookingDetails initialize
+	bookingDetailsRepo := _bookingDetailsRepo.NewBookingDetailsRepo(db)
+	bookingDetailsUsecase := _bookingDetailsUsecase.NewBookingDetailsUsecase(bookingDetailsRepo, timeoutContext)
+	bookingDetailsController := bookingdetails.NewControllers(bookingDetailsUsecase)
+
 	routesInit := routes.ControllersList{
-		JWTMiddleware:       configJWT.Init(),
-		SchedulesController: schedulesController,
-		GymController:       gymsHandler,
-    MembershipsController: membershipsController,
-		ClassController:     classesHandler,
-		SessionsController:  sessionsController,
-		AuthController:      authController,
+		JWTMiddleware:            configJWT.Init(),
+		SchedulesController:      schedulesController,
+		GymController:            gymsHandler,
+		MembershipsController:    membershipsController,
+		ClassController:          classesHandler,
+		SessionsController:       sessionsController,
+		AuthController:           authController,
+		BookingDetailsController: bookingDetailsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
