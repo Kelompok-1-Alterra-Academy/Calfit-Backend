@@ -25,3 +25,15 @@ func (repo *BookingDetailsRepo) Insert(ctx context.Context, domain bookingdetail
 	}
 	return data.ToDomain(), nil
 }
+
+func (repo *BookingDetailsRepo) GetByUserID(ctx context.Context, userID int) ([]bookingdetails.Domain, error) {
+	data := []Booking_detail{}
+	if err := repo.DBConn.Where("user_id=?", userID).Find(&data).Error; err != nil {
+		return []bookingdetails.Domain{}, err
+	}
+	var domain []bookingdetails.Domain
+	for _, val := range data {
+		domain = append(domain, val.ToDomain())
+	}
+	return domain, nil
+}
