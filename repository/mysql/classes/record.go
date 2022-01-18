@@ -5,6 +5,8 @@ import (
 	"CalFit/business/schedules"
 	bookingdetails "CalFit/repository/mysql/booking_details"
 
+	// memberships "CalFit/repository/mysql/membership_types"
+
 	// "CalFit/repository/mysql/gyms"
 	schedulesRepo "CalFit/repository/mysql/schedules"
 	"time"
@@ -26,6 +28,7 @@ type Class struct {
 	GymID              uint
 	Price              int
 	// Gym				   gyms.Gym
+	// Membership_type memberships.Membership_type
 	Booking_details []bookingdetails.Booking_detail
 	Schedules       []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
 	Created_at      time.Time
@@ -50,6 +53,7 @@ func (c *Class) ToDomain() classes.Domain {
 		Category:           c.Category,
 		Status:             c.Status,
 		GymID:              c.GymID,
+		Membership_typeID:  c.Membership_typeID,
 		Price:              c.Price,
 		Created_at:         c.Created_at,
 		Updated_at:         c.Updated_at,
@@ -69,6 +73,7 @@ func FromDomain(domain classes.Domain) Class {
 		Category:           domain.Category,
 		Status:             domain.Status,
 		Price:              domain.Price,
+		Membership_typeID:  domain.Membership_typeID,
 		Created_at:         domain.Created_at,
 		Updated_at:         domain.Updated_at,
 	}

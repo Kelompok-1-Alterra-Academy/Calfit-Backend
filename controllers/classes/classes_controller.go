@@ -116,6 +116,11 @@ func (u *ClassController) Create(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
+	intMembershipTypeId, err := strconv.Atoi(createdClass.Membership_typeID)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
 	classDomain := classes.Domain{
 		Name:               createdClass.Name,
 		Description:        createdClass.Description,
@@ -123,9 +128,11 @@ func (u *ClassController) Create(c echo.Context) error {
 		Card_picture_url:   createdClass.Card_picture_url,
 		Online:             createdClass.Online,
 		Link:               createdClass.Link,
+		Price:              createdClass.Price,
 		Category:           createdClass.Category,
 		Status:             createdClass.Status,
 		GymID:              uint(intGymId),
+		Membership_typeID:  uint(intMembershipTypeId),
 	}
 
 	class, err := u.Usecase.Create(ctx, classDomain, gymId)
@@ -150,6 +157,11 @@ func (u *ClassController) Update(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
+	intMembershipTypeId, err := strconv.Atoi(updatedClass.Membership_typeID)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
 	updatedClassDomain := classes.Domain{
 		Name:               updatedClass.Name,
 		Description:        updatedClass.Description,
@@ -157,9 +169,11 @@ func (u *ClassController) Update(c echo.Context) error {
 		Card_picture_url:   updatedClass.Card_picture_url,
 		Online:             updatedClass.Online,
 		Link:               updatedClass.Link,
+		Price:              updatedClass.Price,
 		Category:           updatedClass.Category,
 		Status:             updatedClass.Status,
 		GymID:              uint(intGymId),
+		Membership_typeID:  uint(intMembershipTypeId),
 	}
 
 	class, err := u.Usecase.Update(ctx, classId, updatedClassDomain)
