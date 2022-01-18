@@ -116,6 +116,11 @@ func (u *ClassController) Create(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
+	intMembershipTypeId, err := strconv.Atoi(createdClass.Membership_typeID)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
 	classDomain := classes.Domain{
 		Name:               createdClass.Name,
 		Description:        createdClass.Description,
@@ -126,6 +131,7 @@ func (u *ClassController) Create(c echo.Context) error {
 		Category:           createdClass.Category,
 		Status:             createdClass.Status,
 		GymID:              uint(intGymId),
+		Membership_typeID:  uint(intMembershipTypeId),
 	}
 
 	class, err := u.Usecase.Create(ctx, classDomain, gymId)

@@ -5,6 +5,7 @@ import (
 	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"context"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -56,12 +57,14 @@ func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 		Category:           class.Category,
 		Status:             class.Status,
 		GymID:              class.GymID,
-		// Membership_typeID:  class.Membership_typeID,
+		Membership_typeID:  class.Membership_typeID,
 	}
 	err := c.Conn.Create(&createdClass).Error
 	if err != nil {
 		return classes.Domain{}, err
 	}
+
+	log.Println("created class: ", createdClass)
 
 	return createdClass.ToDomain(), nil
 }

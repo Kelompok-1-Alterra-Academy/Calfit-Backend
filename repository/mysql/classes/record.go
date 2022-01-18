@@ -5,6 +5,8 @@ import (
 	"CalFit/business/schedules"
 	bookingdetails "CalFit/repository/mysql/booking_details"
 
+	// memberships "CalFit/repository/mysql/membership_types"
+
 	// "CalFit/repository/mysql/gyms"
 	schedulesRepo "CalFit/repository/mysql/schedules"
 	"time"
@@ -26,6 +28,7 @@ type Class struct {
 	GymID              uint
 	Price              int
 	// Gym				   gyms.Gym
+	// Membership_type memberships.Membership_type
 	Booking_details []bookingdetails.Booking_detail
 	Schedules       []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
 	Created_at      time.Time
