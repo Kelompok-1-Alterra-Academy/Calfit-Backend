@@ -19,8 +19,10 @@ type Domain struct {
 
 type Usecase interface {
 	Insert(ctx context.Context, bookingDetails Domain) (Domain, error)
+	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 }
 
 type Repository interface {
 	Insert(ctx context.Context, bookingDetails Domain) (Domain, error)
+	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 }
