@@ -21,6 +21,7 @@ type ClassResponse struct {
 	Membership_typeID  uint   `json:"membership_typeID"`
 	Price              int    `json:"price"`
 	// Booking_details    []booking_details.Domain
+	GymID      uint                `json:"gymID"`
 	GymName    string              `json:"gym_name"`
 	Schedules  []request.Schedules `json:"schedules,omitempty"`
 	Created_at time.Time           `json:"createdAt"`

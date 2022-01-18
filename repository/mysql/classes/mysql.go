@@ -5,7 +5,6 @@ import (
 	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"context"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -56,6 +55,9 @@ func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 		Card_picture_url:   class.Card_picture_url,
 		Category:           class.Category,
 		Status:             class.Status,
+		Online:             class.Online,
+		Link:               class.Link,
+		Price:              class.Price,
 		GymID:              class.GymID,
 		Membership_typeID:  class.Membership_typeID,
 	}
@@ -63,8 +65,6 @@ func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymI
 	if err != nil {
 		return classes.Domain{}, err
 	}
-
-	log.Println("created class: ", createdClass)
 
 	return createdClass.ToDomain(), nil
 }
@@ -83,8 +83,11 @@ func (c *ClassRepository) Update(ctx context.Context, id string, class classes.D
 	classModel.Card_picture_url = class.Card_picture_url
 	classModel.Category = class.Category
 	classModel.Status = class.Status
+	classModel.Online = class.Online
+	classModel.Link = class.Link
+	classModel.Price = class.Price
 	// classModel.GymID = class.GymID
-	// classModel.Membership_typeID = class.Membership_typeID
+	classModel.Membership_typeID = class.Membership_typeID
 	if err := c.Conn.Save(&classModel).Error; err != nil {
 		return classes.Domain{}, err
 	}

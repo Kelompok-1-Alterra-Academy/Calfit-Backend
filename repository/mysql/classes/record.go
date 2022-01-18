@@ -53,6 +53,7 @@ func (c *Class) ToDomain() classes.Domain {
 		Category:           c.Category,
 		Status:             c.Status,
 		GymID:              c.GymID,
+		Membership_typeID:  c.Membership_typeID,
 		Price:              c.Price,
 		Created_at:         c.Created_at,
 		Updated_at:         c.Updated_at,
@@ -72,6 +73,7 @@ func FromDomain(domain classes.Domain) Class {
 		Category:           domain.Category,
 		Status:             domain.Status,
 		Price:              domain.Price,
+		Membership_typeID:  domain.Membership_typeID,
 		Created_at:         domain.Created_at,
 		Updated_at:         domain.Updated_at,
 	}

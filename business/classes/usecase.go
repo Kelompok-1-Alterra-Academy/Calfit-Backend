@@ -5,6 +5,7 @@ import (
 	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	context "context"
+	"log"
 	"strconv"
 	"time"
 
@@ -62,6 +63,8 @@ func (u *Usecase) Create(ctx context.Context, domain Domain, gymId string) (Doma
 	if (gymErr != nil) || (gym.Id == 0) {
 		return Domain{}, exceptions.ErrGymNotFound
 	}
+
+	log.Printf("%+v", domain)
 
 	validate := validator.New()
 	err := validate.Struct(domain)
