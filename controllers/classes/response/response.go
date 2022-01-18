@@ -4,32 +4,29 @@ import (
 	"CalFit/business/classes"
 	"CalFit/business/schedules"
 	"CalFit/controllers/schedules/request"
-	"fmt"
 	"time"
 )
 
 type ClassResponse struct {
 	ID                 uint   `json:"id"`
 	Name               string `json:"name"`
-	Description        string `json:"description"`
-	Banner_picture_url string `json:"banner_picture_url"`
-	Card_picture_url   string `json:"card_picture_url"`
-	Online             bool   `json:"online"`
-	Link               string `json:"link"`
-	Category           string `json:"category"`
-	Status             string `json:"status"`
-	Membership_typeID  uint   `json:"membership_typeID"`
-	Price              int    `json:"price"`
+	Description        string `json:"description,omitempty"`
+	Banner_picture_url string `json:"banner_picture_url,omitempty"`
+	Card_picture_url   string `json:"card_picture_url,omitempty"`
+	Online             bool   `json:"online,omitempty"`
+	Link               string `json:"link,omitempty"`
+	Category           string `json:"category,omitempty"`
+	Status             string `json:"status,omitempty"`
+	Membership_typeID  uint   `json:"membership_typeID,omitempty"`
+	Price              int    `json:"price,omitempty"`
 	// Booking_details    []booking_details.Domain
-	GymID      uint                `json:"gymID"`
-	GymName    string              `json:"gym_name"`
+	GymName    string              `json:"gym_name,omitempty"`
 	Schedules  []request.Schedules `json:"schedules,omitempty"`
-	Created_at time.Time           `json:"createdAt"`
-	Updated_at time.Time           `json:"updatedAt"`
+	Created_at *time.Time          `json:"createdAt,omitempty"`
+	Updated_at *time.Time          `json:"updatedAt,omitempty"`
 }
 
 func FromDomain(domain classes.Domain) ClassResponse {
-	fmt.Println("ini domain", domain.Schedules)
 	return ClassResponse{
 		ID:                 domain.Id,
 		Name:               domain.Name,
@@ -47,8 +44,8 @@ func FromDomain(domain classes.Domain) ClassResponse {
 		GymID:             domain.GymID,
 		// Booking_details:    domain.Booking_details,
 		Schedules:  toListSchedules(domain.Schedules),
-		Created_at: domain.Created_at,
-		Updated_at: domain.Updated_at,
+		Created_at: &domain.Created_at,
+		Updated_at: &domain.Updated_at,
 	}
 }
 
