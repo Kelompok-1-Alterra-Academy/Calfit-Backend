@@ -24,6 +24,7 @@ type Class struct {
 	Status             string
 	Membership_typeID  uint
 	GymID              uint
+	Price              int
 	// Gym				   gyms.Gym
 	Booking_details []bookingdetails.Booking_detail
 	Schedules       []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
@@ -49,6 +50,7 @@ func (c *Class) ToDomain() classes.Domain {
 		Category:           c.Category,
 		Status:             c.Status,
 		GymID:              c.GymID,
+		Price:              c.Price,
 		Created_at:         c.Created_at,
 		Updated_at:         c.Updated_at,
 		Schedules:          convertToSchedulesArray(c.Schedules),
@@ -66,6 +68,7 @@ func FromDomain(domain classes.Domain) Class {
 		Link:               domain.Link,
 		Category:           domain.Category,
 		Status:             domain.Status,
+		Price:              domain.Price,
 		Created_at:         domain.Created_at,
 		Updated_at:         domain.Updated_at,
 	}

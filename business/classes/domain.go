@@ -18,7 +18,9 @@ type Domain struct {
 	Category           string `validate:"required"`
 	Status             string `validate:"required"`
 	// Membership_typeID  uint `validate:"required"`
-	GymID uint `validate:"required"`
+	GymID   uint   `validate:"required"`
+	GymName string `validate:"required"`
+	Price   int    `validate:"required"`
 	// Booking_details    []booking_details.Domain
 	Schedules  []schedules.Domain
 	Created_at time.Time
