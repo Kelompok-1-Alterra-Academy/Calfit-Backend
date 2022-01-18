@@ -15,7 +15,7 @@ type Membership_type struct {
 	Id          int    `gorm:"primaryKey"`
 	Name        string `gorm:"type:varchar(50);not null"`
 	Description string `gorm:"type:varchar(500);not null"`
-	Price       int    `gorm:"type:"`
+	Price       int    `gorm:"type:int;not null"`
 	// Users       []users.User    `gorm:"foreignkey:UserID"`
 	Classes    []classes.Class
 	Created_at time.Time
