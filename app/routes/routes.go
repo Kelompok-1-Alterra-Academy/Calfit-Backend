@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"CalFit/app/middlewares"
 	"CalFit/controllers/auth"
 	bookingdetails "CalFit/controllers/booking_details"
 	"CalFit/controllers/classes"
@@ -69,9 +70,12 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.POST("/auth/loginOAuth", controllers.AuthController.LoginOAuth)
 		v1.POST("/auth/login", controllers.AuthController.Login)
 		v1.POST("/auth/register", controllers.AuthController.Register)
+	}
 
-		// account endpoint
-		v1.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID)
+	// Member routes
+	member := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
+	{
+		member.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
 	}
 
 	// superadmin routes
