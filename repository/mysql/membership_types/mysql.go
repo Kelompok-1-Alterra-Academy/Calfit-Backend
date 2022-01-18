@@ -60,6 +60,7 @@ func (repo *MembershipsRepo) Update(ctx context.Context, id string, membership m
 
 	membershipModel.Name = membership.Name
 	membershipModel.Description = membership.Description
+	membershipModel.Price = membership.Price
 	membershipModel.Updated_at = time.Now()
 
 	updateErr := repo.DBConn.Save(&membershipModel).Error

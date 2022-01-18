@@ -37,6 +37,7 @@ func (m *MembershipController) Insert(c echo.Context) error {
 	membershipDomain := memberships.Domain{
 		Name:        createdMembership.Name,
 		Description: createdMembership.Description,
+		Price:       createdMembership.Price,
 	}
 	membership, err := m.Usecase.Insert(ctx, membershipDomain)
 	if err != nil {
@@ -85,6 +86,7 @@ func (m *MembershipController) Update(c echo.Context) error {
 	membershipDomain := memberships.Domain{
 		Name:        updatedMembership.Name,
 		Description: updatedMembership.Description,
+		Price:       updatedMembership.Price,
 	}
 	membership, err := m.Usecase.Update(ctx, id, membershipDomain)
 	if err != nil {

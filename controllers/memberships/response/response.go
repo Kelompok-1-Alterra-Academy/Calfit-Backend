@@ -9,6 +9,7 @@ type Memberships struct {
 	Id          int             `json:"id"`
 	Name        string          `json:"name"`
 	Description string          `json:"description"`
+	Price       int             `json:"price"`
 	Classes     []ClassResponse `json:"classes"`
 	Created_at  time.Time       `json:"created_at"`
 	Updated_at  time.Time       `json:"updated_at"`
@@ -63,6 +64,7 @@ func FromDomain(m memberships.Domain) Memberships {
 		Id:          m.Id,
 		Name:        m.Name,
 		Description: m.Description,
+		Price:       m.Price,
 		Classes:     FromClassDomainList(m.Classes),
 		Created_at:  m.Created_at,
 		Updated_at:  m.Updated_at,
