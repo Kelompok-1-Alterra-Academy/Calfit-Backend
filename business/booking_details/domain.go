@@ -13,6 +13,7 @@ type Domain struct {
 	OperationalAdminID int
 	PaymentID          int
 	ClassID            int
+	ScheduleID         int
 	ClassName          string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time

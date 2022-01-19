@@ -9,6 +9,7 @@ type Booking_details struct {
 	OperationalAdminID int    `json:"operational_admin_id" form:"operational_admin_id"`
 	PaymentID          int    `json:"payment_id" form:"payment_id"`
 	ClassID            int    `json:"class_id" form:"class_id" param:"class_id"`
+	ScheduleID         int    `form:"schedule_id"`
 }
 
 func (request *Booking_details) ToDomain() bookingdetails.Domain {
@@ -19,5 +20,6 @@ func (request *Booking_details) ToDomain() bookingdetails.Domain {
 		OperationalAdminID: request.OperationalAdminID,
 		PaymentID:          request.PaymentID,
 		ClassID:            request.ClassID,
+		ScheduleID:         request.ScheduleID,
 	}
 }
