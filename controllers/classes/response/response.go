@@ -58,6 +58,7 @@ func toListSchedules(domain []schedules.Domain) []response.Schedules {
 
 func toReqSchedule(domain schedules.Domain) response.Schedules {
 	return response.Schedules{
+		ID:           domain.Id,
 		TimeSchedule: domain.TimeSchedule,
 		Duration:     domain.Duration,
 		SessionID:    domain.Duration,
