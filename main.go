@@ -85,7 +85,7 @@ func main() {
 
 	// BookingDetails initialize
 	bookingDetailsRepo := _bookingDetailsRepo.NewBookingDetailsRepo(db)
-	bookingDetailsUsecase := _bookingDetailsUsecase.NewBookingDetailsUsecase(bookingDetailsRepo, classesRepo, timeoutContext)
+	bookingDetailsUsecase := _bookingDetailsUsecase.NewBookingDetailsUsecase(bookingDetailsRepo, classesRepo, schedulesRepo, timeoutContext)
 	bookingDetailsController := bookingdetails.NewControllers(bookingDetailsUsecase)
 
 	routesInit := routes.ControllersList{

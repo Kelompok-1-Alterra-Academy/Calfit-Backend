@@ -13,8 +13,9 @@ type Domain struct {
 	OperationalAdminID int
 	PaymentID          int
 	ClassID            int
-	ScheduleID         int
 	ClassName          string
+	ScheduleID         int
+	TimeSchedule       string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 }

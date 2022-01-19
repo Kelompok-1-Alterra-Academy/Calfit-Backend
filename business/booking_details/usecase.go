@@ -2,6 +2,7 @@ package bookingdetails
 
 import (
 	"CalFit/business/classes"
+	"CalFit/business/schedules"
 	"context"
 	"strconv"
 	"time"
@@ -10,14 +11,16 @@ import (
 type BookingDetailsUsecase struct {
 	Repo           Repository
 	ClassRepo      classes.DomainRepository
+	SchedulesRepo  schedules.Repository
 	ContextTimeout time.Duration
 }
 
-func NewBookingDetailsUsecase(repo Repository, classRepo classes.DomainRepository, timeout time.Duration) Usecase {
+func NewBookingDetailsUsecase(repo Repository, classRepo classes.DomainRepository, schedulesRepo schedules.Repository, timeout time.Duration) Usecase {
 	return &BookingDetailsUsecase{
 		Repo:           repo,
 		ContextTimeout: timeout,
 		ClassRepo:      classRepo,
+		SchedulesRepo:  schedulesRepo,
 	}
 }
 
@@ -39,8 +42,10 @@ func (usecase *BookingDetailsUsecase) GetByUserID(ctx context.Context, userID in
 		return []Domain{}, err
 	}
 	for i, val := range res {
-		domain, _ := usecase.ClassRepo.GetById(ctx, strconv.Itoa(val.ClassID))
-		res[i].ClassName = domain.Name
+		classes, _ := usecase.ClassRepo.GetById(ctx, strconv.Itoa(val.ClassID))
+		schedules, _ := usecase.SchedulesRepo.GetById(ctx, val.ScheduleID)
+		res[i].ClassName = classes.Name
+		res[i].TimeSchedule = schedules.TimeSchedule
 	}
 	return res, nil
 }
