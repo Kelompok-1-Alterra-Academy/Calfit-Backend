@@ -76,6 +76,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	member := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
 	{
 		member.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
+		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
 	}
 
 	// superadmin routes

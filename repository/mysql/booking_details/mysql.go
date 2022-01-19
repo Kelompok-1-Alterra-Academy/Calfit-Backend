@@ -51,18 +51,18 @@ func (repo *BookingDetailsRepo) GetByUserID(ctx context.Context, userID int) ([]
 }
 
 func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdetails.Domain, error) {
-	data := []Booking_detail{}
-	if err := repo.DBConn.Where("id=?", id).Find(&data).Error; err != nil {
+	data := Booking_detail{}
+	if err := repo.DBConn.Where("id=?", id).First(&data).Error; err != nil {
 		return bookingdetails.Domain{}, err
 	}
-	var domain bookingdetails.Domain
+	domain := data.ToDomain()
 	type Class struct {
 		Name         string
 		TimeSchedule string
 		GymName      string
 	}
 	class := Class{}
-	repo.DBConn.Table("booking_details").Select("classes.name as name, schedules.time_schedule, gyms.name as gym_name").Joins("left join classes on booking_details.class_id=class_id left join schedules on booking_details.schedule_id=schedules.id left join gyms on classes.gym_id=gyms.id").Scan(&class)
+	repo.DBConn.Table("booking_details").Select("classes.name as name, schedules.time_schedule, gyms.name as gym_name").Joins("left join classes on booking_details.class_id=class_id left join schedules on booking_details.schedule_id=schedules.id left join gyms on classes.gym_id=gyms.id").Where("booking_details.id=?", id).Scan(&class)
 	domain.ClassName = class.Name
 	domain.TimeSchedule = class.TimeSchedule
 	domain.GymName = class.GymName
