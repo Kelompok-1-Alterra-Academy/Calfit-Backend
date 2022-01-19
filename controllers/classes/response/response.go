@@ -3,13 +3,13 @@ package response
 import (
 	"CalFit/business/classes"
 	"CalFit/business/schedules"
-	"CalFit/controllers/schedules/request"
+	"CalFit/controllers/schedules/response"
 	"time"
 )
 
 type ClassResponse struct {
-	ID                 uint   `json:"id"`
-	Name               string `json:"name"`
+	ID                 uint   `json:"id,omitempty"`
+	Name               string `json:"name,omitempty"`
 	Description        string `json:"description,omitempty"`
 	Banner_picture_url string `json:"banner_picture_url,omitempty"`
 	Card_picture_url   string `json:"card_picture_url,omitempty"`
@@ -20,10 +20,10 @@ type ClassResponse struct {
 	Membership_typeID  uint   `json:"membership_typeID,omitempty"`
 	Price              int    `json:"price,omitempty"`
 	// Booking_details    []booking_details.Domain
-	GymName    string              `json:"gym_name,omitempty"`
-	Schedules  []request.Schedules `json:"schedules,omitempty"`
-	Created_at *time.Time          `json:"createdAt,omitempty"`
-	Updated_at *time.Time          `json:"updatedAt,omitempty"`
+	GymName    string               `json:"gym_name,omitempty"`
+	Schedules  []response.Schedules `json:"schedules,omitempty"`
+	Created_at *time.Time           `json:"createdAt,omitempty"`
+	Updated_at *time.Time           `json:"updatedAt,omitempty"`
 }
 
 func FromDomain(domain classes.Domain) ClassResponse {
@@ -49,16 +49,17 @@ func FromDomain(domain classes.Domain) ClassResponse {
 	}
 }
 
-func toListSchedules(domain []schedules.Domain) []request.Schedules {
-	req := []request.Schedules{}
+func toListSchedules(domain []schedules.Domain) []response.Schedules {
+	req := []response.Schedules{}
 	for _, val := range domain {
 		req = append(req, toReqSchedule(val))
 	}
 	return req
 }
 
-func toReqSchedule(domain schedules.Domain) request.Schedules {
-	return request.Schedules{
+func toReqSchedule(domain schedules.Domain) response.Schedules {
+	return response.Schedules{
+		ID:           domain.Id,
 		TimeSchedule: domain.TimeSchedule,
 		Duration:     domain.Duration,
 		SessionID:    domain.Duration,
