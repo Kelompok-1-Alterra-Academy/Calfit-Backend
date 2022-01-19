@@ -53,3 +53,16 @@ func (controller *Controllers) GetByUserID(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
+
+func (controller *Controllers) GetByID(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	res, err := controller.BookingDetailsUC.GetByID(ctx, id)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
+}
