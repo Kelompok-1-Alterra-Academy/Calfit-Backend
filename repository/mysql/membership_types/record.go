@@ -15,6 +15,7 @@ type Membership_type struct {
 	Id          int    `gorm:"primaryKey"`
 	Name        string `gorm:"type:varchar(50);not null"`
 	Description string `gorm:"type:varchar(500);not null"`
+	Price       int    `gorm:"type:int;not null"`
 	// Users       []users.User    `gorm:"foreignkey:UserID"`
 	Classes    []classes.Class
 	Created_at time.Time
@@ -26,6 +27,7 @@ func FromDomain(domain memberships.Domain) Membership_type {
 		Id:          domain.Id,
 		Name:        domain.Name,
 		Description: domain.Description,
+		Price:       domain.Price,
 		Created_at:  time.Now(),
 		Updated_at:  time.Now(),
 	}
@@ -35,6 +37,7 @@ func (m *Membership_type) ToDomain() memberships.Domain {
 		Id:          m.Id,
 		Name:        m.Name,
 		Description: m.Description,
+		Price:       m.Price,
 		Created_at:  m.Created_at,
 		Updated_at:  m.Updated_at,
 	}

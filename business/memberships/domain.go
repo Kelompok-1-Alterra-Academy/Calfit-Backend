@@ -25,6 +25,7 @@ type Domain struct {
 	Id          int
 	Name        string `validate:"required"`
 	Description string `validate:"required,min=20"`
+	Price       int    `validate:"required"`
 	Classes     []ClassDomain
 	Created_at  time.Time
 	Updated_at  time.Time

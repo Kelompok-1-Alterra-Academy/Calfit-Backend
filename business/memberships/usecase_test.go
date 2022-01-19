@@ -22,16 +22,19 @@ func setup() {
 		Id:          1,
 		Name:        "Basic",
 		Description: "Get basic membership for free to all member",
+		Price:       5000000,
 	}
 	updatedMembershipDomain = memberships.Domain{
 		Id:          1,
 		Name:        "Silver",
 		Description: "Get silver membership for free to all member",
+		Price:       7500000,
 	}
 	emptyMembershipDomain = memberships.Domain{
 		Id:          0,
 		Name:        "",
 		Description: "",
+		Price:       0,
 	}
 }
 
