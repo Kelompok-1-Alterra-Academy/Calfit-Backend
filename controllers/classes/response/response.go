@@ -8,8 +8,8 @@ import (
 )
 
 type ClassResponse struct {
-	ID                 uint   `json:"id,omitempty"`
-	Name               string `json:"name,omitempty"`
+	ID                 uint   `json:"id"`
+	Name               string `json:"name"`
 	Description        string `json:"description,omitempty"`
 	Banner_picture_url string `json:"banner_picture_url,omitempty"`
 	Card_picture_url   string `json:"card_picture_url,omitempty"`
@@ -41,7 +41,6 @@ func FromDomain(domain classes.Domain) ClassResponse {
 		GymName:           domain.GymName,
 		Price:             domain.Price,
 		Membership_typeID: domain.Membership_typeID,
-		GymID:             domain.GymID,
 		// Booking_details:    domain.Booking_details,
 		Schedules:  toListSchedules(domain.Schedules),
 		Created_at: &domain.Created_at,
@@ -59,7 +58,6 @@ func toListSchedules(domain []schedules.Domain) []response.Schedules {
 
 func toReqSchedule(domain schedules.Domain) response.Schedules {
 	return response.Schedules{
-		ID:           domain.Id,
 		TimeSchedule: domain.TimeSchedule,
 		Duration:     domain.Duration,
 		SessionID:    domain.Duration,

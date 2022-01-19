@@ -3,7 +3,7 @@ package response
 import (
 	bookingdetails "CalFit/business/booking_details"
 	classResponse "CalFit/controllers/classes/response"
-	schedulesResponse "CalFit/controllers/schedules/response"
+	"CalFit/controllers/schedules/response"
 	"time"
 )
 
@@ -22,7 +22,7 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 	class := classResponse.ClassResponse{
 		ID:   uint(domain.Id),
 		Name: domain.ClassName,
-		Schedules: []schedulesResponse.Schedules{
+		Schedules: []response.Schedules{
 			{
 				TimeSchedule: domain.TimeSchedule,
 			},
