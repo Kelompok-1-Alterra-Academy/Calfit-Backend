@@ -15,6 +15,7 @@ type Booking_detail struct {
 	OperationalAdminID int
 	PaymentID          int
 	ClassID            int
+	ScheduleID         int
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 }
