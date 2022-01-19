@@ -14,7 +14,6 @@ type Booking_details struct {
 	OperationalAdminID int                         `json:"operational_admin_id"`
 	PaymentID          int                         `json:"payment_id"`
 	Class              classResponse.ClassResponse `json:"class"`
-	ScheduleID         int                         `json:"schedule_id,omitempty"`
 	CreatedAt          *time.Time                  `json:"created_at"`
 	UpdatedAt          *time.Time                  `json:"updated_at"`
 }
@@ -28,6 +27,7 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 				TimeSchedule: domain.TimeSchedule,
 			},
 		},
+		GymName: domain.GymName,
 	}
 	return Booking_details{
 		Amount:             domain.Amount,
@@ -36,7 +36,6 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 		OperationalAdminID: domain.OperationalAdminID,
 		PaymentID:          domain.PaymentID,
 		Class:              class,
-		ScheduleID:         domain.ScheduleID,
 		CreatedAt:          &domain.CreatedAt,
 		UpdatedAt:          &domain.UpdatedAt,
 	}

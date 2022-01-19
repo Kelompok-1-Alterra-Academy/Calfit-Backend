@@ -16,6 +16,7 @@ type Domain struct {
 	ClassName          string
 	ScheduleID         int
 	TimeSchedule       string
+	GymName            string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 }
