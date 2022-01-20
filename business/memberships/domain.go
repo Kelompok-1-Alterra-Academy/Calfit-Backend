@@ -1,6 +1,9 @@
 package memberships
 
 import (
+	"CalFit/business/addresses"
+	bookingdetails "CalFit/business/booking_details"
+	"CalFit/business/schedules"
 	"context"
 	"time"
 )
@@ -15,18 +18,35 @@ type ClassDomain struct {
 	Link               string
 	Category           string
 	Status             string
-	Membership_typeID  int
-	// Booking_details    []booking_details.Domain
-	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
-	Created_at time.Time
-	Updated_at time.Time
+	Price              int
+	Membership_typeID  uint
+	Booking_details    []bookingdetails.Domain
+	Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
+	Created_at         time.Time
+	Updated_at         time.Time
 }
+
+type UserDomain struct {
+	Id               int
+	Email            string
+	Photo            string
+	Password         string
+	MembershipTypeID int
+	AddressID        uint
+	Token            string
+	BookingDetails   []bookingdetails.Domain
+	Address          addresses.Domain
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+}
+
 type Domain struct {
 	Id          int
 	Name        string `validate:"required"`
 	Description string `validate:"required,min=20"`
 	Price       int    `validate:"required"`
 	Classes     []ClassDomain
+	Users       []UserDomain
 	Created_at  time.Time
 	Updated_at  time.Time
 }
