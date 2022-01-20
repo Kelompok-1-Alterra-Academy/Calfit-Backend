@@ -8,6 +8,7 @@ import (
 )
 
 type Booking_details struct {
+	ID                 int                         `json:"id"`
 	Amount             int                         `json:"amount"`
 	Status             string                      `json:"status"`
 	UserID             int                         `json:"user_id"`
@@ -31,6 +32,7 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 		Card_picture_url: domain.CardPictureUrl,
 	}
 	return Booking_details{
+		ID:                 domain.Id,
 		Amount:             domain.Amount,
 		Status:             domain.Status,
 		UserID:             domain.UserID,
