@@ -11,12 +11,12 @@ import (
 
 type Membership_type struct {
 	gorm.Model
-	Id          int                 `gorm:"primaryKey"`
-	Name        string              `gorm:"type:varchar(50);not null"`
-	Description string              `gorm:"type:varchar(500);not null"`
-	Price       int                 `gorm:"type:int;not null"`
-	Users       []usersRepo.User    `gorm:"foreignkey:UserID"`
-	Classes     []classesRepo.Class `gorm:"foreignkey:ClassID"`
+	Id          int    `gorm:"primaryKey"`
+	Name        string `gorm:"type:varchar(50);not null"`
+	Description string `gorm:"type:varchar(500);not null"`
+	Price       int    `gorm:"type:int;not null"`
+	Users       []usersRepo.User
+	Classes     []classesRepo.Class
 	Created_at  time.Time
 	Updated_at  time.Time
 }
