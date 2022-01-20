@@ -17,7 +17,7 @@ type ClassDomain struct {
 	Link               string
 	Category           string
 	Status             string
-	// Membership_typeID  uint
+	Membership_typeID  uint
 	// Booking_details    []booking_details.Domain
 	// Schedules          []schedules.Domain `gorm:"many2many:class_schedules"`
 	Created_at time.Time

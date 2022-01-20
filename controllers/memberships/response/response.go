@@ -11,6 +11,7 @@ type Memberships struct {
 	Description string          `json:"description"`
 	Price       int             `json:"price"`
 	Classes     []ClassResponse `json:"classes"`
+	Users       []UserResponse  `json:"users"`
 	Created_at  time.Time       `json:"created_at"`
 	Updated_at  time.Time       `json:"updated_at"`
 }
@@ -26,10 +27,45 @@ type ClassResponse struct {
 	Category           string `json:"category"`
 	Status             string `json:"status"`
 	Membership_typeID  uint   `json:"membership_typeID"`
+	Price              int    `json:"price" form:"price"`
 	// Booking_details    []booking_details.Domain
 	// Schedules          []schedules.Domain
 	Created_at time.Time `json:"createdAt"`
 	Updated_at time.Time `json:"updatedAt"`
+}
+
+type UserResponse struct {
+	Id               int    `json:"id"`
+	Email            string `json:"email"`
+	Photo            string `json:"photo"`
+	Password         string `json:"password"`
+	MembershipTypeID int    `json:"membership_typeID"`
+	AddressID        uint   `json:"AddressID"`
+	// BookingDetails   []bookingDetailsRepo.Booking_detail
+	// Address          addresses.Address `gorm:"foreignkey:AddressID"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+func FromUserDomain(udomain memberships.UserDomain) UserResponse {
+	return UserResponse{
+		Id:               udomain.Id,
+		Email:            udomain.Email,
+		Photo:            udomain.Photo,
+		Password:         udomain.Password,
+		MembershipTypeID: udomain.MembershipTypeID,
+		AddressID:        udomain.AddressID,
+		CreatedAt:        udomain.CreatedAt,
+		UpdatedAt:        udomain.UpdatedAt,
+	}
+}
+
+func FromUserDomainList(udomain []memberships.UserDomain) []UserResponse {
+	var response []UserResponse
+	for _, item := range udomain {
+		response = append(response, FromUserDomain(item))
+	}
+	return response
 }
 
 func FromClassDomain(domain memberships.ClassDomain) ClassResponse {
@@ -43,7 +79,7 @@ func FromClassDomain(domain memberships.ClassDomain) ClassResponse {
 		Link:               domain.Link,
 		Category:           domain.Category,
 		Status:             domain.Status,
-		// Membership_typeID:  domain.Membership_typeID,
+		Membership_typeID:  domain.Membership_typeID,
 		// Booking_details:    domain.Booking_details,
 		// Schedules:          domain.Schedules,
 		Created_at: domain.Created_at,
