@@ -28,7 +28,7 @@ func (repo *BookingDetailsRepo) Insert(ctx context.Context, domain bookingdetail
 
 func (repo *BookingDetailsRepo) GetByUserID(ctx context.Context, userID int) ([]bookingdetails.Domain, error) {
 	data := []Booking_detail{}
-	if err := repo.DBConn.Where("user_id=?", userID).Find(&data).Error; err != nil {
+	if err := repo.DBConn.Where("user_id=?", userID).Limit(5).Find(&data).Error; err != nil {
 		return []bookingdetails.Domain{}, err
 	}
 	var domain []bookingdetails.Domain
