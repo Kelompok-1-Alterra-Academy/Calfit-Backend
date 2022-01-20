@@ -14,6 +14,7 @@ type Domain struct {
 	PaymentID          int
 	ClassID            int
 	ClassName          string
+	CardPictureUrl     string
 	ScheduleID         int
 	TimeSchedule       string
 	GymName            string

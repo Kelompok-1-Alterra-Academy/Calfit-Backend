@@ -27,7 +27,8 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 				TimeSchedule: domain.TimeSchedule,
 			},
 		},
-		GymName: domain.GymName,
+		GymName:          domain.GymName,
+		Card_picture_url: domain.CardPictureUrl,
 	}
 	return Booking_details{
 		Amount:             domain.Amount,
