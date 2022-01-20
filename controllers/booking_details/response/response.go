@@ -2,27 +2,46 @@ package response
 
 import (
 	bookingdetails "CalFit/business/booking_details"
+	classResponse "CalFit/controllers/classes/response"
+	"CalFit/controllers/schedules/response"
 	"time"
 )
 
 type Booking_details struct {
-	Amount             int       `json:"amount" form:"amount"`
-	Status             string    `json:"status" form:"status"`
-	UserID             int       `json:"user_id" form:"user_id"`
-	OperationalAdminID int       `json:"operational_admin_id" form:"operational_admin_id"`
-	PaymentID          int       `json:"payment_id" form:"payment_id"`
-	ClassID            int       `json:"class_id" form:"class_id"`
-	CreatedAt          time.Time `json:"created_at" form:"created_at"`
-	UpdatedAt          time.Time `json:"updated_at" form:"updated_at"`
+	ID                 int                         `json:"id"`
+	Amount             int                         `json:"amount"`
+	Status             string                      `json:"status"`
+	UserID             int                         `json:"user_id"`
+	OperationalAdminID int                         `json:"operational_admin_id"`
+	PaymentID          int                         `json:"payment_id"`
+	Class              classResponse.ClassResponse `json:"class"`
+	CreatedAt          *time.Time                  `json:"created_at"`
+	UpdatedAt          *time.Time                  `json:"updated_at"`
 }
 
 func FromDomain(domain bookingdetails.Domain) Booking_details {
+	class := classResponse.ClassResponse{
+		ID:   uint(domain.Id),
+		Name: domain.ClassName,
+		Schedules: []response.Schedules{
+			{
+				TimeSchedule: domain.TimeSchedule,
+			},
+		},
+		GymName:          domain.GymName,
+		Card_picture_url: domain.CardPictureUrl,
+		Online:           domain.Online,
+		Link:             domain.Link,
+	}
 	return Booking_details{
+		ID:                 domain.Id,
 		Amount:             domain.Amount,
 		Status:             domain.Status,
 		UserID:             domain.UserID,
 		OperationalAdminID: domain.OperationalAdminID,
 		PaymentID:          domain.PaymentID,
-		ClassID:            domain.ClassID,
+		Class:              class,
+		CreatedAt:          &domain.CreatedAt,
+		UpdatedAt:          &domain.UpdatedAt,
 	}
 }

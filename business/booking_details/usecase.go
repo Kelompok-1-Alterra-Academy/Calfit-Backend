@@ -26,3 +26,23 @@ func (usecase *BookingDetailsUsecase) Insert(ctx context.Context, domain Domain)
 	}
 	return res, nil
 }
+
+func (usecase *BookingDetailsUsecase) GetByUserID(ctx context.Context, userID int) ([]Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, usecase.ContextTimeout)
+	defer cancel()
+	res, err := usecase.Repo.GetByUserID(ctx, userID)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return res, nil
+}
+
+func (usecase *BookingDetailsUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, usecase.ContextTimeout)
+	defer cancel()
+	res, err := usecase.Repo.GetByID(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}

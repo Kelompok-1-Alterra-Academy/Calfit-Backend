@@ -7,6 +7,7 @@ import (
 	"CalFit/controllers/booking_details/response"
 	"CalFit/exceptions"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -34,4 +35,34 @@ func (controller *Controllers) Insert(c echo.Context) error {
 	}
 	resFromDomain := response.FromDomain(res)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) GetByUserID(c echo.Context) error {
+	ctx := c.Request().Context()
+	userID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	res, err := controller.BookingDetailsUC.GetByUserID(ctx, userID)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	resFromDomain := []response.Booking_details{}
+	for _, val := range res {
+		resFromDomain = append(resFromDomain, response.FromDomain(val))
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) GetByID(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	res, err := controller.BookingDetailsUC.GetByID(ctx, id)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
 }

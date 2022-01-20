@@ -23,7 +23,7 @@ func NewSchedulesRepo(db *gorm.DB) schedules.Repository {
 func (repo *SchedulesRepo) Insert(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
 	data.CreatedAt = time.Now()
-	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
+	if err := repo.DBConn.Create(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
 	return data.toDomain(), nil
@@ -31,7 +31,7 @@ func (repo *SchedulesRepo) Insert(ctx context.Context, domain schedules.Domain) 
 
 func (repo *SchedulesRepo) Get(ctx context.Context) ([]schedules.Domain, error) {
 	data := []Schedule{}
-	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
+	if err := repo.DBConn.Find(&data).Error; err != nil {
 		return []schedules.Domain{}, err
 	}
 	var domainSchedules []schedules.Domain
@@ -43,7 +43,7 @@ func (repo *SchedulesRepo) Get(ctx context.Context) ([]schedules.Domain, error) 
 
 func (repo *SchedulesRepo) GetById(ctx context.Context, id int) (schedules.Domain, error) {
 	data := Schedule{}
-	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("id=?", id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}
@@ -54,7 +54,7 @@ func (repo *SchedulesRepo) GetById(ctx context.Context, id int) (schedules.Domai
 
 func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) (schedules.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("id=?", data.Id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}
@@ -64,7 +64,7 @@ func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) 
 	data.TimeSchedule = domain.TimeSchedule
 	data.SessionID = domain.SessionID
 	data.UpdatedAt = time.Now()
-	if err := repo.DBConn.Debug().Where("id=?", data.Id).Save(&data).Error; err != nil {
+	if err := repo.DBConn.Where("id=?", data.Id).Save(&data).Error; err != nil {
 		return schedules.Domain{}, err
 	}
 	return data.toDomain(), nil
@@ -72,7 +72,7 @@ func (repo *SchedulesRepo) Update(ctx context.Context, domain schedules.Domain) 
 
 func (repo *SchedulesRepo) Delete(ctx context.Context, id int) (schedules.Domain, error) {
 	data := Schedule{}
-	if err := repo.DBConn.Debug().Where("id=?", id).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("id=?", id).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return schedules.Domain{}, exceptions.ErrNotFound
 		}

@@ -15,6 +15,7 @@ type Booking_detail struct {
 	OperationalAdminID int
 	PaymentID          int
 	ClassID            int
+	ScheduleID         int
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 }
@@ -34,6 +35,7 @@ func FromDomain(domain bookingdetails.Domain) Booking_detail {
 		OperationalAdminID: domain.OperationalAdminID,
 		PaymentID:          domain.PaymentID,
 		ClassID:            domain.ClassID,
+		ScheduleID:         domain.ScheduleID,
 		CreatedAt:          domain.CreatedAt,
 		UpdatedAt:          domain.UpdatedAt,
 	}
@@ -48,6 +50,7 @@ func (repo Booking_detail) ToDomain() bookingdetails.Domain {
 		OperationalAdminID: repo.OperationalAdminID,
 		PaymentID:          repo.PaymentID,
 		ClassID:            repo.ClassID,
+		ScheduleID:         repo.ScheduleID,
 		CreatedAt:          repo.CreatedAt,
 		UpdatedAt:          repo.UpdatedAt,
 	}

@@ -2,16 +2,18 @@ package schedules
 
 import (
 	"CalFit/business/schedules"
+	bookingdetails "CalFit/repository/mysql/booking_details"
 	"time"
 )
 
 type Schedule struct {
-	Id           int `gorm:"primaryKey"`
-	TimeSchedule string
-	Duration     int
-	SessionID    int
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	Id             int `gorm:"primaryKey"`
+	TimeSchedule   string
+	Duration       int
+	SessionID      int
+	BookingDetails []bookingdetails.Booking_detail
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 func FromDomain(domain schedules.Domain) Schedule {
