@@ -15,6 +15,8 @@ type Domain struct {
 	ClassID            int
 	ClassName          string
 	CardPictureUrl     string
+	Online             bool
+	Link               string
 	ScheduleID         int
 	TimeSchedule       string
 	GymName            string

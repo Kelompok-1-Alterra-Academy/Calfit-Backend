@@ -62,11 +62,15 @@ func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdet
 		Name         string
 		TimeSchedule string
 		GymName      string
+		Online       bool
+		Link         string
 	}
 	class := Class{}
-	repo.DBConn.Table("booking_details").Select("classes.name as name, schedules.time_schedule, gyms.name as gym_name").Joins("left join classes on booking_details.class_id=class_id left join schedules on booking_details.schedule_id=schedules.id left join gyms on classes.gym_id=gyms.id").Where("booking_details.id=?", id).Scan(&class)
+	repo.DBConn.Table("booking_details").Select("classes.name as name,classes.card_picture_url as card_picture_url,classes.online as online, classes.link as link, schedules.time_schedule, gyms.name as gym_name").Joins("left join classes on booking_details.class_id=class_id left join schedules on booking_details.schedule_id=schedules.id left join gyms on classes.gym_id=gyms.id").Scan(&class)
 	domain.ClassName = class.Name
 	domain.TimeSchedule = class.TimeSchedule
 	domain.GymName = class.GymName
+	domain.Online = class.Online
+	domain.Link = class.Link
 	return domain, nil
 }

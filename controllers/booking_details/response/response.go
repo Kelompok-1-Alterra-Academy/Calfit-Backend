@@ -30,6 +30,8 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 		},
 		GymName:          domain.GymName,
 		Card_picture_url: domain.CardPictureUrl,
+		Online:           domain.Online,
+		Link:             domain.Link,
 	}
 	return Booking_details{
 		ID:                 domain.Id,
