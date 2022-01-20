@@ -19,7 +19,7 @@ func NewMembershipsRepo(db *gorm.DB) memberships.Repository {
 
 func (repo *MembershipsRepo) Insert(ctx context.Context, domain memberships.Domain) (memberships.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Create(&data).Error; err != nil {
+	if err := repo.DBConn.Create(&data).Error; err != nil {
 		return memberships.Domain{}, err
 	}
 	return data.ToDomain(), nil
@@ -27,7 +27,7 @@ func (repo *MembershipsRepo) Insert(ctx context.Context, domain memberships.Doma
 
 func (repo *MembershipsRepo) Get(ctx context.Context) ([]memberships.Domain, error) {
 	data := []Membership_type{}
-	if err := repo.DBConn.Debug().Find(&data).Error; err != nil {
+	if err := repo.DBConn.Find(&data).Error; err != nil {
 		return []memberships.Domain{}, err
 	}
 	var domainMemberships []memberships.Domain
@@ -50,7 +50,7 @@ func (repo *MembershipsRepo) GetById(ctx context.Context, id string) (membership
 
 func (repo *MembershipsRepo) Update(ctx context.Context, id string, membership memberships.Domain) (memberships.Domain, error) {
 	var membershipModel Membership_type
-	if err := repo.DBConn.Debug().Where("id = ?", id).First(&membershipModel).Error; err != nil {
+	if err := repo.DBConn.Where("id = ?", id).First(&membershipModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return memberships.Domain{}, exceptions.ErrMembershipNotFound
 		}
@@ -72,7 +72,7 @@ func (repo *MembershipsRepo) Update(ctx context.Context, id string, membership m
 
 func (repo *MembershipsRepo) Delete(ctx context.Context, id string) error {
 	var membershipModel Membership_type
-	if err := repo.DBConn.Debug().Where("id=?", id).First(&membershipModel).Error; err != nil {
+	if err := repo.DBConn.Where("id=?", id).First(&membershipModel).Error; err != nil {
 		return err
 	}
 	deleteErr := repo.DBConn.Delete(&membershipModel).Error

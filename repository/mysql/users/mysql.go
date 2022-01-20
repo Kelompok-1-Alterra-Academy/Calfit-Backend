@@ -23,7 +23,7 @@ func NewUsersRepo(db *gorm.DB) users.Repository {
 
 func (repo *UsersRepo) LoginOAuth(ctx context.Context, domain users.Domain) (users.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
 			data.CreatedAt = time.Now()
@@ -33,9 +33,9 @@ func (repo *UsersRepo) LoginOAuth(ctx context.Context, domain users.Domain) (use
 				City:        "default",
 				Postal_code: "11111",
 			}
-			repo.DBConn.Debug().Create(&address)
+			repo.DBConn.Create(&address)
 			data.AddressID = address.Id
-			repo.DBConn.Debug().Create(&data)
+			repo.DBConn.Create(&data)
 			return data.ToDomain(), nil
 		}
 		return users.Domain{}, err
@@ -45,7 +45,7 @@ func (repo *UsersRepo) LoginOAuth(ctx context.Context, domain users.Domain) (use
 
 func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users.Domain, error) {
 	data := FromDomain(domain)
-	if err := repo.DBConn.Debug().Where("email=?", data.Email).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
 			data.CreatedAt = time.Now()
@@ -55,9 +55,9 @@ func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users
 				City:        "default",
 				Postal_code: "11111",
 			}
-			repo.DBConn.Debug().Create(&address)
+			repo.DBConn.Create(&address)
 			data.AddressID = address.Id
-			repo.DBConn.Debug().Create(&data)
+			repo.DBConn.Create(&data)
 			return data.ToDomain(), nil
 		}
 		return users.Domain{}, err
@@ -67,7 +67,7 @@ func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users
 
 func (repo *UsersRepo) GetByUsername(ctx context.Context, email string) (users.Domain, error) {
 	data := User{}
-	if err := repo.DBConn.Debug().Where("email=?", email).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("email=?", email).First(&data).Error; err != nil {
 		return users.Domain{}, err
 	}
 	return data.ToDomain(), nil
