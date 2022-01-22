@@ -116,11 +116,6 @@ func (u *ClassController) Create(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	intMembershipTypeId, err := strconv.Atoi(createdClass.Membership_typeID)
-	if err != nil {
-		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
-	}
-
 	classDomain := classes.Domain{
 		Name:               createdClass.Name,
 		Description:        createdClass.Description,
@@ -132,7 +127,7 @@ func (u *ClassController) Create(c echo.Context) error {
 		Category:           createdClass.Category,
 		Status:             createdClass.Status,
 		GymID:              uint(intGymId),
-		Membership_typeID:  uint(intMembershipTypeId),
+		Membership_typeID:  uint(createdClass.Membership_typeID),
 	}
 
 	class, err := u.Usecase.Create(ctx, classDomain, gymId)
@@ -157,11 +152,6 @@ func (u *ClassController) Update(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	intMembershipTypeId, err := strconv.Atoi(updatedClass.Membership_typeID)
-	if err != nil {
-		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
-	}
-
 	updatedClassDomain := classes.Domain{
 		Name:               updatedClass.Name,
 		Description:        updatedClass.Description,
@@ -173,7 +163,7 @@ func (u *ClassController) Update(c echo.Context) error {
 		Category:           updatedClass.Category,
 		Status:             updatedClass.Status,
 		GymID:              uint(intGymId),
-		Membership_typeID:  uint(intMembershipTypeId),
+		Membership_typeID:  uint(updatedClass.Membership_typeID),
 	}
 
 	class, err := u.Usecase.Update(ctx, classId, updatedClassDomain)

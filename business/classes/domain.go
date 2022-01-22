@@ -13,13 +13,13 @@ type Domain struct {
 	Description        string `validate:"required"`
 	Banner_picture_url string `validate:"required"`
 	Card_picture_url   string `validate:"required"`
-	Online             bool   `validate:"required"`
+	Online             bool
 	Link               string
 	Category           string `validate:"required"`
 	Status             string `validate:"required"`
 	GymID              uint   `validate:"required"`
 	GymName            string
-	Price              int  `validate:"required"`
+	Price              int
 	Membership_typeID  uint `validate:"required"`
 	// Booking_details    []booking_details.Domain
 	Schedules  []schedules.Domain
