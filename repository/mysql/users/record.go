@@ -1,7 +1,6 @@
 package users
 
 import (
-	bookingdetails "CalFit/business/booking_details"
 	"CalFit/business/users"
 	"CalFit/repository/mysql/addresses"
 	bookingDetailsRepo "CalFit/repository/mysql/booking_details"
@@ -13,6 +12,7 @@ type User struct {
 	Email            string `gorm:"not null"`
 	Photo            string
 	Password         string
+	FullName         string
 	MembershipTypeID int
 	AddressID        uint `gorm:"not null"`
 	BookingDetails   []bookingDetailsRepo.Booking_detail
@@ -27,6 +27,7 @@ func FromDomain(domain users.Domain) User {
 		Email:            domain.Email,
 		Photo:            domain.Photo,
 		Password:         domain.Password,
+		FullName:         domain.FullName,
 		MembershipTypeID: domain.MembershipTypeID,
 		AddressID:        domain.AddressID,
 		CreatedAt:        domain.CreatedAt,
@@ -40,6 +41,7 @@ func (u User) ToDomain() users.Domain {
 		Email:            u.Email,
 		Photo:            u.Photo,
 		Password:         u.Password,
+		FullName:         u.FullName,
 		MembershipTypeID: u.MembershipTypeID,
 		AddressID:        u.AddressID,
 		BookingDetails:   convertToArray(u.BookingDetails),
@@ -48,16 +50,16 @@ func (u User) ToDomain() users.Domain {
 	}
 }
 
-func convertToArray(bookingDetails []bookingDetailsRepo.Booking_detail) []bookingdetails.Domain {
-	bookingDetailsDomain := []bookingdetails.Domain{}
+func convertToArray(bookingDetails []bookingDetailsRepo.Booking_detail) []users.BookingDetailDomain {
+	var bookingDetailsDomain []users.BookingDetailDomain
 	for _, val := range bookingDetails {
 		bookingDetailsDomain = append(bookingDetailsDomain, toBookingDetailsDomain(val))
 	}
 	return bookingDetailsDomain
 }
 
-func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) bookingdetails.Domain {
-	return bookingdetails.Domain{
+func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) users.BookingDetailDomain {
+	return users.BookingDetailDomain{
 		Id:                 bookingDetails.Id,
 		Amount:             bookingDetails.Amount,
 		Status:             bookingDetails.Status,
