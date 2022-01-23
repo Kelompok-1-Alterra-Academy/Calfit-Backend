@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"CalFit/business/superadmins"
 	"CalFit/business/users"
 	"CalFit/controllers"
 	"CalFit/controllers/auth/request"
@@ -8,18 +9,21 @@ import (
 	"CalFit/exceptions"
 	"CalFit/helpers"
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 type Controllers struct {
-	UsersUC users.Usecase
+	UsersUC       users.Usecase
+	SuperadminsUC superadmins.Usecase
 }
 
-func NewControllers(usersUC users.Usecase) *Controllers {
+func NewControllers(usersUC users.Usecase, superadminsUC superadmins.Usecase) *Controllers {
 	return &Controllers{
-		UsersUC: usersUC,
+		UsersUC:       usersUC,
+		SuperadminsUC: superadminsUC,
 	}
 }
 
@@ -58,6 +62,24 @@ func (controller *Controllers) Register(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
 	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomain(res))
+}
+
+func (controller *Controllers) SuperadminRegister(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.SuperadminAuth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	log.Println(domain)
+	res, err := controller.SuperadminsUC.Register(ctx, domain)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrUserAlreadyExists) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrUserAlreadyExists)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomainSuperadmin(res))
 }
 
 func (controller *Controllers) Login(c echo.Context) error {

@@ -70,6 +70,10 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.POST("/auth/loginOAuth", controllers.AuthController.LoginOAuth)
 		v1.POST("/auth/login", controllers.AuthController.Login)
 		v1.POST("/auth/register", controllers.AuthController.Register)
+
+		// v1.POST("/auth/loginOAuth", controllers.AuthController.LoginOAuth)
+		// v1.POST("/auth/login", controllers.AuthController.Login)
+		v1.POST("/superadmin/register", controllers.AuthController.SuperadminRegister)
 	}
 
 	// Member routes
