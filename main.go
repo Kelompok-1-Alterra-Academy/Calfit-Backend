@@ -18,6 +18,7 @@ import (
 	_membershipsController "CalFit/controllers/memberships"
 	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
+	_superadminsController "CalFit/controllers/superadmins"
 	"CalFit/repository/mysql"
 	_bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	_classDb "CalFit/repository/mysql/classes"
@@ -86,6 +87,7 @@ func main() {
 	// Superadmins initialize
 	superadminsRepo := _superadminsRepo.NewSuperadminsRepo(db)
 	superadminsUsecase := _superadminsUsecase.NewSuperadminsUsecase(superadminsRepo, timeoutContext, &configJWT)
+	superadminsController := _superadminsController.NewControllers(superadminsUsecase)
 
 	// Auth initialize
 	authController := _authController.NewControllers(usersUsecase, superadminsUsecase)
@@ -104,6 +106,7 @@ func main() {
 		SessionsController:       sessionsController,
 		AuthController:           authController,
 		BookingDetailsController: bookingDetailsController,
+		SuperadminsController:    superadminsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))

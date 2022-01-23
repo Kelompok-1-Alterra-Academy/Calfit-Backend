@@ -8,6 +8,7 @@ import (
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
+	"CalFit/controllers/superadmins"
 
 	"CalFit/controllers/memberships"
 
@@ -24,6 +25,7 @@ type ControllersList struct {
 	SessionsController       *sessions.Controllers
 	AuthController           *auth.Controllers
 	BookingDetailsController *bookingdetails.Controllers
+	SuperadminsController    *superadmins.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -107,5 +109,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.DELETE("/sessions/:id", controllers.SessionsController.Delete, middlewares.Superadmin())
 		admin.PUT("/schedules/:id", controllers.SchedulesController.Update, middlewares.Superadmin())
 		admin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete, middlewares.Superadmin())
+
+		// admin endpoint
+		admin.PUT("/superadmin", controllers.SuperadminsController.UpdatePassword, middlewares.Superadmin())
 	}
 }
