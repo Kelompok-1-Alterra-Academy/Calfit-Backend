@@ -5,6 +5,7 @@ import (
 	"CalFit/exceptions"
 	"context"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -40,6 +41,23 @@ func (repo *SuperadminsRepo) Register(ctx context.Context, domain superadmins.Do
 		return superadmins.Domain{}, err
 	}
 	return superadmins.Domain{}, exceptions.ErrSuperadminExists
+}
+
+func (repo *SuperadminsRepo) UpdatePassword(ctx context.Context, domain superadmins.Domain) (superadmins.Domain, error) {
+	// data := FromDomain(domain)
+	superadmin := Superadmin{}
+	err := repo.DBConn.Where("username=?", domain.Username).First(&superadmin).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return superadmins.Domain{}, exceptions.ErrSuperadminNotFound
+		}
+		return superadmins.Domain{}, err
+	}
+	superadmin.Password = domain.Password
+	repo.DBConn.Save(&superadmin)
+	superadmin.Updated_at = time.Now()
+	superadmin.Password = ""
+	return superadmin.ToDomain(), nil
 }
 
 func (repo *SuperadminsRepo) GetAll(ctx context.Context) ([]superadmins.Domain, error) {
