@@ -79,7 +79,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		member.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
+		member.GET("/account/:id", controllers.UsersController.GetByID, middlewares.Member())
 		member.POST("/account", controllers.UsersController.GetByUsername, middlewares.Member())
+		member.PUT("/account", controllers.UsersController.Update, middlewares.Member())
 	}
 
 	// superadmin routes

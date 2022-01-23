@@ -18,7 +18,6 @@ type Auth struct {
 func FromDomain(u users.Domain) Auth {
 	return Auth{
 		Email:          u.Email,
-		Username:       u.Username,
 		Token:          u.Token,
 		MembershipName: u.MembershipName,
 		Photo:          u.Photo,

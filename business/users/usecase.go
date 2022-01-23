@@ -139,3 +139,20 @@ func (uu *UsersUsecase) GetByUsername(ctx context.Context, email string) (Domain
 	}
 	return res, nil
 }
+
+func (uu *UsersUsecase) Update(ctx context.Context, users Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
+	defer cancel()
+	var err error
+	if users.Password != "" {
+		users.Password, err = helpers.Hash(users.Password)
+		if err != nil {
+			return Domain{}, err
+		}
+	}
+	res, err := uu.Repo.Update(ctx, users)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}

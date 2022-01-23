@@ -10,7 +10,6 @@ type Auth struct {
 
 func (a Auth) ToDomain() users.Domain {
 	return users.Domain{
-		Username: a.Username,
 		Email:    a.Email,
 		Password: a.Password,
 	}
