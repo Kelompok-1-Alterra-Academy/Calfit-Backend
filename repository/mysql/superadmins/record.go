@@ -41,3 +41,11 @@ func FromDomain(domain superadmins.Domain) Superadmin {
 		Updated_at: domain.UpdatedAt,
 	}
 }
+
+func ToListDomain(data []Superadmin) []superadmins.Domain {
+	var listDomain []superadmins.Domain
+	for _, item := range data {
+		listDomain = append(listDomain, item.ToDomain())
+	}
+	return listDomain
+}

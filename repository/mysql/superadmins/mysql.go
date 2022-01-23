@@ -22,20 +22,9 @@ func NewSuperadminsRepo(db *gorm.DB) superadmins.Repository {
 func (repo *SuperadminsRepo) Login(ctx context.Context, domain superadmins.Domain) (superadmins.Domain, error) {
 	data := FromDomain(domain)
 	if err := repo.DBConn.Where("username=?", data.Username).First(&data).Error; err != nil {
-		// if errors.Is(err, gorm.ErrRecordNotFound) {
-		// 	data.MembershipTypeID = 1
-		// 	data.CreatedAt = time.Now()
-		// 	address := addresses.Address{
-		// 		Address:     "default",
-		// 		District:    "default",
-		// 		City:        "default",
-		// 		Postal_code: "11111",
-		// 	}
-		// 	repo.DBConn.Create(&address)
-		// 	data.AddressID = address.Id
-		// 	repo.DBConn.Create(&data)
-		// 	return data.ToDomain(), nil
-		// }
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return superadmins.Domain{}, exceptions.ErrSuperadminNotFound
+		}
 		return superadmins.Domain{}, err
 	}
 	return data.ToDomain(), nil
@@ -50,7 +39,15 @@ func (repo *SuperadminsRepo) Register(ctx context.Context, domain superadmins.Do
 		}
 		return superadmins.Domain{}, err
 	}
-	return superadmins.Domain{}, exceptions.ErrUserAlreadyExists
+	return superadmins.Domain{}, exceptions.ErrSuperadminExists
+}
+
+func (repo *SuperadminsRepo) GetAll(ctx context.Context) ([]superadmins.Domain, error) {
+	var data []Superadmin
+	if err := repo.DBConn.Find(&data).Error; err != nil {
+		return nil, err
+	}
+	return ToListDomain(data), nil
 }
 
 func (repo *SuperadminsRepo) GetByUsername(ctx context.Context, username string) (superadmins.Domain, error) {
