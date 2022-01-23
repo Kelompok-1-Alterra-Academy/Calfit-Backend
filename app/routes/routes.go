@@ -43,7 +43,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		// gym endpoint
 		v1.GET("/gyms", controllers.GymController.GetAll)
-		v1.GET("/gyms/count", controllers.GymController.CountAll)
+		// v1.GET("/gyms/count", controllers.GymController.CountAll)
 		v1.GET("/gyms/:gymId", controllers.GymController.GetById)
 
 		// class endpoint
@@ -82,32 +82,30 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
 	}
 
-	// superadmin routes
-	superadmin := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
-	// superadmin.Use(controllers.JWTMiddleware)
+	// admin routes
+	admin := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
 	{
 		// gym endpoint
-		superadmin.POST("/gyms", controllers.GymController.Create, middlewares.Superadmin())
-		superadmin.PUT("/gyms/:gymId", controllers.GymController.Update, middlewares.OperationalAdmin())
-		superadmin.DELETE("/gyms/:gymId", controllers.GymController.Delete, middlewares.Superadmin())
+		admin.GET("/gyms/count", controllers.GymController.CountAll, middlewares.OperationalAdmin())
+		admin.POST("/gyms", controllers.GymController.Create, middlewares.Superadmin())
+		admin.PUT("/gyms/:gymId", controllers.GymController.Update, middlewares.OperationalAdmin())
+		admin.DELETE("/gyms/:gymId", controllers.GymController.Delete, middlewares.Superadmin())
 
 		// class endpoint
-		// superadmin.GET("/classes/count", controllers.ClassController.CountAll)
-		superadmin.GET("/classes/count", controllers.ClassController.CountAll, middlewares.OperationalAdmin())
-		// superadmin.GET("/classes", controllers.ClassController.GetAll)
-		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create, middlewares.OperationalAdmin())
-		superadmin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
-		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
+		admin.GET("/classes/count", controllers.ClassController.CountAll, middlewares.OperationalAdmin())
+		admin.POST("/gyms/:gymId/classes", controllers.ClassController.Create, middlewares.OperationalAdmin())
+		admin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
+		admin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
 
 		//membership endpoint
-		superadmin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
-		superadmin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
-		superadmin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete, middlewares.Superadmin())
+		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
+		admin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
+		admin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete, middlewares.Superadmin())
 
 		// session endpoint
-		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update, middlewares.Superadmin())
-		superadmin.DELETE("/sessions/:id", controllers.SessionsController.Delete, middlewares.Superadmin())
-		superadmin.PUT("/schedules/:id", controllers.SchedulesController.Update, middlewares.Superadmin())
-		superadmin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete, middlewares.Superadmin())
+		admin.PUT("/sessions/:id", controllers.SessionsController.Update, middlewares.Superadmin())
+		admin.DELETE("/sessions/:id", controllers.SessionsController.Delete, middlewares.Superadmin())
+		admin.PUT("/schedules/:id", controllers.SchedulesController.Update, middlewares.Superadmin())
+		admin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete, middlewares.Superadmin())
 	}
 }
