@@ -75,17 +75,14 @@ func (repo *UsersRepo) GetByUsername(ctx context.Context, email string) (users.D
 }
 
 func (b *UsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
-	data := []User{}
+	var usersModel []User
 
 	offset := (pagination.Page - 1) * pagination.Limit
-	if err := b.DBConn.Preload("Address").Preload("BookingDetails").Limit(pagination.Limit).Offset(offset).Find(&data).Error; err != nil {
+	if err := b.DBConn.Preload("Address").Preload("BookingDetails").Limit(pagination.Limit).Offset(offset).Find(&usersModel).Error; err != nil {
 		return nil, err
 	}
-	var domainUsers []users.Domain
-	for _, val := range data {
-		domainUsers = append(domainUsers, val.ToDomain())
-	}
-	return domainUsers, nil
+	var result []users.Domain = ToListDomain(usersModel)
+	return result, nil
 }
 
 func (b *UsersRepo) CountAll(ctx context.Context) (int, error) {

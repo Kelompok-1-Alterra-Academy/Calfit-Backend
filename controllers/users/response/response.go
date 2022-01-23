@@ -20,7 +20,6 @@ type UsersResponse struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
-
 type BookingDetailsResponse struct {
 	Id                 int       `json:"id"`
 	Amount             int       `json:"amount"`

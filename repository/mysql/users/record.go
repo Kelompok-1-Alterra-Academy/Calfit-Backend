@@ -2,7 +2,7 @@ package users
 
 import (
 	"CalFit/business/users"
-	"CalFit/repository/mysql/addresses"
+	addressesRepo "CalFit/repository/mysql/addresses"
 	bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	"time"
 )
@@ -16,7 +16,7 @@ type User struct {
 	MembershipTypeID int
 	AddressID        uint `gorm:"not null"`
 	BookingDetails   []bookingDetailsRepo.Booking_detail
-	Address          addresses.Address `gorm:"foreignkey:AddressID"`
+	Address          addressesRepo.Address
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }
@@ -44,21 +44,22 @@ func (u User) ToDomain() users.Domain {
 		FullName:         u.FullName,
 		MembershipTypeID: u.MembershipTypeID,
 		AddressID:        u.AddressID,
-		BookingDetails:   convertToArray(u.BookingDetails),
+		BookingDetails:   ConvertToBookingDetailsArray(u.BookingDetails),
+		Address:          u.Address.ToDomain(),
 		CreatedAt:        u.CreatedAt,
 		UpdatedAt:        u.UpdatedAt,
 	}
 }
 
-func convertToArray(bookingDetails []bookingDetailsRepo.Booking_detail) []users.BookingDetailDomain {
+func ConvertToBookingDetailsArray(bookingDetails []bookingDetailsRepo.Booking_detail) []users.BookingDetailDomain {
 	var bookingDetailsDomain []users.BookingDetailDomain
 	for _, val := range bookingDetails {
-		bookingDetailsDomain = append(bookingDetailsDomain, toBookingDetailsDomain(val))
+		bookingDetailsDomain = append(bookingDetailsDomain, ToBookingDetailsDomain(val))
 	}
 	return bookingDetailsDomain
 }
 
-func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) users.BookingDetailDomain {
+func ToBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) users.BookingDetailDomain {
 	return users.BookingDetailDomain{
 		Id:                 bookingDetails.Id,
 		Amount:             bookingDetails.Amount,
@@ -70,4 +71,13 @@ func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) us
 		CreatedAt:          bookingDetails.CreatedAt,
 		UpdatedAt:          bookingDetails.UpdatedAt,
 	}
+}
+
+func ToListDomain(data []User) []users.Domain {
+	var listDomain []users.Domain
+	for _, item := range data {
+		listDomain = append(listDomain, item.ToDomain())
+	}
+
+	return listDomain
 }
