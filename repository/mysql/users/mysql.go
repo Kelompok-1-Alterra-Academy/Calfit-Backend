@@ -68,10 +68,17 @@ func (repo *UsersRepo) Register(ctx context.Context, domain users.Domain) (users
 
 func (repo *UsersRepo) GetByUsername(ctx context.Context, email string) (users.Domain, error) {
 	data := User{}
-	if err := repo.DBConn.Where("email=?", email).First(&data).Error; err != nil {
+	if err := repo.DBConn.Where("email=?", email).Preload("Addresses").First(&data).Error; err != nil {
 		return users.Domain{}, err
 	}
-	return data.ToDomain(), nil
+	domain := data.ToDomain()
+	type Relation struct {
+		MembershipName string
+	}
+	relation := Relation{}
+	repo.DBConn.Table("users").Select("membership_types.name AS membershipname").Joins("LEFT JOIN membership_types ON users.membership_type_id = membership_types.id").Scan(&relation)
+	domain.MembershipName = relation.MembershipName
+	return domain, nil
 }
 
 func (b *UsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {

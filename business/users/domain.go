@@ -13,6 +13,7 @@ type Domain struct {
 	Photo            string
 	Password         string
 	MembershipTypeID int
+	MembershipName   string
 	AddressID        uint
 	Token            string
 	FullName         string
