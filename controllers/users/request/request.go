@@ -1,5 +1,7 @@
 package request
 
+import "CalFit/business/users"
+
 type KeyStruct struct {
 	Key string `json:"key"`
 }
@@ -16,4 +18,10 @@ type Users struct {
 	District    string `json:"district" form:"district"`
 	City        string `json:"city" form:"city"`
 	Postal_code string `json:"postalCode" form:"postalCode"`
+}
+
+func (a Users) ToDomain() users.Domain {
+	return users.Domain{
+		Email: a.Email,
+	}
 }

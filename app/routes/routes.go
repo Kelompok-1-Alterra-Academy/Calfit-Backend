@@ -8,6 +8,7 @@ import (
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
+	"CalFit/controllers/users"
 
 	"CalFit/controllers/memberships"
 
@@ -24,6 +25,7 @@ type ControllersList struct {
 	SessionsController       *sessions.Controllers
 	AuthController           *auth.Controllers
 	BookingDetailsController *bookingdetails.Controllers
+	UsersController          *users.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -77,6 +79,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		member.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
+		member.POST("/account", controllers.UsersController.GetByUsername, middlewares.Member())
 	}
 
 	// superadmin routes

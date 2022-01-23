@@ -127,3 +127,15 @@ func (uu *PUseCase) Update(ctx context.Context, id string, domain Domain) (Domai
 
 	return uu.ProfileRepo.Update(ctx, id, domain)
 }
+func (uu *UsersUsecase) GetByUsername(ctx context.Context, email string) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
+	defer cancel()
+	if email == "" {
+		return Domain{}, exceptions.ErrInvalidCredentials
+	}
+	res, err := uu.Repo.GetByUsername(ctx, email)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}

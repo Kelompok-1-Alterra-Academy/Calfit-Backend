@@ -40,6 +40,7 @@ type Usecase interface {
 	LoginOAuth(ctx context.Context, users Domain) (Domain, error)
 	Register(ctx context.Context, users Domain) (Domain, error)
 	Login(ctx context.Context, users Domain) (Domain, error)
+	GetByUsername(ctx context.Context, email string) (Domain, error)
 }
 
 type ProfileUsecase interface {
