@@ -15,13 +15,13 @@ type Domain struct {
 }
 
 type Usecase interface {
-	// LoginOAuth(ctx context.Context, superadmins Domain) (Domain, error)
 	Register(ctx context.Context, superadmins Domain) (Domain, error)
-	// Login(ctx context.Context, superadmins Domain) (Domain, error)
+	Login(ctx context.Context, superadmins Domain) (Domain, error)
 }
 
 type Repository interface {
 	Login(ctx context.Context, superadmins Domain) (Domain, error)
 	Register(ctx context.Context, superadmins Domain) (Domain, error)
 	GetByUsername(ctx context.Context, username string) (Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 }

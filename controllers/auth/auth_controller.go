@@ -9,7 +9,6 @@ import (
 	"CalFit/exceptions"
 	"CalFit/helpers"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -71,11 +70,12 @@ func (controller *Controllers) SuperadminRegister(c echo.Context) error {
 		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
 	}
 	domain := req.ToDomain()
-	log.Println(domain)
 	res, err := controller.SuperadminsUC.Register(ctx, domain)
 	if err != nil {
-		if errors.Is(err, exceptions.ErrUserAlreadyExists) {
-			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrUserAlreadyExists)
+		if errors.Is(err, exceptions.ErrSuperadminExists) {
+			return controllers.ErrorResponse(c, http.StatusConflict, err)
+		} else if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusBadRequest, err)
 		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
@@ -91,6 +91,29 @@ func (controller *Controllers) Login(c echo.Context) error {
 	domain := req.ToDomain()
 	res, err := controller.UsersUC.Login(ctx, domain)
 	resFromDomain := response.FromDomain(res)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
+		}
+		if errors.Is(err, exceptions.ErrValidationFailed) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrValidationFailed)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	cookie := helpers.CreateCookie(resFromDomain.Token)
+	c.SetCookie(cookie)
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) SuperadminLogin(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.SuperadminAuth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	res, err := controller.SuperadminsUC.Login(ctx, domain)
+	resFromDomain := response.FromDomainSuperadmin(res)
 	if err != nil {
 		if errors.Is(err, exceptions.ErrInvalidCredentials) {
 			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
