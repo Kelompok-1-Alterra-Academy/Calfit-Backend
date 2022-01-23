@@ -54,7 +54,7 @@ func (controller *Controllers) Update(c echo.Context) error {
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if err == exceptions.ErrNotFound {
-			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrScheduleNotFound)
+			return controllers.ErrorResponse(c, http.StatusNotFound, exceptions.ErrUserNotFound)
 		}
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}
