@@ -9,6 +9,7 @@ import (
 
 type Domain struct {
 	Id               int
+	Username         string
 	Email            string
 	Photo            string
 	Password         string

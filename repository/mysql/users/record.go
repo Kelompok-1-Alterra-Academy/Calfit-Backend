@@ -8,7 +8,8 @@ import (
 )
 
 type User struct {
-	Id               int    `gorm:"primaryKey"`
+	Id               int `gorm:"primaryKey"`
+	Username         string
 	Email            string `gorm:"not null"`
 	Photo            string
 	Password         string
@@ -24,6 +25,7 @@ type User struct {
 func FromDomain(domain users.Domain) User {
 	return User{
 		Id:               domain.Id,
+		Username:         domain.Username,
 		Email:            domain.Email,
 		Photo:            domain.Photo,
 		Password:         domain.Password,
@@ -38,6 +40,7 @@ func FromDomain(domain users.Domain) User {
 func (u User) ToDomain() users.Domain {
 	return users.Domain{
 		Id:               u.Id,
+		Username:         u.Username,
 		Email:            u.Email,
 		Photo:            u.Photo,
 		Password:         u.Password,
