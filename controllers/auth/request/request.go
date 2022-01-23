@@ -3,7 +3,7 @@ package request
 import "CalFit/business/users"
 
 type Auth struct {
-	Username string `json:"username,omitempty" form:"username,omitempty"`
+	Username string `json:"username,omitempty" form:"username"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
 }
