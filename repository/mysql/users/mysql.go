@@ -104,7 +104,7 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 		data.Password = domain.Password
 	}
 	data.UpdatedAt = time.Now()
-	if err := repo.DBConn.Debug().Save(&data).Error; err != nil {
+	if err := repo.DBConn.Save(&data).Error; err != nil {
 		return users.Domain{}, err
 	}
 	return data.ToDomain(), nil
