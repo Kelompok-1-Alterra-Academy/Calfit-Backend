@@ -3,8 +3,8 @@ package superadmins
 import (
 	"CalFit/business/superadmins"
 	"CalFit/controllers"
-	"CalFit/controllers/auth/response"
 	"CalFit/controllers/superadmins/request"
+	"CalFit/controllers/superadmins/response"
 	"CalFit/exceptions"
 	"errors"
 	"net/http"

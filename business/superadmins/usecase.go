@@ -29,7 +29,6 @@ func (su *SuperadminsUsecase) Register(ctx context.Context, superadmin Domain) (
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
 
-	_, err := su.Repo.GetAll(ctx)
 	superadmins, err := su.Repo.GetAll(ctx)
 	if err != nil {
 		return Domain{}, err
