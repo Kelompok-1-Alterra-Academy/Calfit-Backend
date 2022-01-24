@@ -86,6 +86,7 @@ func (uu *UsersUsecase) Login(ctx context.Context, users Domain) (Domain, error)
 	return res, nil
 }
 
+<<<<<<< HEAD
 func (uu *PUseCase) GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
 	defer cancel()
@@ -128,12 +129,15 @@ func (uu *PUseCase) Update(ctx context.Context, id string, domain Domain) (Domai
 	return uu.ProfileRepo.Update(ctx, id, domain)
 }
 func (uu *UsersUsecase) GetByUsername(ctx context.Context, email string) (Domain, error) {
+=======
+func (uu *UsersUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+>>>>>>> 76631be (refactor: change get user by email to id)
 	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
 	defer cancel()
-	if email == "" {
+	if id == 0 {
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
-	res, err := uu.Repo.GetByUsername(ctx, email)
+	res, err := uu.Repo.GetByID(ctx, id)
 	if err != nil {
 		return Domain{}, err
 	}
