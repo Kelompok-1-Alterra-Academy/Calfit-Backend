@@ -8,6 +8,7 @@ import (
 	"CalFit/exceptions"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,14 +23,18 @@ func NewControllers(usersUC users.Usecase) *Controllers {
 	}
 }
 
-func (controller *Controllers) GetByUsername(c echo.Context) error {
+func (controller *Controllers) GetByID(c echo.Context) error {
 	ctx := c.Request().Context()
+<<<<<<< HEAD
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
+=======
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+>>>>>>> cfbe0d0 (refactor(users): add get by id)
 		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
 	}
-	domain := req.ToDomain()
-	res, err := controller.UsersUC.GetByUsername(ctx, domain.Email)
+	res, err := controller.UsersUC.GetByID(ctx, id)
 	resFromDomain := response.FromDomain(res)
 	if err != nil {
 		if errors.Is(err, exceptions.ErrInvalidCredentials) {
