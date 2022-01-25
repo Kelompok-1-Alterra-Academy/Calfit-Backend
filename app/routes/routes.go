@@ -9,6 +9,7 @@ import (
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
 	"CalFit/controllers/superadmins"
+	"CalFit/controllers/users"
 
 	"CalFit/controllers/memberships"
 
@@ -26,6 +27,7 @@ type ControllersList struct {
 	AuthController           *auth.Controllers
 	BookingDetailsController *bookingdetails.Controllers
 	SuperadminsController    *superadmins.Controllers
+	ProfileController        *users.ProfileController
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -63,6 +65,10 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/schedules", controllers.SchedulesController.Get)
 		v1.PUT("/schedules", controllers.SchedulesController.Update)
 		v1.DELETE("/schedules", controllers.SchedulesController.Delete)
+
+		//profile endpoint
+		v1.GET("/profiles/:Id", controllers.MembershipsController.GetById)
+		v1.PUT("/profiles/:Id", controllers.ProfileController.Update)
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)
@@ -103,6 +109,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
 		admin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
 		admin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete, middlewares.Superadmin())
+
+		//users endpoint
+		admin.GET("/users/count", controllers.ProfileController.CountAll, middlewares.OperationalAdmin())
 
 		// session endpoint
 		admin.PUT("/sessions/:id", controllers.SessionsController.Update, middlewares.Superadmin())
