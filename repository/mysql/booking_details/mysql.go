@@ -77,7 +77,7 @@ func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdet
 
 func (repo *BookingDetailsRepo) GetAll(ctx context.Context, total int) ([]bookingdetails.Domain, error) {
 	data := []Booking_detail{}
-	if err := repo.DBConn.Order("created_at asc").Limit(total).Find(&data).Error; err != nil {
+	if err := repo.DBConn.Order("created_at desc").Limit(total).Find(&data).Error; err != nil {
 		return []bookingdetails.Domain{}, err
 	}
 	domain := []bookingdetails.Domain{}
