@@ -28,10 +28,12 @@ type Usecase interface {
 	Insert(ctx context.Context, bookingDetails Domain) (Domain, error)
 	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
+	GetAll(ctx context.Context, total int) ([]Domain, error)
 }
 
 type Repository interface {
 	Insert(ctx context.Context, bookingDetails Domain) (Domain, error)
 	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
+	GetAll(ctx context.Context, total int) ([]Domain, error)
 }

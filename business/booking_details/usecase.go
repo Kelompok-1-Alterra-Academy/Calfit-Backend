@@ -46,3 +46,13 @@ func (usecase *BookingDetailsUsecase) GetByID(ctx context.Context, id int) (Doma
 	}
 	return res, nil
 }
+
+func (usecase *BookingDetailsUsecase) GetAll(ctx context.Context, id int) ([]Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, usecase.ContextTimeout)
+	defer cancel()
+	res, err := usecase.Repo.GetAll(ctx, id)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return res, nil
+}

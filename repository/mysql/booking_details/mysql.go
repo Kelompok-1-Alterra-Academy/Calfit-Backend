@@ -74,3 +74,15 @@ func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdet
 	domain.Link = class.Link
 	return domain, nil
 }
+
+func (repo *BookingDetailsRepo) GetAll(ctx context.Context, total int) ([]bookingdetails.Domain, error) {
+	data := []Booking_detail{}
+	if err := repo.DBConn.Order("created_at asc").Limit(total).Find(&data).Error; err != nil {
+		return []bookingdetails.Domain{}, err
+	}
+	domain := []bookingdetails.Domain{}
+	for _, val := range data {
+		domain = append(domain, val.ToDomain())
+	}
+	return domain, nil
+}

@@ -66,3 +66,20 @@ func (controller *Controllers) GetByID(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, response.FromDomain(res))
 }
+
+func (controller *Controllers) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+	total, err := strconv.Atoi(c.QueryParam("total"))
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	res, err := controller.BookingDetailsUC.GetAll(ctx, total)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	resFromDomain := []response.Booking_details{}
+	for _, val := range res {
+		resFromDomain = append(resFromDomain, response.FromDomain(val))
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
