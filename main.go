@@ -84,7 +84,7 @@ func main() {
 	// Profile initialize
 	profileRepo := _usersRepo.NewProfileRepo(db)
 	profileUsecase := _usersUsecase.NewProfileUsecase(profileRepo, timeoutContext)
-	profileController := _usersController.NewHandler(*&profileUsecase)
+	profileController := _usersController.NewHandler(profileUsecase)
 
 	// Users initialize
 	usersRepo := _usersRepo.NewUsersRepo(db)
