@@ -19,6 +19,7 @@ import (
 	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
 	_superadminsController "CalFit/controllers/superadmins"
+	_usersController "CalFit/controllers/users"
 	"CalFit/repository/mysql"
 	_bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	_classDb "CalFit/repository/mysql/classes"
@@ -80,6 +81,11 @@ func main() {
 	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo, timeoutContext)
 	membershipsController := _membershipsController.NewHandler(*membershipsUsecase)
 
+	// Profile initialize
+	profileRepo := _usersRepo.NewProfileRepo(db)
+	profileUsecase := _usersUsecase.NewProfileUsecase(profileRepo, timeoutContext)
+	profileController := _usersController.NewHandler(*&profileUsecase)
+
 	// Users initialize
 	usersRepo := _usersRepo.NewUsersRepo(db)
 	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext, &configJWT)
@@ -107,6 +113,7 @@ func main() {
 		AuthController:           authController,
 		BookingDetailsController: bookingDetailsController,
 		SuperadminsController:    superadminsController,
+		ProfileController:        profileController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
