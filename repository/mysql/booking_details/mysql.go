@@ -75,11 +75,9 @@ func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdet
 	return domain, nil
 }
 
-func (repo *BookingDetailsRepo) GetAll(ctx context.Context, total int) ([]bookingdetails.Domain, error) {
+func (repo *BookingDetailsRepo) GetByGymID(ctx context.Context, total int, gymID int) ([]bookingdetails.Domain, error) {
 	data := []Booking_detail{}
-	if err := repo.DBConn.Order("created_at desc").Limit(total).Find(&data).Error; err != nil {
-		return []bookingdetails.Domain{}, err
-	}
+	repo.DBConn.Select("booking_details.*").Joins("LEFT JOIN classes ON booking_details.class_id=classes.id LEFT JOIN gyms ON classes.gym_id=gyms.id").Where("gyms.id=?", gymID).Order("created_at desc").Limit(total).Find(&data)
 	domain := []bookingdetails.Domain{}
 	for _, val := range data {
 		domain = append(domain, val.ToDomain())
