@@ -2,6 +2,7 @@ package admins
 
 import (
 	"CalFit/app/middlewares"
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"CalFit/helpers"
 	"context"
@@ -87,4 +88,17 @@ func (oa *OperationalAdminsUsecase) UpdatePassword(ctx context.Context, opadmin 
 		return Domain{}, err
 	}
 	return res, nil
+}
+
+func (oa *OperationalAdminsUsecase) CountAll(ctx context.Context) (int, error) {
+	ctx, cancel := context.WithTimeout(ctx, oa.ContextTimeout)
+	defer cancel()
+
+	return oa.Repo.CountAll(ctx)
+}
+func (oa *OperationalAdminsUsecase) Get(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, oa.ContextTimeout)
+	defer cancel()
+
+	return oa.Repo.Get(ctx, pagination)
 }

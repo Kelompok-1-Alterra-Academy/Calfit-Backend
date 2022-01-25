@@ -104,7 +104,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
 		admin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
 
-		// operational endpoint
+		// operational admin endpoint
 
 		admin.PUT("/admin", controllers.OperationaladminsController.UpdatePassword, middlewares.OperationalAdmin())
 
@@ -121,5 +121,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// admin endpoint
 		admin.PUT("/superadmin", controllers.SuperadminsController.UpdatePassword, middlewares.Superadmin())
+		admin.GET("/superadmin/admin/count", controllers.OperationaladminsController.CountAll, middlewares.Superadmin())
+		admin.GET("/superadmin/admin", controllers.OperationaladminsController.Get, middlewares.Superadmin())
 	}
 }

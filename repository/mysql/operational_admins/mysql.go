@@ -2,6 +2,7 @@ package operational_admins
 
 import (
 	"CalFit/business/admins"
+	"CalFit/business/paginations"
 	"CalFit/exceptions"
 	"context"
 	"errors"
@@ -75,4 +76,23 @@ func (repo *OperationalAdminsRepo) GetByUsername(ctx context.Context, username s
 		return admins.Domain{}, err
 	}
 	return data.ToDomain(), nil
+}
+
+func (repo *OperationalAdminsRepo) Get(ctx context.Context, pagination paginations.Domain) ([]admins.Domain, error) {
+	var data []Operational_admin
+
+	offset := (pagination.Page - 1) * pagination.Limit
+	if err := repo.Conn.Limit(pagination.Limit).Offset(offset).Find(&data).Error; err != nil {
+		return nil, err
+	}
+	var result []admins.Domain = ToListDomain(data)
+	return result, nil
+}
+
+func (repo *OperationalAdminsRepo) CountAll(ctx context.Context) (int, error) {
+	var count int64
+	if err := repo.Conn.Model(&Operational_admin{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return int(count), nil
 }

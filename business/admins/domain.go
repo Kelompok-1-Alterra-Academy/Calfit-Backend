@@ -1,6 +1,7 @@
 package admins
 
 import (
+	"CalFit/business/paginations"
 	"CalFit/business/superadmins"
 	"context"
 	"time"
@@ -24,6 +25,8 @@ type Usecase interface {
 	Register(ctx context.Context, admins Domain) (Domain, error)
 	Login(ctx context.Context, admins Domain) (Domain, error)
 	UpdatePassword(ctx context.Context, admins Domain) (Domain, error)
+	Get(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
+	CountAll(ctx context.Context) (int, error)
 }
 
 type Repository interface {
@@ -32,4 +35,6 @@ type Repository interface {
 	GetByUsername(ctx context.Context, username string) (Domain, error)
 	GetAll(ctx context.Context) ([]Domain, error)
 	UpdatePassword(ctx context.Context, admins Domain) (Domain, error)
+	Get(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
+	CountAll(ctx context.Context) (int, error)
 }
