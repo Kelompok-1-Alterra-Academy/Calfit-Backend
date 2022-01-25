@@ -7,10 +7,11 @@ import (
 )
 
 type Domain struct {
-	Id             int `gorm:"primaryKey"`
-	Username       string
-	Password       string
-	ChangePassword string
+	Id              int `gorm:"primaryKey"`
+	Username        string
+	Password        string
+	ChangedPassword string
+	Token           string
 	// SuperadminID   int
 	// Newsletters    []newsletters.Newsletter
 	// Video_contents []video_contents.Video_content
