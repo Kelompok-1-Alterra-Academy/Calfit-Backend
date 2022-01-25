@@ -68,9 +68,9 @@ func setup() {
 
 func TestGetAllClasses(t *testing.T) {
 	setup()
-	classRepository.On("GetAll", mock.Anything, mock.AnythingOfType("paginations.Domain")).Return([]classes.Domain{classDomain}, nil)
+	classRepository.On("GetAll", mock.Anything, mock.AnythingOfType("paginations.Domain"), mock.AnythingOfType("Domain")).Return([]classes.Domain{classDomain}, nil)
 	t.Run("Test Case 1 | Get All Classes", func(t *testing.T) {
-		classes, err := classService.GetAll(context.Background(), paginationDomain)
+		classes, err := classService.GetAll(context.Background(), paginationDomain, classDomain)
 		if err != nil {
 			t.Errorf("Error: %s", err)
 		}
@@ -83,21 +83,21 @@ func TestGetAllClasses(t *testing.T) {
 }
 
 func TestGetClassByClassId(t *testing.T) {
-	// setup()
-	// classRepository.On("GetById", mock.Anything, mock.AnythingOfType("string")).Return(classDomain, nil)
-	// t.Run("Test Case 1 | Valid Get Class By ClassId", func(t *testing.T) {
-	// 	class, err := classService.GetById(context.Background(), "1")
-	// 	if err != nil {
-	// 		t.Errorf("Error: %s", err)
-	// 	}
-	// 	assert.Nil(t, err)
-	// 	assert.Equal(t, classDomain, class)
-	// })
-	// t.Run("Test Case 2 | Invalid Get Class By Empty ClassId", func(t *testing.T) {
-	// 	class, err := classService.GetById(context.Background(), "")
-	// 	assert.NotNil(t, err)
-	// 	assert.NotEqual(t, class, classDomain)
-	// })
+	setup()
+	classRepository.On("GetById", mock.Anything, mock.AnythingOfType("string")).Return(classDomain, nil)
+	t.Run("Test Case 1 | Valid Get Class By ClassId", func(t *testing.T) {
+		class, err := classService.GetById(context.Background(), "1")
+		if err != nil {
+			t.Errorf("Error: %s", err)
+		}
+		assert.Nil(t, err)
+		assert.Equal(t, classDomain, class)
+	})
+	t.Run("Test Case 2 | Invalid Get Class By Empty ClassId", func(t *testing.T) {
+		class, err := classService.GetById(context.Background(), "")
+		assert.NotNil(t, err)
+		assert.NotEqual(t, class, classDomain)
+	})
 }
 
 func TestCreateNewClass(t *testing.T) {

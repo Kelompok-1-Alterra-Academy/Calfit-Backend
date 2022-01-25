@@ -28,7 +28,7 @@ type Domain struct {
 }
 
 type DomainRepository interface {
-	GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error)
+	GetAll(ctx context.Context, pagination paginations.Domain, domain Domain) ([]Domain, error)
 	CountAll(ctx context.Context) (int, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
@@ -37,7 +37,7 @@ type DomainRepository interface {
 }
 
 type DomainService interface {
-	GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error)
+	GetAll(ctx context.Context, pagination paginations.Domain, domain Domain) ([]Domain, error)
 	CountAll(ctx context.Context) (int, error)
 	GetById(ctx context.Context, id string) (Domain, error)
 	Create(ctx context.Context, domain Domain, gymId string) (Domain, error)
