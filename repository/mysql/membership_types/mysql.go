@@ -39,7 +39,7 @@ func (repo *MembershipsRepo) Get(ctx context.Context) ([]memberships.Domain, err
 
 func (repo *MembershipsRepo) GetById(ctx context.Context, id string) (memberships.Domain, error) {
 	var membershipModel Membership_type
-	if err := repo.DBConn.Preload("Classes").Where("id = ?", id).First(&membershipModel).Error; err != nil {
+	if err := repo.DBConn.Preload("Classes").Preload("Users").Where("id = ?", id).First(&membershipModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return memberships.Domain{}, exceptions.ErrNotFound
 		}

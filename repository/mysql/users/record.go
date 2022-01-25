@@ -1,9 +1,8 @@
 package users
 
 import (
-	bookingdetails "CalFit/business/booking_details"
 	"CalFit/business/users"
-	"CalFit/repository/mysql/addresses"
+	addressesRepo "CalFit/repository/mysql/addresses"
 	bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	"time"
 )
@@ -13,10 +12,11 @@ type User struct {
 	Email            string `gorm:"not null"`
 	Photo            string
 	Password         string
+	FullName         string
 	MembershipTypeID int
 	AddressID        uint `gorm:"not null"`
 	BookingDetails   []bookingDetailsRepo.Booking_detail
-	Address          addresses.Address `gorm:"foreignkey:AddressID"`
+	Address          addressesRepo.Address
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }
@@ -27,6 +27,7 @@ func FromDomain(domain users.Domain) User {
 		Email:            domain.Email,
 		Photo:            domain.Photo,
 		Password:         domain.Password,
+		FullName:         domain.FullName,
 		MembershipTypeID: domain.MembershipTypeID,
 		AddressID:        domain.AddressID,
 		CreatedAt:        domain.CreatedAt,
@@ -40,24 +41,26 @@ func (u User) ToDomain() users.Domain {
 		Email:            u.Email,
 		Photo:            u.Photo,
 		Password:         u.Password,
+		FullName:         u.FullName,
 		MembershipTypeID: u.MembershipTypeID,
 		AddressID:        u.AddressID,
-		BookingDetails:   convertToArray(u.BookingDetails),
+		BookingDetails:   ConvertToBookingDetailsArray(u.BookingDetails),
+		Address:          u.Address.ToDomain(),
 		CreatedAt:        u.CreatedAt,
 		UpdatedAt:        u.UpdatedAt,
 	}
 }
 
-func convertToArray(bookingDetails []bookingDetailsRepo.Booking_detail) []bookingdetails.Domain {
-	bookingDetailsDomain := []bookingdetails.Domain{}
+func ConvertToBookingDetailsArray(bookingDetails []bookingDetailsRepo.Booking_detail) []users.BookingDetailDomain {
+	var bookingDetailsDomain []users.BookingDetailDomain
 	for _, val := range bookingDetails {
-		bookingDetailsDomain = append(bookingDetailsDomain, toBookingDetailsDomain(val))
+		bookingDetailsDomain = append(bookingDetailsDomain, ToBookingDetailsDomain(val))
 	}
 	return bookingDetailsDomain
 }
 
-func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) bookingdetails.Domain {
-	return bookingdetails.Domain{
+func ToBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) users.BookingDetailDomain {
+	return users.BookingDetailDomain{
 		Id:                 bookingDetails.Id,
 		Amount:             bookingDetails.Amount,
 		Status:             bookingDetails.Status,
@@ -68,4 +71,13 @@ func toBookingDetailsDomain(bookingDetails bookingDetailsRepo.Booking_detail) bo
 		CreatedAt:          bookingDetails.CreatedAt,
 		UpdatedAt:          bookingDetails.UpdatedAt,
 	}
+}
+
+func ToListDomain(data []User) []users.Domain {
+	var listDomain []users.Domain
+	for _, item := range data {
+		listDomain = append(listDomain, item.ToDomain())
+	}
+
+	return listDomain
 }

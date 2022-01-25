@@ -49,7 +49,7 @@ func FromClassDomain(domain gyms.ClassDomain) ClassResponse {
 		Link:               domain.Link,
 		Category:           domain.Category,
 		Status:             domain.Status,
-		// Membership_typeID:  domain.Membership_typeID,
+		Membership_typeID:  domain.Membership_typeID,
 		// Booking_details:    domain.Booking_details,
 		// Schedules:          domain.Schedules,
 		Created_at: domain.Created_at,

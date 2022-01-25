@@ -2,9 +2,8 @@ package membership_types
 
 import (
 	"CalFit/business/memberships"
-	"CalFit/repository/mysql/classes"
-
-	// "CalFit/repository/mysql/users"
+	classesRepo "CalFit/repository/mysql/classes"
+	usersRepo "CalFit/repository/mysql/users"
 	"time"
 
 	"gorm.io/gorm"
@@ -16,10 +15,10 @@ type Membership_type struct {
 	Name        string `gorm:"type:varchar(50);not null"`
 	Description string `gorm:"type:varchar(500);not null"`
 	Price       int    `gorm:"type:int;not null"`
-	// Users       []users.User    `gorm:"foreignkey:UserID"`
-	Classes    []classes.Class
-	Created_at time.Time
-	Updated_at time.Time
+	Users       []usersRepo.User
+	Classes     []classesRepo.Class
+	Created_at  time.Time
+	Updated_at  time.Time
 }
 
 func FromDomain(domain memberships.Domain) Membership_type {
@@ -51,7 +50,7 @@ func ToListDomain(data []Membership_type) []memberships.Domain {
 	return listDomain
 }
 
-func ToClassDomain(data classes.Class) memberships.ClassDomain {
+func ToClassDomain(data classesRepo.Class) memberships.ClassDomain {
 	return memberships.ClassDomain{
 		Id:                 data.Id,
 		Name:               data.Name,
@@ -61,16 +60,38 @@ func ToClassDomain(data classes.Class) memberships.ClassDomain {
 		Online:             data.Online,
 		Link:               data.Link,
 		Category:           data.Category,
+		Membership_typeID:  data.Membership_typeID,
 		Status:             data.Status,
+		Price:              data.Price,
 		Created_at:         data.Created_at,
 		Updated_at:         data.Updated_at,
 	}
 }
 
-func ToListClassDomain(data []classes.Class) []memberships.ClassDomain {
+func ToListClassDomain(data []classesRepo.Class) []memberships.ClassDomain {
 	var listDomain []memberships.ClassDomain
 	for _, item := range data {
 		listDomain = append(listDomain, ToClassDomain(item))
+	}
+	return listDomain
+}
+
+func ToUserDomain(u usersRepo.User) memberships.UserDomain {
+	return memberships.UserDomain{
+		Id:        u.Id,
+		Email:     u.Email,
+		Photo:     u.Photo,
+		Password:  u.Password,
+		AddressID: u.AddressID,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
+}
+
+func ToListUserDomain(u []usersRepo.User) []memberships.UserDomain {
+	var listDomain []memberships.UserDomain
+	for _, item := range u {
+		listDomain = append(listDomain, ToUserDomain(item))
 	}
 	return listDomain
 }
