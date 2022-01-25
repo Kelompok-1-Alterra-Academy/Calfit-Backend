@@ -25,7 +25,7 @@ func OperationalAdmin() echo.MiddlewareFunc {
 	return func(hf echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			claims := GetUser(c)
-			if claims.OperationalAdmin {
+			if claims.OperationalAdmin || claims.Superadmin {
 				return hf(c)
 			} else {
 				return controllers.ErrorResponse(c, http.StatusForbidden, errors.New("forbidden roles"))

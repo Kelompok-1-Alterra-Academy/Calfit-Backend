@@ -8,6 +8,7 @@ import (
 	"CalFit/controllers/gyms"
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
+	"CalFit/controllers/superadmins"
 
 	"CalFit/controllers/memberships"
 
@@ -24,6 +25,7 @@ type ControllersList struct {
 	SessionsController       *sessions.Controllers
 	AuthController           *auth.Controllers
 	BookingDetailsController *bookingdetails.Controllers
+	SuperadminsController    *superadmins.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -43,12 +45,12 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		// gym endpoint
 		v1.GET("/gyms", controllers.GymController.GetAll)
-		v1.GET("/gyms/count", controllers.GymController.CountAll)
+		// v1.GET("/gyms/count", controllers.GymController.CountAll)
 		v1.GET("/gyms/:gymId", controllers.GymController.GetById)
 
 		// class endpoint
 		v1.GET("/classes", controllers.ClassController.GetAll)
-		v1.GET("/classes/count", controllers.ClassController.CountAll)
+		// v1.GET("/classes/count", controllers.ClassController.CountAll)
 		v1.GET("/classes/:classId", controllers.ClassController.GetById)
 		v1.POST("/classes/:class_id/bookings", controllers.BookingDetailsController.Insert)
 
@@ -70,6 +72,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.POST("/auth/loginOAuth", controllers.AuthController.LoginOAuth)
 		v1.POST("/auth/login", controllers.AuthController.Login)
 		v1.POST("/auth/register", controllers.AuthController.Register)
+
+		v1.POST("/superadmin/login", controllers.AuthController.SuperadminLogin)
+		v1.POST("/superadmin/register", controllers.AuthController.SuperadminRegister)
 	}
 
 	// Member routes
@@ -79,30 +84,33 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
 	}
 
-	// superadmin routes
-	superadmin := v1.Group("")
-	// superadmin.Use(controllers.JWTMiddleware.MiddlewareFunc())
+	// admin routes
+	admin := v1.Group("", middleware.JWTWithConfig(controllers.JWTMiddleware))
 	{
 		// gym endpoint
-		superadmin.POST("/gyms", controllers.GymController.Create)
-		superadmin.PUT("/gyms/:gymId", controllers.GymController.Update)
-		superadmin.DELETE("/gyms/:gymId", controllers.GymController.Delete)
+		admin.GET("/gyms/count", controllers.GymController.CountAll, middlewares.OperationalAdmin())
+		admin.POST("/gyms", controllers.GymController.Create, middlewares.Superadmin())
+		admin.PUT("/gyms/:gymId", controllers.GymController.Update, middlewares.OperationalAdmin())
+		admin.DELETE("/gyms/:gymId", controllers.GymController.Delete, middlewares.Superadmin())
 
 		// class endpoint
-		superadmin.GET("/classes", controllers.ClassController.GetAll)
-		superadmin.POST("/gyms/:gymId/classes", controllers.ClassController.Create)
-		superadmin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update)
-		superadmin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete)
+		admin.GET("/classes/count", controllers.ClassController.CountAll, middlewares.OperationalAdmin())
+		admin.POST("/gyms/:gymId/classes", controllers.ClassController.Create, middlewares.OperationalAdmin())
+		admin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
+		admin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
 
 		//membership endpoint
-		superadmin.POST("/memberships", controllers.MembershipsController.Insert)
-		superadmin.PUT("/memberships/:Id", controllers.MembershipsController.Update)
-		superadmin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete)
+		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
+		admin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
+		admin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete, middlewares.Superadmin())
 
 		// session endpoint
-		superadmin.PUT("/sessions/:id", controllers.SessionsController.Update)
-		superadmin.DELETE("/sessions/:id", controllers.SessionsController.Delete)
-		superadmin.PUT("/schedules/:id", controllers.SchedulesController.Update)
-		superadmin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete)
+		admin.PUT("/sessions/:id", controllers.SessionsController.Update, middlewares.Superadmin())
+		admin.DELETE("/sessions/:id", controllers.SessionsController.Delete, middlewares.Superadmin())
+		admin.PUT("/schedules/:id", controllers.SchedulesController.Update, middlewares.Superadmin())
+		admin.DELETE("/schedules:/:id", controllers.SchedulesController.Delete, middlewares.Superadmin())
+
+		// admin endpoint
+		admin.PUT("/superadmin", controllers.SuperadminsController.UpdatePassword, middlewares.Superadmin())
 	}
 }

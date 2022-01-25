@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"CalFit/business/superadmins"
 	"CalFit/business/users"
 	"CalFit/controllers"
 	"CalFit/controllers/auth/request"
@@ -14,12 +15,14 @@ import (
 )
 
 type Controllers struct {
-	UsersUC users.Usecase
+	UsersUC       users.Usecase
+	SuperadminsUC superadmins.Usecase
 }
 
-func NewControllers(usersUC users.Usecase) *Controllers {
+func NewControllers(usersUC users.Usecase, superadminsUC superadmins.Usecase) *Controllers {
 	return &Controllers{
-		UsersUC: usersUC,
+		UsersUC:       usersUC,
+		SuperadminsUC: superadminsUC,
 	}
 }
 
@@ -60,6 +63,25 @@ func (controller *Controllers) Register(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomain(res))
 }
 
+func (controller *Controllers) SuperadminRegister(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.SuperadminAuth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	res, err := controller.SuperadminsUC.Register(ctx, domain)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrSuperadminExists) {
+			return controllers.ErrorResponse(c, http.StatusConflict, err)
+		} else if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusBadRequest, err)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusCreated, response.FromDomainSuperadmin(res))
+}
+
 func (controller *Controllers) Login(c echo.Context) error {
 	ctx := c.Request().Context()
 	req := request.Auth{}
@@ -69,6 +91,29 @@ func (controller *Controllers) Login(c echo.Context) error {
 	domain := req.ToDomain()
 	res, err := controller.UsersUC.Login(ctx, domain)
 	resFromDomain := response.FromDomain(res)
+	if err != nil {
+		if errors.Is(err, exceptions.ErrInvalidCredentials) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
+		}
+		if errors.Is(err, exceptions.ErrValidationFailed) {
+			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrValidationFailed)
+		}
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	cookie := helpers.CreateCookie(resFromDomain.Token)
+	c.SetCookie(cookie)
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
+
+func (controller *Controllers) SuperadminLogin(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.SuperadminAuth{}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	res, err := controller.SuperadminsUC.Login(ctx, domain)
+	resFromDomain := response.FromDomainSuperadmin(res)
 	if err != nil {
 		if errors.Is(err, exceptions.ErrInvalidCredentials) {
 			return controllers.ErrorResponse(c, http.StatusConflict, exceptions.ErrInvalidCredentials)
