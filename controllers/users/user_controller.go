@@ -25,13 +25,8 @@ func NewControllers(usersUC users.Usecase) *Controllers {
 
 func (controller *Controllers) GetByID(c echo.Context) error {
 	ctx := c.Request().Context()
-<<<<<<< HEAD
-	req := request.Users{}
-	if err := c.Bind(&req); err != nil {
-=======
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
->>>>>>> cfbe0d0 (refactor(users): add get by id)
 		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
 	}
 	res, err := controller.UsersUC.GetByID(ctx, id)

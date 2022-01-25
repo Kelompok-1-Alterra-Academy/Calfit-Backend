@@ -110,7 +110,6 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 	return data.ToDomain(), nil
 }
 
-<<<<<<< HEAD
 func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
 	var usersModel []User
 
@@ -163,7 +162,7 @@ func (b *ProfileUsersRepo) Update(ctx context.Context, id string, user users.Dom
 		return users.Domain{}, updateErr
 	}
 	return userModel.ToDomain(), nil
-=======
+}
 func (repo *UsersRepo) GetByID(ctx context.Context, id int) (users.Domain, error) {
 	data := User{}
 	if err := repo.DBConn.Where("id=?", id).First(&data).Error; err != nil {
@@ -177,5 +176,4 @@ func (repo *UsersRepo) GetByID(ctx context.Context, id int) (users.Domain, error
 	repo.DBConn.Table("users").Select("membership_types.name AS membership_name").Joins("LEFT JOIN membership_types ON users.membership_type_id = membership_types.id").Scan(&relation)
 	domain.MembershipName = relation.MembershipName
 	return domain, nil
->>>>>>> cfbe0d0 (refactor(users): add get by id)
 }
