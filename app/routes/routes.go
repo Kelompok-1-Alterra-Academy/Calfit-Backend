@@ -2,6 +2,7 @@ package routes
 
 import (
 	"CalFit/app/middlewares"
+	"CalFit/controllers/admins"
 	"CalFit/controllers/auth"
 	bookingdetails "CalFit/controllers/booking_details"
 	"CalFit/controllers/classes"
@@ -17,15 +18,16 @@ import (
 )
 
 type ControllersList struct {
-	JWTMiddleware            middleware.JWTConfig
-	MembershipsController    *memberships.MembershipController
-	SchedulesController      *schedules.Controllers
-	GymController            *gyms.GymController
-	ClassController          *classes.ClassController
-	SessionsController       *sessions.Controllers
-	AuthController           *auth.Controllers
-	BookingDetailsController *bookingdetails.Controllers
-	SuperadminsController    *superadmins.Controllers
+	JWTMiddleware               middleware.JWTConfig
+	MembershipsController       *memberships.MembershipController
+	SchedulesController         *schedules.Controllers
+	GymController               *gyms.GymController
+	ClassController             *classes.ClassController
+	SessionsController          *sessions.Controllers
+	AuthController              *auth.Controllers
+	BookingDetailsController    *bookingdetails.Controllers
+	SuperadminsController       *superadmins.Controllers
+	OperationaladminsController *admins.OpAdminControllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -75,6 +77,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		v1.POST("/superadmin/login", controllers.AuthController.SuperadminLogin)
 		v1.POST("/superadmin/register", controllers.AuthController.SuperadminRegister)
+
+		v1.POST("/admin/login", controllers.AuthController.OpadminLogin)
+		v1.POST("/admin/register", controllers.AuthController.OpadminRegister)
 	}
 
 	// Member routes
@@ -98,6 +103,10 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.POST("/gyms/:gymId/classes", controllers.ClassController.Create, middlewares.OperationalAdmin())
 		admin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
 		admin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
+
+		// operational endpoint
+
+		admin.PUT("/admin", controllers.OperationaladminsController.UpdatePassword, middlewares.OperationalAdmin())
 
 		//membership endpoint
 		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())

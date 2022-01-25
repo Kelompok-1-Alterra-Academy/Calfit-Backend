@@ -29,11 +29,11 @@ func (oa *OperationalAdminsUsecase) Register(ctx context.Context, opadmin Domain
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
 
-	superadmins, err := oa.Repo.GetAll(ctx)
+	operational_admin, err := oa.Repo.GetAll(ctx)
 	if err != nil {
 		return Domain{}, err
 	}
-	if superadmins != nil {
+	if operational_admin != nil {
 		return Domain{}, exceptions.ErrSuperadminExists
 	}
 

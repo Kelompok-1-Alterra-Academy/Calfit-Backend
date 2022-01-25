@@ -3,6 +3,7 @@ package main
 import (
 	"CalFit/app/middlewares"
 	"CalFit/app/routes"
+	_opadminsUsecase "CalFit/business/admins"
 	_bookingDetailsUsecase "CalFit/business/booking_details"
 	_classUsecase "CalFit/business/classes"
 	_gymUsecase "CalFit/business/gyms"
@@ -11,6 +12,7 @@ import (
 	_sessionsUsecase "CalFit/business/sessions"
 	_superadminsUsecase "CalFit/business/superadmins"
 	_usersUsecase "CalFit/business/users"
+	_opadminsController "CalFit/controllers/admins"
 	_authController "CalFit/controllers/auth"
 	bookingdetails "CalFit/controllers/booking_details"
 	_classController "CalFit/controllers/classes"
@@ -24,6 +26,7 @@ import (
 	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
+	_opadminsRepo "CalFit/repository/mysql/operational_admins"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	_sessionsRepo "CalFit/repository/mysql/sessions"
 	_superadminsRepo "CalFit/repository/mysql/superadmins"
@@ -84,13 +87,19 @@ func main() {
 	usersRepo := _usersRepo.NewUsersRepo(db)
 	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext, &configJWT)
 
+	// Operationaladmins initialize
+
+	operationaladminsRepo := _opadminsRepo.NewOperationalAdminsRepo(db)
+	operatinaladminsUsecase := _opadminsUsecase.NewOperationaldminsUsecase(operationaladminsRepo, timeoutContext, &configJWT)
+	operationaladminsController := _opadminsController.NewControllers(operatinaladminsUsecase)
+
 	// Superadmins initialize
 	superadminsRepo := _superadminsRepo.NewSuperadminsRepo(db)
 	superadminsUsecase := _superadminsUsecase.NewSuperadminsUsecase(superadminsRepo, timeoutContext, &configJWT)
 	superadminsController := _superadminsController.NewControllers(superadminsUsecase)
 
 	// Auth initialize
-	authController := _authController.NewControllers(usersUsecase, superadminsUsecase)
+	authController := _authController.NewControllers(usersUsecase, superadminsUsecase, operatinaladminsUsecase)
 
 	// BookingDetails initialize
 	bookingDetailsRepo := _bookingDetailsRepo.NewBookingDetailsRepo(db)
@@ -98,15 +107,16 @@ func main() {
 	bookingDetailsController := bookingdetails.NewControllers(bookingDetailsUsecase)
 
 	routesInit := routes.ControllersList{
-		JWTMiddleware:            configJWT.Init(),
-		SchedulesController:      schedulesController,
-		GymController:            gymsHandler,
-		MembershipsController:    membershipsController,
-		ClassController:          classesHandler,
-		SessionsController:       sessionsController,
-		AuthController:           authController,
-		BookingDetailsController: bookingDetailsController,
-		SuperadminsController:    superadminsController,
+		JWTMiddleware:               configJWT.Init(),
+		SchedulesController:         schedulesController,
+		GymController:               gymsHandler,
+		MembershipsController:       membershipsController,
+		ClassController:             classesHandler,
+		SessionsController:          sessionsController,
+		AuthController:              authController,
+		BookingDetailsController:    bookingDetailsController,
+		SuperadminsController:       superadminsController,
+		OperationaladminsController: operationaladminsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
