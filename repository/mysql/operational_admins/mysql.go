@@ -25,7 +25,7 @@ func (repo *OperationalAdminsRepo) Login(ctx context.Context, domain admins.Doma
 	data := FromDomain(domain)
 	if err := repo.Conn.Where("username=?", data.Username).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return admins.Domain{}, exceptions.ErrSuperadminNotFound
+			return admins.Domain{}, exceptions.ErrOperationalAdminNotFound
 		}
 		return admins.Domain{}, err
 	}
@@ -41,7 +41,7 @@ func (repo *OperationalAdminsRepo) Register(ctx context.Context, domain admins.D
 		}
 		return admins.Domain{}, err
 	}
-	return admins.Domain{}, exceptions.ErrSuperadminExists
+	return admins.Domain{}, exceptions.ErrOperationalAdminExists
 }
 
 func (repo *OperationalAdminsRepo) UpdatePassword(ctx context.Context, domain admins.Domain) (admins.Domain, error) {
@@ -49,7 +49,7 @@ func (repo *OperationalAdminsRepo) UpdatePassword(ctx context.Context, domain ad
 	err := repo.Conn.Where("username=?", domain.Username).First(&admin).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return admins.Domain{}, exceptions.ErrSuperadminNotFound
+			return admins.Domain{}, exceptions.ErrOperationalAdminNotFound
 		}
 		return admins.Domain{}, err
 	}
