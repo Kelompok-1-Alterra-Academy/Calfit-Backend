@@ -9,6 +9,7 @@ import (
 	_membershipsUsecase "CalFit/business/memberships"
 	_schedulesUsecase "CalFit/business/schedules"
 	_sessionsUsecase "CalFit/business/sessions"
+	_superadminsUsecase "CalFit/business/superadmins"
 	_usersUsecase "CalFit/business/users"
 	_authController "CalFit/controllers/auth"
 	bookingdetails "CalFit/controllers/booking_details"
@@ -17,6 +18,7 @@ import (
 	_membershipsController "CalFit/controllers/memberships"
 	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
+	_superadminsController "CalFit/controllers/superadmins"
 	_usersController "CalFit/controllers/users"
 	"CalFit/repository/mysql"
 	_bookingDetailsRepo "CalFit/repository/mysql/booking_details"
@@ -25,6 +27,7 @@ import (
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	_sessionsRepo "CalFit/repository/mysql/sessions"
+	_superadminsRepo "CalFit/repository/mysql/superadmins"
 	_usersRepo "CalFit/repository/mysql/users"
 	"log"
 	"time"
@@ -77,12 +80,18 @@ func main() {
 	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
 	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo, timeoutContext)
 	membershipsController := _membershipsController.NewHandler(*membershipsUsecase)
+
 	// Users initialize
 	usersRepo := _usersRepo.NewUsersRepo(db)
 	usersUsecase := _usersUsecase.NewUsersUsecase(usersRepo, timeoutContext, &configJWT)
 
+	// Superadmins initialize
+	superadminsRepo := _superadminsRepo.NewSuperadminsRepo(db)
+	superadminsUsecase := _superadminsUsecase.NewSuperadminsUsecase(superadminsRepo, timeoutContext, &configJWT)
+	superadminsController := _superadminsController.NewControllers(superadminsUsecase)
+
 	// Auth initialize
-	authController := _authController.NewControllers(usersUsecase)
+	authController := _authController.NewControllers(usersUsecase, superadminsUsecase)
 
 	// BookingDetails initialize
 	bookingDetailsRepo := _bookingDetailsRepo.NewBookingDetailsRepo(db)
@@ -102,6 +111,7 @@ func main() {
 		AuthController:           authController,
 		BookingDetailsController: bookingDetailsController,
 		UsersController:          usersController,
+		SuperadminsController:    superadminsController,
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))

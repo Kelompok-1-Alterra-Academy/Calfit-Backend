@@ -33,4 +33,8 @@ var (
 	ErrMissingId = errors.New("missing require id")
 	// ErrBadRequest is thrown when request message is invalid
 	ErrBadRequest = errors.New("invalid request message")
+	// ErrSuperadminExists is thrown when the superadmin already exists
+	ErrSuperadminExists = errors.New("superadmin already exists")
+	// ErrSuperadminNotFound is thrown when the superadmin is not found
+	ErrSuperadminNotFound = errors.New("superadmin not found")
 )

@@ -11,7 +11,7 @@ import (
 	"CalFit/repository/mysql/payments"
 	"CalFit/repository/mysql/schedules"
 	"CalFit/repository/mysql/sessions"
-	"CalFit/repository/mysql/super_admins"
+	"CalFit/repository/mysql/superadmins"
 	"CalFit/repository/mysql/users"
 	"CalFit/repository/mysql/video_contents"
 	"fmt"
@@ -38,7 +38,7 @@ func InitDB() *gorm.DB {
 	}
 
 	DB.AutoMigrate(
-		&super_admins.Super_admin{},
+		&superadmins.Superadmin{},
 		&operational_admins.Operational_admin{},
 		&addresses.Address{},
 		&gyms.Gym{},
