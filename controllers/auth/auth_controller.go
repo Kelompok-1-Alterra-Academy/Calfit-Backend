@@ -172,3 +172,9 @@ func (controller *Controllers) OpadminLogin(c echo.Context) error {
 	c.SetCookie(cookie)
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
+
+func (controller *Controllers) SuperadminLogout(c echo.Context) error {
+	cookie := helpers.DeleteCookie()
+	c.SetCookie(cookie)
+	return controllers.SuccessResponse(c, http.StatusOK, nil)
+}
