@@ -1,6 +1,7 @@
 package response
 
 import (
+	"CalFit/business/admins"
 	"CalFit/business/superadmins"
 	"CalFit/business/users"
 	"time"
@@ -14,6 +15,11 @@ type Auth struct {
 	Photo          string     `json:"photo,omitempty"`
 	CreatedAt      *time.Time `json:"created_at,omitempty"`
 	UpdatedAt      *time.Time `json:"updated_at,omitempty"`
+}
+
+type OpAdmin struct {
+	Username string `json:"username"`
+	Token    string `json:"token,omitempty"`
 }
 
 type Superadmin struct {
@@ -37,5 +43,12 @@ func FromDomainSuperadmin(s superadmins.Domain) Superadmin {
 	return Superadmin{
 		Username: s.Username,
 		Token:    s.Token,
+	}
+}
+
+func FromDomainOpAdmin(o admins.Domain) OpAdmin {
+	return OpAdmin{
+		Username: o.Username,
+		Token:    o.Token,
 	}
 }

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"CalFit/app/middlewares"
+	"CalFit/controllers/admins"
 	"CalFit/controllers/auth"
 	bookingdetails "CalFit/controllers/booking_details"
 	"CalFit/controllers/classes"
@@ -19,6 +20,18 @@ import (
 )
 
 type ControllersList struct {
+<<<<<<< HEAD
+	JWTMiddleware               middleware.JWTConfig
+	MembershipsController       *memberships.MembershipController
+	SchedulesController         *schedules.Controllers
+	GymController               *gyms.GymController
+	ClassController             *classes.ClassController
+	SessionsController          *sessions.Controllers
+	AuthController              *auth.Controllers
+	BookingDetailsController    *bookingdetails.Controllers
+	SuperadminsController       *superadmins.Controllers
+	OperationaladminsController *admins.OpAdminControllers
+=======
 	JWTMiddleware            middleware.JWTConfig
 	MembershipsController    *memberships.MembershipController
 	SchedulesController      *schedules.Controllers
@@ -30,6 +43,7 @@ type ControllersList struct {
 	UsersController          *users.Controllers
 	SuperadminsController    *superadmins.Controllers
 	NewslettersController    *newsletters.Controllers
+>>>>>>> master
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -85,6 +99,9 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		v1.POST("/superadmin/login", controllers.AuthController.SuperadminLogin)
 		v1.POST("/superadmin/register", controllers.AuthController.SuperadminRegister)
+
+		v1.POST("/admin/login", controllers.AuthController.OpadminLogin)
+		v1.POST("/admin/register", controllers.AuthController.OpadminRegister)
 	}
 
 	// Member routes
@@ -111,6 +128,10 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.PUT("/gyms/:gymId/classes/:classId", controllers.ClassController.Update, middlewares.OperationalAdmin())
 		admin.DELETE("/gyms/:gymId/classes/:classId", controllers.ClassController.Delete, middlewares.OperationalAdmin())
 
+		// operational admin endpoint
+
+		admin.PUT("/admin", controllers.OperationaladminsController.UpdatePassword, middlewares.OperationalAdmin())
+
 		//membership endpoint
 		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
 		admin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
@@ -129,8 +150,13 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// admin endpoint
 		admin.PUT("/superadmin", controllers.SuperadminsController.UpdatePassword, middlewares.Superadmin())
+<<<<<<< HEAD
+		admin.GET("/superadmin/admin/count", controllers.OperationaladminsController.CountAll, middlewares.Superadmin())
+		admin.GET("/superadmin/admin", controllers.OperationaladminsController.Get, middlewares.Superadmin())
+=======
 
 		// booking endpoint
 		admin.GET("/bookings/gym/:gymID", controllers.BookingDetailsController.GetByGymID, middlewares.OperationalAdmin())
+>>>>>>> master
 	}
 }
