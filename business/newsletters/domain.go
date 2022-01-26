@@ -20,7 +20,7 @@ type Usecase interface {
 	GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error)
 	CountAll(ctx context.Context) (int, error)
 	GetById(ctx context.Context, id string) (Domain, error)
-	Create(ctx context.Context, domain Domain, Id string) (Domain, error)
+	Create(ctx context.Context, domain Domain) (Domain, error)
 	Update(ctx context.Context, id string, domain Domain) (Domain, error)
 	Delete(ctx context.Context, id string) error
 }
