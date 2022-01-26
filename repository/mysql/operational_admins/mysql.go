@@ -26,7 +26,10 @@ func (repo *OperationalAdminsRepo) Login(ctx context.Context, domain admins.Doma
 	data := FromDomain(domain)
 	if err := repo.Conn.Where("username=?", data.Username).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return admins.Domain{}, exceptions.ErrOperationalAdminNotFound
+			data.SuperadminID = 1
+			data.Created_at = time.Now()
+			repo.Conn.Create(&data)
+			return data.ToDomain(), nil
 		}
 		return admins.Domain{}, err
 	}
@@ -37,6 +40,8 @@ func (repo *OperationalAdminsRepo) Register(ctx context.Context, domain admins.D
 	data := FromDomain(domain)
 	if err := repo.Conn.Where("username=?", data.Username).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			data.SuperadminID = 1
+			data.Created_at = time.Now()
 			repo.Conn.Create(&data)
 			return data.ToDomain(), nil
 		}
@@ -62,14 +67,6 @@ func (repo *OperationalAdminsRepo) UpdatePassword(ctx context.Context, domain ad
 	return res, nil
 }
 
-func (repo *OperationalAdminsRepo) GetAll(ctx context.Context) ([]admins.Domain, error) {
-	var data []Operational_admin
-	if err := repo.Conn.Find(&data).Error; err != nil {
-		return nil, err
-	}
-	return ToListDomain(data), nil
-}
-
 func (repo *OperationalAdminsRepo) GetByUsername(ctx context.Context, username string) (admins.Domain, error) {
 	data := Operational_admin{}
 	if err := repo.Conn.Where("username=?", username).First(&data).Error; err != nil {
@@ -78,11 +75,11 @@ func (repo *OperationalAdminsRepo) GetByUsername(ctx context.Context, username s
 	return data.ToDomain(), nil
 }
 
-func (repo *OperationalAdminsRepo) Get(ctx context.Context, pagination paginations.Domain) ([]admins.Domain, error) {
+func (repo *OperationalAdminsRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]admins.Domain, error) {
 	var data []Operational_admin
 
 	offset := (pagination.Page - 1) * pagination.Limit
-	if err := repo.Conn.Limit(pagination.Limit).Offset(offset).Find(&data).Error; err != nil {
+	if err := repo.Conn.Preload("Superadmin").Limit(pagination.Limit).Offset(offset).Find(&data).Error; err != nil {
 		return nil, err
 	}
 	var result []admins.Domain = ToListDomain(data)

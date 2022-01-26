@@ -30,14 +30,7 @@ func (oa *OperationalAdminsUsecase) Register(ctx context.Context, opadmin Domain
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
 
-	operational_admin, err := oa.Repo.GetAll(ctx)
-	if err != nil {
-		return Domain{}, err
-	}
-	if operational_admin != nil {
-		return Domain{}, exceptions.ErrSuperadminExists
-	}
-
+	var err error
 	opadmin.Password, err = helpers.Hash(opadmin.Password)
 	if err != nil {
 		return Domain{}, err
@@ -96,9 +89,9 @@ func (oa *OperationalAdminsUsecase) CountAll(ctx context.Context) (int, error) {
 
 	return oa.Repo.CountAll(ctx)
 }
-func (oa *OperationalAdminsUsecase) Get(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
+func (oa *OperationalAdminsUsecase) GetAll(ctx context.Context, pagination paginations.Domain) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, oa.ContextTimeout)
 	defer cancel()
 
-	return oa.Repo.Get(ctx, pagination)
+	return oa.Repo.GetAll(ctx, pagination)
 }

@@ -26,7 +26,7 @@ type Usecase interface {
 	Register(ctx context.Context, admins Domain) (Domain, error)
 	Login(ctx context.Context, admins Domain) (Domain, error)
 	UpdatePassword(ctx context.Context, admins Domain) (Domain, error)
-	Get(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
+	GetAll(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
 	CountAll(ctx context.Context) (int, error)
 }
 
@@ -34,8 +34,7 @@ type Repository interface {
 	Login(ctx context.Context, admins Domain) (Domain, error)
 	Register(ctx context.Context, admins Domain) (Domain, error)
 	GetByUsername(ctx context.Context, username string) (Domain, error)
-	GetAll(ctx context.Context) ([]Domain, error)
 	UpdatePassword(ctx context.Context, admins Domain) (Domain, error)
-	Get(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
+	GetAll(ctx context.Context, paginationDomain paginations.Domain) ([]Domain, error)
 	CountAll(ctx context.Context) (int, error)
 }
