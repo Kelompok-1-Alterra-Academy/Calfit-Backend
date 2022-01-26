@@ -1,6 +1,7 @@
 package admins
 
 import (
+	"CalFit/business/newsletters"
 	"CalFit/business/paginations"
 	"CalFit/business/superadmins"
 	"context"
@@ -14,7 +15,7 @@ type Domain struct {
 	ChangedPassword string
 	Token           string
 	// SuperadminID   int
-	// Newsletters    []newsletters.Newsletter
+	Newsletters []newsletters.Domain
 	// Video_contents []video_contents.Video_content
 	Superadmin superadmins.Domain `gorm:"foreignKey:SuperadminID"`
 	Created_at time.Time

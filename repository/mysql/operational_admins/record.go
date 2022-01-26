@@ -1,8 +1,9 @@
 package operational_admins
 
 import (
-	// "CalFit/repository/mysql/newsletters"
+	"CalFit/repository/mysql/newsletters"
 	"CalFit/repository/mysql/superadmins"
+
 	// "CalFit/repository/mysql/video_contents"
 	"CalFit/business/admins"
 	"time"
@@ -15,7 +16,7 @@ type Operational_admin struct {
 	Username string
 	Password string
 	// SuperadminID   int
-	// Newsletters    []newsletters.Newsletter
+	Newsletters []newsletters.Newsletter
 	// Video_contents []video_contents.Video_content
 	Superadmin superadmins.Superadmin `gorm:"foreignKey:SuperadminID"`
 	Created_at time.Time
