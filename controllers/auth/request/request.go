@@ -7,6 +7,7 @@ import (
 )
 
 type Auth struct {
+	Username string `json:"username,omitempty" form:"username"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
 }

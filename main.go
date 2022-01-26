@@ -8,6 +8,7 @@ import (
 	_classUsecase "CalFit/business/classes"
 	_gymUsecase "CalFit/business/gyms"
 	_membershipsUsecase "CalFit/business/memberships"
+	_newslettersUsecase "CalFit/business/newsletters"
 	_schedulesUsecase "CalFit/business/schedules"
 	_sessionsUsecase "CalFit/business/sessions"
 	_superadminsUsecase "CalFit/business/superadmins"
@@ -18,15 +19,21 @@ import (
 	_classController "CalFit/controllers/classes"
 	_gymController "CalFit/controllers/gyms"
 	_membershipsController "CalFit/controllers/memberships"
+	_newslettersController "CalFit/controllers/newsletters"
 	_schedulesController "CalFit/controllers/schedules"
 	_sessionsController "CalFit/controllers/sessions"
 	_superadminsController "CalFit/controllers/superadmins"
+	_usersController "CalFit/controllers/users"
 	"CalFit/repository/mysql"
 	_bookingDetailsRepo "CalFit/repository/mysql/booking_details"
 	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
+<<<<<<< HEAD
 	_opadminsRepo "CalFit/repository/mysql/operational_admins"
+=======
+	_newslettersRepo "CalFit/repository/mysql/newsletters"
+>>>>>>> master
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	_sessionsRepo "CalFit/repository/mysql/sessions"
 	_superadminsRepo "CalFit/repository/mysql/superadmins"
@@ -78,6 +85,11 @@ func main() {
 	sessionsUsecase := _sessionsUsecase.NewSessionsUsecase(sessionsRepo, timeoutContext)
 	sessionsController := _sessionsController.NewControllers(sessionsUsecase)
 
+	// Newsletters initialize
+	newslettersRepo := _newslettersRepo.NewNewsletterRepository(db)
+	newslettersUsecase := _newslettersUsecase.NewNewsletterUsecase(newslettersRepo, timeoutContext)
+	newslettersController := _newslettersController.NewHandler(newslettersUsecase)
+
 	// Memberships initialize
 	membershipsRepo := _membershipsRepo.NewMembershipsRepo(db)
 	membershipsUsecase := _membershipsUsecase.NewMembershipsUsecase(membershipsRepo, timeoutContext)
@@ -106,7 +118,11 @@ func main() {
 	bookingDetailsUsecase := _bookingDetailsUsecase.NewBookingDetailsUsecase(bookingDetailsRepo, timeoutContext)
 	bookingDetailsController := bookingdetails.NewControllers(bookingDetailsUsecase)
 
+	// Users initialize
+	usersController := _usersController.NewControllers(usersUsecase)
+
 	routesInit := routes.ControllersList{
+<<<<<<< HEAD
 		JWTMiddleware:               configJWT.Init(),
 		SchedulesController:         schedulesController,
 		GymController:               gymsHandler,
@@ -117,6 +133,19 @@ func main() {
 		BookingDetailsController:    bookingDetailsController,
 		SuperadminsController:       superadminsController,
 		OperationaladminsController: operationaladminsController,
+=======
+		JWTMiddleware:            configJWT.Init(),
+		SchedulesController:      schedulesController,
+		GymController:            gymsHandler,
+		MembershipsController:    membershipsController,
+		ClassController:          classesHandler,
+		SessionsController:       sessionsController,
+		AuthController:           authController,
+		BookingDetailsController: bookingDetailsController,
+		UsersController:          usersController,
+		SuperadminsController:    superadminsController,
+		NewslettersController:    newslettersController,
+>>>>>>> master
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
