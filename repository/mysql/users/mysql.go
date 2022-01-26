@@ -16,11 +16,7 @@ type UsersRepo struct {
 	DBConn *gorm.DB
 }
 
-<<<<<<< HEAD
 type ProfilesRepo struct {
-=======
-type ProfileUsersRepo struct {
->>>>>>> master
 	DBConn *gorm.DB
 }
 
@@ -30,13 +26,8 @@ func NewUsersRepo(db *gorm.DB) users.Repository {
 	}
 }
 
-<<<<<<< HEAD
 func NewProfileRepo(db *gorm.DB) users.ProfileRepository {
 	return &ProfilesRepo{
-=======
-func NewProfileUsersRepo(db *gorm.DB) users.ProfileRepository {
-	return &ProfileUsersRepo{
->>>>>>> master
 		DBConn: db,
 	}
 }
@@ -119,11 +110,7 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 	return data.ToDomain(), nil
 }
 
-<<<<<<< HEAD
 func (b *ProfilesRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
-=======
-func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
->>>>>>> master
 	var usersModel []User
 
 	offset := (pagination.Page - 1) * pagination.Limit
@@ -134,11 +121,7 @@ func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Do
 	return result, nil
 }
 
-<<<<<<< HEAD
 func (b *ProfilesRepo) CountAll(ctx context.Context) (int, error) {
-=======
-func (b *ProfileUsersRepo) CountAll(ctx context.Context) (int, error) {
->>>>>>> master
 	var count int64
 	if err := b.DBConn.Model(&User{}).Count(&count).Error; err != nil {
 		return 0, err
@@ -146,11 +129,7 @@ func (b *ProfileUsersRepo) CountAll(ctx context.Context) (int, error) {
 	return int(count), nil
 }
 
-<<<<<<< HEAD
 func (b *ProfilesRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
-=======
-func (b *ProfileUsersRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
->>>>>>> master
 	var user User
 	if err := b.DBConn.Preload("Address").Preload("Classes").Where("id = ?", id).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -161,11 +140,7 @@ func (b *ProfileUsersRepo) GetById(ctx context.Context, id string) (users.Domain
 	return user.ToDomain(), nil
 }
 
-<<<<<<< HEAD
 func (b *ProfilesRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
-=======
-func (b *ProfileUsersRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
->>>>>>> master
 	var userModel User
 	if err := b.DBConn.Where("id = ?", id).Preload("Address").First(&userModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {

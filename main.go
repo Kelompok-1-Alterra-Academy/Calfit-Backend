@@ -29,11 +29,8 @@ import (
 	_classDb "CalFit/repository/mysql/classes"
 	_gymDb "CalFit/repository/mysql/gyms"
 	_membershipsRepo "CalFit/repository/mysql/membership_types"
-<<<<<<< HEAD
-	_opadminsRepo "CalFit/repository/mysql/operational_admins"
-=======
 	_newslettersRepo "CalFit/repository/mysql/newsletters"
->>>>>>> master
+	_opadminsRepo "CalFit/repository/mysql/operational_admins"
 	_schedulesRepo "CalFit/repository/mysql/schedules"
 	_sessionsRepo "CalFit/repository/mysql/sessions"
 	_superadminsRepo "CalFit/repository/mysql/superadmins"
@@ -127,7 +124,6 @@ func main() {
 	usersController := _usersController.NewControllers(usersUsecase)
 
 	routesInit := routes.ControllersList{
-<<<<<<< HEAD
 		JWTMiddleware:               configJWT.Init(),
 		SchedulesController:         schedulesController,
 		GymController:               gymsHandler,
@@ -136,25 +132,11 @@ func main() {
 		SessionsController:          sessionsController,
 		AuthController:              authController,
 		BookingDetailsController:    bookingDetailsController,
+		UsersController:             usersController,
 		SuperadminsController:       superadminsController,
+		ProfileController:           profileController,
+		NewslettersController:       newslettersController,
 		OperationaladminsController: operationaladminsController,
-=======
-		JWTMiddleware:            configJWT.Init(),
-		SchedulesController:      schedulesController,
-		GymController:            gymsHandler,
-		MembershipsController:    membershipsController,
-		ClassController:          classesHandler,
-		SessionsController:       sessionsController,
-		AuthController:           authController,
-		BookingDetailsController: bookingDetailsController,
-		UsersController:          usersController,
-		SuperadminsController:    superadminsController,
-<<<<<<< HEAD
-		ProfileController:        profileController,
-=======
-		NewslettersController:    newslettersController,
->>>>>>> master
->>>>>>> master
 	}
 	routesInit.RouteRegister(e)
 	e.Logger.Fatal(e.Start(viper.GetString("SERVER_PORT")))
