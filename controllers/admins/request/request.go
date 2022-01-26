@@ -7,7 +7,7 @@ import (
 type OpAdminAuth struct {
 	Username        string `json:"username" form:"username"`
 	Password        string `json:"password" form:"password"`
-	ChangedPassword string `json:"newPassword" form:"new_password"`
+	ChangedPassword string `json:"changedPassword" form:"changed_password"`
 }
 
 func (o OpAdminAuth) ToDomain() admins.Domain {

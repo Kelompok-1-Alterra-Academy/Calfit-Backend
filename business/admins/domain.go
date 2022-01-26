@@ -14,8 +14,8 @@ type Domain struct {
 	Password        string
 	ChangedPassword string
 	Token           string
-	// SuperadminID   int
-	Newsletters []newsletters.Domain
+	SuperadminID    int
+	Newsletters     []newsletters.Domain
 	// Video_contents []video_contents.Video_content
 	Superadmin superadmins.Domain `gorm:"foreignKey:SuperadminID"`
 	Created_at time.Time
