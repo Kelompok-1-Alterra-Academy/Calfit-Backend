@@ -116,5 +116,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// admin endpoint
 		admin.PUT("/superadmin", controllers.SuperadminsController.UpdatePassword, middlewares.Superadmin())
+
+		// booking endpoint
+		admin.GET("/bookings/gym/:gymID", controllers.BookingDetailsController.GetByGymID, middlewares.OperationalAdmin())
 	}
 }
