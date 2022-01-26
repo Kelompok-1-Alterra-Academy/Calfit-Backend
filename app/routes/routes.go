@@ -6,6 +6,7 @@ import (
 	bookingdetails "CalFit/controllers/booking_details"
 	"CalFit/controllers/classes"
 	"CalFit/controllers/gyms"
+	"CalFit/controllers/newsletters"
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
 	"CalFit/controllers/superadmins"
@@ -28,6 +29,7 @@ type ControllersList struct {
 	BookingDetailsController *bookingdetails.Controllers
 	UsersController          *users.Controllers
 	SuperadminsController    *superadmins.Controllers
+	NewslettersController    *newsletters.Controllers
 }
 
 func (controllers ControllersList) RouteRegister(e *echo.Echo) {
@@ -65,6 +67,12 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		v1.GET("/schedules", controllers.SchedulesController.Get)
 		v1.PUT("/schedules", controllers.SchedulesController.Update)
 		v1.DELETE("/schedules", controllers.SchedulesController.Delete)
+
+		// newsletter endpoint
+
+		v1.GET("/newsletters", controllers.NewslettersController.GetAll)
+		v1.GET("/newsletters/:Id", controllers.NewslettersController.GetById)
+		v1.GET("/newsletters/count", controllers.NewslettersController.CountAll)
 
 		// session endpoint
 		v1.POST("/sessions", controllers.SessionsController.Insert)
@@ -107,6 +115,11 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.POST("/memberships", controllers.MembershipsController.Insert, middlewares.Superadmin())
 		admin.PUT("/memberships/:Id", controllers.MembershipsController.Update, middlewares.Superadmin())
 		admin.DELETE("/memberships/:Id", controllers.MembershipsController.Delete, middlewares.Superadmin())
+
+		// newsletter endpoint
+		admin.POST("/newsletters", controllers.NewslettersController.Create, middlewares.OperationalAdmin())
+		admin.PUT("/newsletters/:Id", controllers.NewslettersController.Update, middlewares.OperationalAdmin())
+		admin.DELETE("/newsletters/:Id", controllers.NewslettersController.Delete, middlewares.OperationalAdmin())
 
 		// session endpoint
 		admin.PUT("/sessions/:id", controllers.SessionsController.Update, middlewares.Superadmin())
