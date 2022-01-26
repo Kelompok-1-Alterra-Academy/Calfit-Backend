@@ -19,7 +19,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type NewsController struct {
+type Controllers struct {
 	Usecase newsletters.Usecase
 }
 
@@ -27,13 +27,13 @@ type Header struct {
 	Cookie string `json:"cookie"`
 }
 
-func NewHandler(n newsletters.Usecase) *NewsController {
-	return &NewsController{
+func NewHandler(n newsletters.Usecase) *Controllers {
+	return &Controllers{
 		Usecase: n,
 	}
 }
 
-func (n *NewsController) GetAll(c echo.Context) error {
+func (n *Controllers) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	paginationDomain := paginations.Domain{
@@ -77,7 +77,7 @@ func (n *NewsController) GetAll(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
-func (n *NewsController) CountAll(c echo.Context) error {
+func (n *Controllers) CountAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	count, err := n.Usecase.CountAll(ctx)
@@ -88,7 +88,7 @@ func (n *NewsController) CountAll(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, count)
 }
 
-func (n *NewsController) GetById(c echo.Context) error {
+func (n *Controllers) GetById(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := c.Param("Id")
@@ -104,7 +104,7 @@ func (n *NewsController) GetById(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
-func (n *NewsController) Create(c echo.Context) error {
+func (n *Controllers) Create(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	createdNews := requests.CreateNews{}
@@ -126,7 +126,7 @@ func (n *NewsController) Create(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusCreated, response)
 }
 
-func (n *NewsController) Update(c echo.Context) error {
+func (n *Controllers) Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := c.Param("Id")
@@ -149,7 +149,7 @@ func (n *NewsController) Update(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, response)
 }
 
-func (n *NewsController) Delete(c echo.Context) error {
+func (n *Controllers) Delete(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := c.Param("Id")
