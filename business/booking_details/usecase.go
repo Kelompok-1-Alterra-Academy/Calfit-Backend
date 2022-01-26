@@ -27,6 +27,16 @@ func (usecase *BookingDetailsUsecase) Insert(ctx context.Context, domain Domain)
 	return res, nil
 }
 
+func (usecae *BookingDetailsUsecase) CountAll(ctx context.Context) (int, error) {
+	ctx, cancel := context.WithTimeout(ctx, usecae.ContextTimeout)
+	defer cancel()
+	res, err := usecae.Repo.CountAll(ctx)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
 func (usecase *BookingDetailsUsecase) GetByUserID(ctx context.Context, userID int) ([]Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, usecase.ContextTimeout)
 	defer cancel()

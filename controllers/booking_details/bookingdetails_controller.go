@@ -37,6 +37,15 @@ func (controller *Controllers) Insert(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
 
+func (controller *Controllers) CountAll(c echo.Context) error {
+	ctx := c.Request().Context()
+	res, err := controller.BookingDetailsUC.CountAll(ctx)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	return controllers.SuccessResponse(c, http.StatusOK, res)
+}
+
 func (controller *Controllers) GetByUserID(c echo.Context) error {
 	ctx := c.Request().Context()
 	userID, err := strconv.Atoi(c.Param("id"))

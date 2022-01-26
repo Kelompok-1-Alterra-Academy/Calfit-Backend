@@ -26,6 +26,19 @@ func (repo *BookingDetailsRepo) Insert(ctx context.Context, domain bookingdetail
 	return data.ToDomain(), nil
 }
 
+func (repo *BookingDetailsRepo) CountAll(ctx context.Context) (int, error) {
+	var count int64
+	if err := repo.DBConn.Model(&Booking_detail{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return int(count), nil
+	// data := []Booking_detail{}
+	// if err := repo.DBConn.Find(&data).Error; err != nil {
+	// 	return 0, err
+	// }
+	// return len(data), nil
+}
+
 func (repo *BookingDetailsRepo) GetByUserID(ctx context.Context, userID int) ([]bookingdetails.Domain, error) {
 	data := []Booking_detail{}
 	if err := repo.DBConn.Where("user_id=?", userID).Limit(5).Find(&data).Error; err != nil {

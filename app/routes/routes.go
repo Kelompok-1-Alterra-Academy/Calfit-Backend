@@ -152,5 +152,6 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 
 		// booking endpoint
 		admin.GET("/bookings/gym/:gymID", controllers.BookingDetailsController.GetByGymID, middlewares.OperationalAdmin())
+		admin.GET("/bookings/count", controllers.BookingDetailsController.CountAll, middlewares.OperationalAdmin())
 	}
 }
