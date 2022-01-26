@@ -11,6 +11,7 @@ type Domain struct {
 	Title               string `validate:"required"`
 	Description         string `validate:"required"`
 	Content             string `validate:"required"`
+	Url_Picture         string `validate:"required"`
 	Operational_adminID int    `validate:"required"`
 	Created_at          time.Time
 	Updated_at          time.Time

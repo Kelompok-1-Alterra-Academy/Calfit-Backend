@@ -53,6 +53,7 @@ func (n *NewsletterRepository) Create(ctx context.Context, news newsletters.Doma
 		Description:         news.Description,
 		Content:             news.Content,
 		Operational_adminID: news.Operational_adminID,
+		Url_Picture:         news.Url_Picture,
 		Created_at:          news.Created_at,
 		Updated_at:          news.Updated_at,
 	}
@@ -76,6 +77,7 @@ func (n *NewsletterRepository) Update(ctx context.Context, id string, news newsl
 	newsModel.Description = news.Description
 	newsModel.Content = news.Content
 	newsModel.Operational_adminID = news.Operational_adminID
+	newsModel.Url_Picture = news.Url_Picture
 	newsModel.Created_at = news.Created_at
 	newsModel.Updated_at = news.Updated_at
 	if err := n.Conn.Save(&newsModel).Error; err != nil {

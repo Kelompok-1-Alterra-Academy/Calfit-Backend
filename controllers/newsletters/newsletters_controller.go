@@ -114,6 +114,7 @@ func (n *Controllers) Create(c echo.Context) error {
 		Title:               createdNews.Title,
 		Description:         createdNews.Description,
 		Content:             createdNews.Content,
+		Url_Picture:         createdNews.Url_Picture,
 		Operational_adminID: int(createdNews.Operational_adminID),
 	}
 
@@ -137,6 +138,7 @@ func (n *Controllers) Update(c echo.Context) error {
 		Title:               updatedNews.Title,
 		Description:         updatedNews.Description,
 		Content:             updatedNews.Content,
+		Url_Picture:         updatedNews.Url_Picture,
 		Operational_adminID: int(updatedNews.Operational_adminID),
 	}
 
