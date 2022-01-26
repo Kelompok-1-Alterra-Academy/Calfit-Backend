@@ -13,6 +13,7 @@ type Domain struct {
 	Photo            string
 	Password         string
 	MembershipTypeID int
+	MembershipName   string
 	AddressID        uint
 	Token            string
 	FullName         string
@@ -38,6 +39,8 @@ type Usecase interface {
 	LoginOAuth(ctx context.Context, users Domain) (Domain, error)
 	Register(ctx context.Context, users Domain) (Domain, error)
 	Login(ctx context.Context, users Domain) (Domain, error)
+	GetByID(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, users Domain) (Domain, error)
 }
 
 type ProfileUsecase interface {
@@ -51,6 +54,8 @@ type Repository interface {
 	LoginOAuth(ctx context.Context, users Domain) (Domain, error)
 	Register(ctx context.Context, users Domain) (Domain, error)
 	GetByUsername(ctx context.Context, email string) (Domain, error)
+	GetByID(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, users Domain) (Domain, error)
 }
 
 type ProfileRepository interface {

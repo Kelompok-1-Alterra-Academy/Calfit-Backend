@@ -9,6 +9,7 @@ import (
 	"CalFit/controllers/schedules"
 	"CalFit/controllers/sessions"
 	"CalFit/controllers/superadmins"
+	"CalFit/controllers/users"
 
 	"CalFit/controllers/memberships"
 
@@ -25,6 +26,7 @@ type ControllersList struct {
 	SessionsController       *sessions.Controllers
 	AuthController           *auth.Controllers
 	BookingDetailsController *bookingdetails.Controllers
+	UsersController          *users.Controllers
 	SuperadminsController    *superadmins.Controllers
 }
 
@@ -82,6 +84,8 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 	{
 		member.GET("/account/:id/mybookings", controllers.BookingDetailsController.GetByUserID, middlewares.Member())
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
+		member.GET("/account/:id", controllers.UsersController.GetByID, middlewares.Member())
+		member.PUT("/account", controllers.UsersController.Update, middlewares.Member())
 	}
 
 	// admin routes

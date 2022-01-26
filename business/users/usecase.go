@@ -127,3 +127,33 @@ func (uu *PUseCase) Update(ctx context.Context, id string, domain Domain) (Domai
 
 	return uu.ProfileRepo.Update(ctx, id, domain)
 }
+
+func (uu *UsersUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
+	defer cancel()
+	if id == 0 {
+		return Domain{}, exceptions.ErrInvalidCredentials
+	}
+	res, err := uu.Repo.GetByID(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}
+
+func (uu *UsersUsecase) Update(ctx context.Context, users Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
+	defer cancel()
+	var err error
+	if users.Password != "" {
+		users.Password, err = helpers.Hash(users.Password)
+		if err != nil {
+			return Domain{}, err
+		}
+	}
+	res, err := uu.Repo.Update(ctx, users)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}
