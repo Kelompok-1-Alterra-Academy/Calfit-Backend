@@ -16,7 +16,11 @@ type UsersRepo struct {
 	DBConn *gorm.DB
 }
 
+<<<<<<< HEAD
 type ProfilesRepo struct {
+=======
+type ProfileUsersRepo struct {
+>>>>>>> master
 	DBConn *gorm.DB
 }
 
@@ -26,8 +30,13 @@ func NewUsersRepo(db *gorm.DB) users.Repository {
 	}
 }
 
+<<<<<<< HEAD
 func NewProfileRepo(db *gorm.DB) users.ProfileRepository {
 	return &ProfilesRepo{
+=======
+func NewProfileUsersRepo(db *gorm.DB) users.ProfileRepository {
+	return &ProfileUsersRepo{
+>>>>>>> master
 		DBConn: db,
 	}
 }
@@ -81,10 +90,40 @@ func (repo *UsersRepo) GetByUsername(ctx context.Context, email string) (users.D
 	if err := repo.DBConn.Where("email=?", email).First(&data).Error; err != nil {
 		return users.Domain{}, err
 	}
+	domain := data.ToDomain()
+	type Relation struct {
+		MembershipName string
+	}
+	relation := Relation{}
+	repo.DBConn.Table("users").Select("membership_types.name AS membership_name").Joins("LEFT JOIN membership_types ON users.membership_type_id = membership_types.id").Scan(&relation)
+	domain.MembershipName = relation.MembershipName
+	return domain, nil
+}
+
+func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.Domain, error) {
+	data := FromDomain(domain)
+	if err := repo.DBConn.Where("email=?", data.Email).First(&data).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return users.Domain{}, exceptions.ErrNotFound
+		}
+		return users.Domain{}, err
+	}
+	data.FullName = domain.FullName
+	if domain.Password != "" {
+		data.Password = domain.Password
+	}
+	data.UpdatedAt = time.Now()
+	if err := repo.DBConn.Save(&data).Error; err != nil {
+		return users.Domain{}, err
+	}
 	return data.ToDomain(), nil
 }
 
+<<<<<<< HEAD
 func (b *ProfilesRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
+=======
+func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
+>>>>>>> master
 	var usersModel []User
 
 	offset := (pagination.Page - 1) * pagination.Limit
@@ -95,7 +134,11 @@ func (b *ProfilesRepo) GetAll(ctx context.Context, pagination paginations.Domain
 	return result, nil
 }
 
+<<<<<<< HEAD
 func (b *ProfilesRepo) CountAll(ctx context.Context) (int, error) {
+=======
+func (b *ProfileUsersRepo) CountAll(ctx context.Context) (int, error) {
+>>>>>>> master
 	var count int64
 	if err := b.DBConn.Model(&User{}).Count(&count).Error; err != nil {
 		return 0, err
@@ -103,7 +146,11 @@ func (b *ProfilesRepo) CountAll(ctx context.Context) (int, error) {
 	return int(count), nil
 }
 
+<<<<<<< HEAD
 func (b *ProfilesRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
+=======
+func (b *ProfileUsersRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
+>>>>>>> master
 	var user User
 	if err := b.DBConn.Preload("Address").Preload("Classes").Where("id = ?", id).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -114,7 +161,11 @@ func (b *ProfilesRepo) GetById(ctx context.Context, id string) (users.Domain, er
 	return user.ToDomain(), nil
 }
 
+<<<<<<< HEAD
 func (b *ProfilesRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
+=======
+func (b *ProfileUsersRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
+>>>>>>> master
 	var userModel User
 	if err := b.DBConn.Where("id = ?", id).Preload("Address").First(&userModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -135,6 +186,19 @@ func (b *ProfilesRepo) Update(ctx context.Context, id string, user users.Domain)
 	if updateErr != nil {
 		return users.Domain{}, updateErr
 	}
-
 	return userModel.ToDomain(), nil
+}
+func (repo *UsersRepo) GetByID(ctx context.Context, id int) (users.Domain, error) {
+	data := User{}
+	if err := repo.DBConn.Where("id=?", id).First(&data).Error; err != nil {
+		return users.Domain{}, err
+	}
+	domain := data.ToDomain()
+	type Relation struct {
+		MembershipName string
+	}
+	relation := Relation{}
+	repo.DBConn.Table("users").Select("membership_types.name AS membership_name").Joins("LEFT JOIN membership_types ON users.membership_type_id = membership_types.id").Scan(&relation)
+	domain.MembershipName = relation.MembershipName
+	return domain, nil
 }

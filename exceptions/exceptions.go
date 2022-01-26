@@ -17,6 +17,8 @@ var (
 	ErrGymNotFound = errors.New("gym not found")
 	// ErrClassNotFound is thrown when the class is not found
 	ErrClassNotFound = errors.New("class not found")
+	// ErrNewsNotFound is thrown when the class is not found
+	ErrNewsNotFound = errors.New("news not found")
 	// ErrMembershipNotFound is thrown when the membership is not found
 	ErrMembershipNotFound = errors.New("membership not found")
 	// ErrUserNotFound is thrown when the user is not found
@@ -33,6 +35,10 @@ var (
 	ErrMissingId = errors.New("missing require id")
 	// ErrBadRequest is thrown when request message is invalid
 	ErrBadRequest = errors.New("invalid request message")
+	// ErrOperationalAdminExists is thrown when the superadmin already exists
+	ErrOperationalAdminExists = errors.New("operational admin already exists")
+	// ErrOperationalAdminNotFound is thrown when the superadmin is not found
+	ErrOperationalAdminNotFound = errors.New("operational admin not found")
 	// ErrSuperadminExists is thrown when the superadmin already exists
 	ErrSuperadminExists = errors.New("superadmin already exists")
 	// ErrSuperadminNotFound is thrown when the superadmin is not found
