@@ -16,7 +16,7 @@ type UsersRepo struct {
 	DBConn *gorm.DB
 }
 
-type ProfileUsersRepo struct {
+type ProfilesRepo struct {
 	DBConn *gorm.DB
 }
 
@@ -26,8 +26,8 @@ func NewUsersRepo(db *gorm.DB) users.Repository {
 	}
 }
 
-func NewProfileUsersRepo(db *gorm.DB) users.ProfileRepository {
-	return &ProfileUsersRepo{
+func NewProfileRepo(db *gorm.DB) users.ProfileRepository {
+	return &ProfilesRepo{
 		DBConn: db,
 	}
 }
@@ -110,7 +110,7 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 	return data.ToDomain(), nil
 }
 
-func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
+func (b *ProfilesRepo) GetAll(ctx context.Context, pagination paginations.Domain) ([]users.Domain, error) {
 	var usersModel []User
 
 	offset := (pagination.Page - 1) * pagination.Limit
@@ -121,7 +121,7 @@ func (b *ProfileUsersRepo) GetAll(ctx context.Context, pagination paginations.Do
 	return result, nil
 }
 
-func (b *ProfileUsersRepo) CountAll(ctx context.Context) (int, error) {
+func (b *ProfilesRepo) CountAll(ctx context.Context) (int, error) {
 	var count int64
 	if err := b.DBConn.Model(&User{}).Count(&count).Error; err != nil {
 		return 0, err
@@ -129,7 +129,7 @@ func (b *ProfileUsersRepo) CountAll(ctx context.Context) (int, error) {
 	return int(count), nil
 }
 
-func (b *ProfileUsersRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
+func (b *ProfilesRepo) GetById(ctx context.Context, id string) (users.Domain, error) {
 	var user User
 	if err := b.DBConn.Preload("Address").Preload("Classes").Where("id = ?", id).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -140,7 +140,7 @@ func (b *ProfileUsersRepo) GetById(ctx context.Context, id string) (users.Domain
 	return user.ToDomain(), nil
 }
 
-func (b *ProfileUsersRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
+func (b *ProfilesRepo) Update(ctx context.Context, id string, user users.Domain) (users.Domain, error) {
 	var userModel User
 	if err := b.DBConn.Where("id = ?", id).Preload("Address").First(&userModel).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {

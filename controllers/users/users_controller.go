@@ -17,14 +17,14 @@ import (
 )
 
 type ProfileController struct {
-	Usecase users.PUseCase
+	Usecase users.ProfileUsecase
 }
 
 type Header struct {
 	Cookie string `json:"cookie"`
 }
 
-func NewHandler(u users.PUseCase) *ProfileController {
+func NewHandler(u users.ProfileUsecase) *ProfileController {
 	return &ProfileController{
 		Usecase: u,
 	}
