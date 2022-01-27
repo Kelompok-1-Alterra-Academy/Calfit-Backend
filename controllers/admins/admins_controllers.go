@@ -46,7 +46,7 @@ func (controller *OpAdminControllers) UpdatePassword(c echo.Context) error {
 	return controllers.SuccessResponse(c, http.StatusOK, superadminResponse)
 }
 
-func (controller *OpAdminControllers) Get(c echo.Context) error {
+func (controller *OpAdminControllers) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	paginationDomain := paginations.Domain{
@@ -78,7 +78,7 @@ func (controller *OpAdminControllers) Get(c echo.Context) error {
 
 	paginationDomain.Sort = sort
 
-	admins, err := controller.OpAdminUC.Get(ctx, paginationDomain)
+	admins, err := controller.OpAdminUC.GetAll(ctx, paginationDomain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
 	}

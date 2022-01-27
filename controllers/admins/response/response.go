@@ -6,7 +6,7 @@ import (
 
 type OpAdmin struct {
 	Username string `json:"username"`
-	Token    string `json:"token"`
+	Token    string `json:"token,omitempty"`
 }
 
 func FromDomainOpAdmin(o admins.Domain) OpAdmin {

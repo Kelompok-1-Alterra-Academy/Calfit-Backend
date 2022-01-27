@@ -31,20 +31,22 @@ func (o *Operational_admin) BeforeCreate(tx *gorm.DB) error {
 
 func FromDomain(domain admins.Domain) Operational_admin {
 	return Operational_admin{
-		Id:         domain.Id,
-		Username:   domain.Username,
-		Password:   domain.Password,
-		Created_at: domain.Created_at,
-		Updated_at: domain.Updated_at,
+		Id:           domain.Id,
+		Username:     domain.Username,
+		Password:     domain.Password,
+		SuperadminID: domain.SuperadminID,
+		Created_at:   domain.Created_at,
+		Updated_at:   domain.Updated_at,
 	}
 }
 func (o *Operational_admin) ToDomain() admins.Domain {
 	return admins.Domain{
-		Id:         o.Id,
-		Username:   o.Username,
-		Password:   o.Password,
-		Created_at: o.Created_at,
-		Updated_at: o.Updated_at,
+		Id:           o.Id,
+		Username:     o.Username,
+		Password:     o.Password,
+		SuperadminID: o.SuperadminID,
+		Created_at:   o.Created_at,
+		Updated_at:   o.Updated_at,
 	}
 }
 

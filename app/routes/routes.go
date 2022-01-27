@@ -149,7 +149,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.GET("/superadmin/admin/count", controllers.OperationaladminsController.CountAll, middlewares.Superadmin())
 		admin.GET("/superadmin/admin", controllers.OperationaladminsController.Get, middlewares.Superadmin())
 		admin.DELETE("/superadmin/logout", controllers.AuthController.SuperadminLogout, middlewares.Superadmin())
-
+    
 		// booking endpoint
 		admin.GET("/bookings/gym/:gymID", controllers.BookingDetailsController.GetByGymID, middlewares.OperationalAdmin())
 		admin.GET("/bookings/count", controllers.BookingDetailsController.CountAll, middlewares.OperationalAdmin())
