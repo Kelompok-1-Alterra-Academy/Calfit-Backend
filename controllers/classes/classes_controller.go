@@ -40,14 +40,15 @@ func (u *ClassController) GetAll(c echo.Context) error {
 		Page:  1,
 		Limit: 0,
 	}
+	var err error
 
 	// get pagination query
 	page := c.QueryParam("page")
 	limit := c.QueryParam("limit")
 	sort := c.QueryParam("sort")
+	online, _ := strconv.ParseBool(c.QueryParam("online"))
 
 	var intPage, intLimit int
-	var err error
 	if page != "" {
 		intPage, err = strconv.Atoi(page)
 		if err != nil {
@@ -63,9 +64,12 @@ func (u *ClassController) GetAll(c echo.Context) error {
 		paginationDomain.Limit = intLimit
 	}
 
+	domain := classes.Domain{
+		Online: online,
+	}
 	paginationDomain.Sort = sort
 
-	classes, err := u.Usecase.GetAll(ctx, paginationDomain)
+	classes, err := u.Usecase.GetAll(ctx, paginationDomain, domain)
 	if err != nil {
 		return controllers.ErrorResponse(c, http.StatusInternalServerError, err)
 	}

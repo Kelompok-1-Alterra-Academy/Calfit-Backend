@@ -72,13 +72,13 @@ func (_m *DomainRepository) Delete(ctx context.Context, id string) error {
 	return r0
 }
 
-// GetAll provides a mock function with given fields: ctx, pagination
-func (_m *DomainRepository) GetAll(ctx context.Context, pagination paginations.Domain) ([]classes.Domain, error) {
-	ret := _m.Called(ctx, pagination)
+// GetAll provides a mock function with given fields: ctx, pagination, domain
+func (_m *DomainRepository) GetAll(ctx context.Context, pagination paginations.Domain, domain classes.Domain) ([]classes.Domain, error) {
+	ret := _m.Called(ctx, pagination, domain)
 
 	var r0 []classes.Domain
-	if rf, ok := ret.Get(0).(func(context.Context, paginations.Domain) []classes.Domain); ok {
-		r0 = rf(ctx, pagination)
+	if rf, ok := ret.Get(0).(func(context.Context, paginations.Domain, classes.Domain) []classes.Domain); ok {
+		r0 = rf(ctx, pagination, domain)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]classes.Domain)
@@ -86,8 +86,8 @@ func (_m *DomainRepository) GetAll(ctx context.Context, pagination paginations.D
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, paginations.Domain) error); ok {
-		r1 = rf(ctx, pagination)
+	if rf, ok := ret.Get(1).(func(context.Context, paginations.Domain, classes.Domain) error); ok {
+		r1 = rf(ctx, pagination, domain)
 	} else {
 		r1 = ret.Error(1)
 	}

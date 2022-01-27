@@ -17,13 +17,20 @@ func NewClassRepository(conn *gorm.DB) classes.DomainRepository {
 	return &ClassRepository{Conn: conn}
 }
 
-func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Domain) ([]classes.Domain, error) {
+func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Domain, domain classes.Domain) ([]classes.Domain, error) {
 	var classesModel []Class
 
 	offset := (pagination.Page - 1) * pagination.Limit
-	if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
-		return nil, err
+	if domain.Online {
+		if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("online=?", domain.Online).Find(&classesModel).Error; err != nil {
+			return nil, err
+		}
+	} else {
+		if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
+			return nil, err
+		}
 	}
+
 	var result []classes.Domain = ToListDomain(classesModel)
 	return result, nil
 }
@@ -44,7 +51,14 @@ func (c *ClassRepository) GetById(ctx context.Context, id string) (classes.Domai
 		}
 		return classes.Domain{}, err
 	}
-	return class.ToDomain(), nil
+	type Gym struct {
+		Name string
+	}
+	gym := Gym{}
+	c.Conn.Table("gyms").Select("name").Where("id=?", class.GymID).Scan(&gym)
+	domain := class.ToDomain()
+	domain.GymName = gym.Name
+	return domain, nil
 }
 
 func (c *ClassRepository) Create(ctx context.Context, class classes.Domain, gymId string) (classes.Domain, error) {
