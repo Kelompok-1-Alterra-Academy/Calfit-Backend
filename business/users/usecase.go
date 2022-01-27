@@ -40,7 +40,7 @@ func NewProfileUsecase(repo ProfileRepository, timeout time.Duration) ProfileUse
 func (uu *UsersUsecase) LoginOAuth(ctx context.Context, users Domain) (Domain, error) {
 	ctx, cancel := context.WithTimeout(ctx, uu.ContextTimeout)
 	defer cancel()
-	if users.Email == "" || users.Password == "" {
+	if users.Email == "" {
 		return Domain{}, exceptions.ErrInvalidCredentials
 	}
 	res, err := uu.Repo.LoginOAuth(ctx, users)

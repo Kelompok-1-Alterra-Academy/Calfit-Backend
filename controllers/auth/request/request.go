@@ -10,6 +10,7 @@ type Auth struct {
 	Username string `json:"username,omitempty" form:"username"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
+	Photo    string `json:"photo" form:"photo"`
 }
 
 type SuperadminAuth struct {
@@ -33,6 +34,7 @@ func (a Auth) ToDomain() users.Domain {
 	return users.Domain{
 		Email:    a.Email,
 		Password: a.Password,
+		Photo:    a.Photo,
 	}
 }
 
