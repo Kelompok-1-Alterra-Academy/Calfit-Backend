@@ -90,10 +90,25 @@ func (repo *BookingDetailsRepo) GetByID(ctx context.Context, id int) (bookingdet
 
 func (repo *BookingDetailsRepo) GetByGymID(ctx context.Context, total int, gymID int) ([]bookingdetails.Domain, error) {
 	data := []Booking_detail{}
+	type Class struct {
+		Name         string
+		TimeSchedule string
+		GymName      string
+		Online       bool
+		Link         string
+	}
 	repo.DBConn.Select("booking_details.*").Joins("LEFT JOIN classes ON booking_details.class_id=classes.id LEFT JOIN gyms ON classes.gym_id=gyms.id").Where("gyms.id=?", gymID).Order("created_at desc").Limit(total).Find(&data)
 	domain := []bookingdetails.Domain{}
 	for _, val := range data {
-		domain = append(domain, val.ToDomain())
+		class := Class{}
+		repo.DBConn.Table("booking_details").Select("classes.name as name,classes.card_picture_url as card_picture_url,classes.online as online, classes.link as link, schedules.time_schedule, gyms.name as gym_name").Joins("left join classes on booking_details.class_id=class_id left join schedules on booking_details.schedule_id=schedules.id left join gyms on classes.gym_id=gyms.id").Scan(&class)
+		booking := val.ToDomain()
+		booking.ClassName = class.Name
+		booking.TimeSchedule = class.TimeSchedule
+		booking.GymName = class.GymName
+		booking.Online = class.Online
+		booking.Link = class.Link
+		domain = append(domain, booking)
 	}
 	return domain, nil
 }

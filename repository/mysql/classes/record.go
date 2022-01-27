@@ -3,7 +3,6 @@ package classes
 import (
 	"CalFit/business/classes"
 	"CalFit/business/schedules"
-	bookingdetails "CalFit/repository/mysql/booking_details"
 
 	// memberships "CalFit/repository/mysql/membership_types"
 
@@ -29,10 +28,10 @@ type Class struct {
 	Price              int
 	// Gym				   gyms.Gym
 	// Membership_type memberships.Membership_type
-	Booking_details []bookingdetails.Booking_detail
-	Schedules       []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
-	Created_at      time.Time
-	Updated_at      time.Time
+	// Booking_details []bookingdetails.Booking_detail
+	Schedules  []schedulesRepo.Schedule `gorm:"many2many:class_schedules"`
+	Created_at time.Time
+	Updated_at time.Time
 }
 
 func (c *Class) BeforeCreate(tx *gorm.DB) error {
