@@ -2,7 +2,9 @@ package bookingdetails
 
 import (
 	bookingdetails "CalFit/business/booking_details"
+	"CalFit/exceptions"
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -111,4 +113,20 @@ func (repo *BookingDetailsRepo) GetByGymID(ctx context.Context, total int, gymID
 		domain = append(domain, booking)
 	}
 	return domain, nil
+}
+
+func (repo *BookingDetailsRepo) Update(ctx context.Context, domain bookingdetails.Domain) (bookingdetails.Domain, error) {
+	data := FromDomain(domain)
+	if err := repo.DBConn.Where("id = ?", data.Id).First(&data).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return bookingdetails.Domain{}, exceptions.ErrBookingNotFound
+		}
+		return bookingdetails.Domain{}, err
+	}
+	data.PaymentProof = domain.PaymentProof
+	data.UpdatedAt = time.Now()
+	if err := repo.DBConn.Save(&data).Error; err != nil {
+		return bookingdetails.Domain{}, err
+	}
+	return data.ToDomain(), nil
 }

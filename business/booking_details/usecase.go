@@ -66,3 +66,13 @@ func (usecase *BookingDetailsUsecase) GetByGymID(ctx context.Context, total int,
 	}
 	return res, nil
 }
+
+func (usecase *BookingDetailsUsecase) Update(ctx context.Context, domain Domain) (Domain, error) {
+	ctx, cancel := context.WithTimeout(ctx, usecase.ContextTimeout)
+	defer cancel()
+	res, err := usecase.Repo.Update(ctx, domain)
+	if err != nil {
+		return Domain{}, err
+	}
+	return res, nil
+}

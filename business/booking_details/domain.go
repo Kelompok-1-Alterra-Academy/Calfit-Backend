@@ -20,6 +20,7 @@ type Domain struct {
 	ScheduleID         int
 	TimeSchedule       string
 	GymName            string
+	PaymentProof       string
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 }
@@ -30,6 +31,7 @@ type Usecase interface {
 	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
 	GetByGymID(ctx context.Context, total int, gymID int) ([]Domain, error)
+	Update(ctx context.Context, domain Domain) (Domain, error)
 }
 
 type Repository interface {
@@ -38,4 +40,5 @@ type Repository interface {
 	GetByUserID(ctx context.Context, userID int) ([]Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
 	GetByGymID(ctx context.Context, total int, gymID int) ([]Domain, error)
+	Update(ctx context.Context, domain Domain) (Domain, error)
 }

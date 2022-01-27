@@ -104,6 +104,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		member.GET("/bookings/:id", controllers.BookingDetailsController.GetByID, middlewares.Member())
 		member.GET("/account/:id", controllers.UsersController.GetByID, middlewares.Member())
 		member.PUT("/account", controllers.UsersController.Update, middlewares.Member())
+		member.PUT("/booking/:bookingID", controllers.BookingDetailsController.Update, middlewares.Member())
 	}
 
 	// admin routes
@@ -149,7 +150,7 @@ func (controllers ControllersList) RouteRegister(e *echo.Echo) {
 		admin.GET("/superadmin/admin/count", controllers.OperationaladminsController.CountAll, middlewares.Superadmin())
 		admin.GET("/superadmin/admin", controllers.OperationaladminsController.GetAll, middlewares.Superadmin())
 		admin.DELETE("/superadmin/logout", controllers.AuthController.SuperadminLogout, middlewares.Superadmin())
-    
+
 		// booking endpoint
 		admin.GET("/bookings/gym/:gymID", controllers.BookingDetailsController.GetByGymID, middlewares.OperationalAdmin())
 		admin.GET("/bookings/count", controllers.BookingDetailsController.CountAll, middlewares.OperationalAdmin())

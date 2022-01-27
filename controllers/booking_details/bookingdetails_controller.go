@@ -96,3 +96,23 @@ func (controller *Controllers) GetByGymID(c echo.Context) error {
 	}
 	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
 }
+
+func (controller *Controllers) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+	req := request.Booking_details{}
+	id, err := strconv.Atoi(c.Param("bookingID"))
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	if err := c.Bind(&req); err != nil {
+		return controllers.ErrorResponse(c, http.StatusBadRequest, exceptions.ErrBadRequest)
+	}
+	domain := req.ToDomain()
+	domain.Id = id
+	res, err := controller.BookingDetailsUC.Update(ctx, domain)
+	if err != nil {
+		return controllers.ErrorResponse(c, http.StatusInternalServerError, exceptions.ErrInternalServerError)
+	}
+	resFromDomain := response.FromDomain(res)
+	return controllers.SuccessResponse(c, http.StatusOK, resFromDomain)
+}
