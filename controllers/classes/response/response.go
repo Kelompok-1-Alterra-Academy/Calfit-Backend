@@ -13,7 +13,7 @@ type ClassResponse struct {
 	Description        string `json:"description,omitempty"`
 	Banner_picture_url string `json:"banner_picture_url,omitempty"`
 	Card_picture_url   string `json:"card_picture_url,omitempty"`
-	Online             bool   `json:"online,omitempty"`
+	Online             bool   `json:"online"`
 	Link               string `json:"link,omitempty"`
 	Category           string `json:"category,omitempty"`
 	Status             string `json:"status,omitempty"`
