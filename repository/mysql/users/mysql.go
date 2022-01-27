@@ -37,7 +37,6 @@ func (repo *UsersRepo) LoginOAuth(ctx context.Context, domain users.Domain) (use
 	if err := repo.DBConn.Where("email=?", data.Email).First(&data).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			data.MembershipTypeID = 1
-			data.CreatedAt = time.Now()
 			address := addresses.Address{
 				Address:     "default",
 				District:    "default",
@@ -45,6 +44,8 @@ func (repo *UsersRepo) LoginOAuth(ctx context.Context, domain users.Domain) (use
 				Postal_code: "11111",
 			}
 			repo.DBConn.Create(&address)
+			data.CreatedAt = time.Now()
+			data.Photo = domain.Photo
 			data.AddressID = address.Id
 			repo.DBConn.Create(&data)
 			return data.ToDomain(), nil

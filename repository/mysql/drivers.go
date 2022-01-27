@@ -45,6 +45,7 @@ func InitDB() *gorm.DB {
 		&sessions.Session{},
 		&schedules.Schedule{},
 		&membership_types.Membership_type{},
+		&users.User{},
 		&payments.Payment{},
 		&users.User{},
 		&classes.Class{},
