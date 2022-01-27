@@ -16,8 +16,9 @@ type Booking_detail struct {
 	PaymentID          int
 	ClassID            int
 	ScheduleID         int
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	// Class              classes.Class `gorm:"foreignkey:ClassID"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (repo *Booking_detail) BeforeCreate(tx *gorm.DB) error {
