@@ -15,6 +15,7 @@ type Booking_details struct {
 	OperationalAdminID int                         `json:"operational_admin_id"`
 	PaymentID          int                         `json:"payment_id"`
 	Class              classResponse.ClassResponse `json:"class"`
+	PaymentProof       string                      `json:"payment_proof,omitempty"`
 	CreatedAt          *time.Time                  `json:"created_at"`
 	UpdatedAt          *time.Time                  `json:"updated_at"`
 }
@@ -41,6 +42,7 @@ func FromDomain(domain bookingdetails.Domain) Booking_details {
 		OperationalAdminID: domain.OperationalAdminID,
 		PaymentID:          domain.PaymentID,
 		Class:              class,
+		PaymentProof:       domain.PaymentProof,
 		CreatedAt:          &domain.CreatedAt,
 		UpdatedAt:          &domain.UpdatedAt,
 	}

@@ -16,6 +16,7 @@ type Booking_detail struct {
 	PaymentID          int
 	ClassID            int
 	ScheduleID         int
+	PaymentProof       string
 	// Class              classes.Class `gorm:"foreignkey:ClassID"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
