@@ -21,7 +21,7 @@ func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Dom
 	var classesModel []Class
 	offset := (pagination.Page - 1) * pagination.Limit
 	if domain.Online {
-		if domain.Membership_typeID == 2 {
+		if domain.Membership_typeID == 2 || domain.Membership_typeID == 0 {
 			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("online=?", domain.Online).Find(&classesModel).Error; err != nil {
 				return nil, err
 			}
@@ -31,7 +31,7 @@ func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Dom
 			}
 		}
 	} else {
-		if domain.Membership_typeID == 2 {
+		if domain.Membership_typeID == 2 || domain.Membership_typeID == 0 {
 			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
 				return nil, err
 			}
