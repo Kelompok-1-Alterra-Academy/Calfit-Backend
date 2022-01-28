@@ -47,9 +47,6 @@ func (u *Usecase) GetById(ctx context.Context, id string) (Domain, error) {
 		return Domain{}, exceptions.ErrEmptyInput
 	}
 	domain, _ := u.Repo.GetById(ctx, id)
-	// gymID := strconv.Itoa(int(domain.GymID))
-	// gymDomain, _ := u.GymRepo.GetById(ctx, gymID)
-	// domain.GymName = gymDomain.Name
 	return domain, nil
 }
 

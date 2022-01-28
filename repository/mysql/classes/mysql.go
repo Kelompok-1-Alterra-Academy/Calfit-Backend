@@ -19,15 +19,26 @@ func NewClassRepository(conn *gorm.DB) classes.DomainRepository {
 
 func (c *ClassRepository) GetAll(ctx context.Context, pagination paginations.Domain, domain classes.Domain) ([]classes.Domain, error) {
 	var classesModel []Class
-
 	offset := (pagination.Page - 1) * pagination.Limit
 	if domain.Online {
-		if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("online=?", domain.Online).Find(&classesModel).Error; err != nil {
-			return nil, err
+		if domain.Membership_typeID == 2 {
+			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("online=?", domain.Online).Find(&classesModel).Error; err != nil {
+				return nil, err
+			}
+		} else {
+			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("online=?", domain.Online).Where("membership_type_id=?", domain.Membership_typeID).Find(&classesModel).Error; err != nil {
+				return nil, err
+			}
 		}
 	} else {
-		if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
-			return nil, err
+		if domain.Membership_typeID == 2 {
+			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Find(&classesModel).Error; err != nil {
+				return nil, err
+			}
+		} else {
+			if err := c.Conn.Limit(pagination.Limit).Offset(offset).Where("membership_type_id=?", domain.Membership_typeID).Find(&classesModel).Error; err != nil {
+				return nil, err
+			}
 		}
 	}
 
