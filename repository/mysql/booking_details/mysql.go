@@ -126,7 +126,7 @@ func (repo *BookingDetailsRepo) Update(ctx context.Context, domain bookingdetail
 	if domain.PaymentProof != "" {
 		data.PaymentProof = domain.PaymentProof
 	}
-	if domain.status != "" {
+	if domain.Status != "" {
 		data.Status = domain.Status
 	}
 	data.UpdatedAt = time.Now()
