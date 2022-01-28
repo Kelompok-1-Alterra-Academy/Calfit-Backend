@@ -104,6 +104,7 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 	if domain.Password != "" {
 		data.Password = domain.Password
 	}
+	data.Photo = domain.Photo
 	data.UpdatedAt = time.Now()
 	if err := repo.DBConn.Save(&data).Error; err != nil {
 		return users.Domain{}, err
