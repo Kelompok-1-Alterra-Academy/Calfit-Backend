@@ -100,9 +100,13 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 		}
 		return users.Domain{}, err
 	}
-	data.FullName = domain.FullName
+
 	if domain.Password != "" {
 		data.Password = domain.Password
+	} else if domain.MembershipTypeID != 0 {
+		data.MembershipTypeID = domain.MembershipTypeID
+	} else if domain.FullName != "" {
+		data.FullName = domain.FullName
 	}
 	data.UpdatedAt = time.Now()
 	if err := repo.DBConn.Save(&data).Error; err != nil {
