@@ -38,7 +38,7 @@ func (n *NewsletterRepository) CountAll(ctx context.Context) (int, error) {
 
 func (n *NewsletterRepository) GetById(ctx context.Context, id string) (newsletters.Domain, error) {
 	var news Newsletter
-	if err := n.Conn.Where("id = ?", id).Preload("Schedules").First(&news).Error; err != nil {
+	if err := n.Conn.Where("id = ?", id).First(&news).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return newsletters.Domain{}, exceptions.ErrNotFound
 		}
