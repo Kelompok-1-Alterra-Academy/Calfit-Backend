@@ -26,5 +26,6 @@ func (a Users) ToDomain() users.Domain {
 		FullName:         a.FullName,
 		Password:         a.Password,
 		MembershipTypeID: a.MembershipTypeID,
+		Photo:            a.Photo,
 	}
 }

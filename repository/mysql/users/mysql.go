@@ -108,6 +108,7 @@ func (repo *UsersRepo) Update(ctx context.Context, domain users.Domain) (users.D
 	} else if domain.FullName != "" {
 		data.FullName = domain.FullName
 	}
+	data.Photo = domain.Photo
 	data.UpdatedAt = time.Now()
 	if err := repo.DBConn.Save(&data).Error; err != nil {
 		return users.Domain{}, err
