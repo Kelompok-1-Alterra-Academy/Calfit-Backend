@@ -123,7 +123,12 @@ func (repo *BookingDetailsRepo) Update(ctx context.Context, domain bookingdetail
 		}
 		return bookingdetails.Domain{}, err
 	}
-	data.PaymentProof = domain.PaymentProof
+	if domain.PaymentProof != "" {
+		data.PaymentProof = domain.PaymentProof
+	}
+	if domain.Status != "" {
+		data.Status = domain.Status
+	}
 	data.UpdatedAt = time.Now()
 	if err := repo.DBConn.Save(&data).Error; err != nil {
 		return bookingdetails.Domain{}, err
