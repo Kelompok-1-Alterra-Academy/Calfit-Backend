@@ -46,6 +46,7 @@ func (u *ClassController) GetAll(c echo.Context) error {
 	page := c.QueryParam("page")
 	limit := c.QueryParam("limit")
 	sort := c.QueryParam("sort")
+	membershipTypeID, _ := strconv.Atoi(c.QueryParam("membershipID"))
 	online, _ := strconv.ParseBool(c.QueryParam("online"))
 
 	var intPage, intLimit int
@@ -65,7 +66,8 @@ func (u *ClassController) GetAll(c echo.Context) error {
 	}
 
 	domain := classes.Domain{
-		Online: online,
+		Online:            online,
+		Membership_typeID: uint(membershipTypeID),
 	}
 	paginationDomain.Sort = sort
 

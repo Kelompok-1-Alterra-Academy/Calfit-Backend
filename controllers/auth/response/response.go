@@ -11,6 +11,7 @@ type Auth struct {
 	Email          string     `json:"email"`
 	FullName       string     `json:"fullname"`
 	Token          string     `json:"token,omitempty"`
+	MembershipID   int        `json:"membership_type_id"`
 	MembershipName string     `json:"membership_name,omitempty"`
 	Photo          string     `json:"photo,omitempty"`
 	CreatedAt      *time.Time `json:"created_at,omitempty"`
@@ -32,6 +33,7 @@ func FromDomain(u users.Domain) Auth {
 		Email:          u.Email,
 		FullName:       u.FullName,
 		Token:          u.Token,
+		MembershipID:   u.MembershipTypeID,
 		MembershipName: u.MembershipName,
 		Photo:          u.Photo,
 		CreatedAt:      &u.CreatedAt,

@@ -22,9 +22,10 @@ type Users struct {
 
 func (a Users) ToDomain() users.Domain {
 	return users.Domain{
-		Email:    a.Email,
-		FullName: a.FullName,
-		Password: a.Password,
-		Photo:    a.Photo,
+		Email:            a.Email,
+		FullName:         a.FullName,
+		Password:         a.Password,
+		MembershipTypeID: a.MembershipTypeID,
+		Photo:            a.Photo,
 	}
 }
